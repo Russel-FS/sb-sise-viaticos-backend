@@ -9,6 +9,11 @@
     <style>
         body { background-color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes dash {
+          to { stroke-dashoffset: -1000; }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -59,80 +64,85 @@
 
                 <!-- Itinerario Dinámico -->
                 <div class="glass-card p-8 rounded-[28px] shadow-sm">
-                    <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center justify-between mb-8">
                         <h2 class="text-lg font-semibold flex items-center gap-2">
                             <i data-lucide="map-pin" class="w-5 h-5 text-blue-600"></i>
                             Itinerario del Viaje
                         </h2>
                         <button type="button" onclick="agregarTramo()" 
-                                class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 px-3 py-2 bg-blue-50 rounded-xl transition-all">
-                            <i data-lucide="plus" class="w-3 h-3"></i>
-                            Añadir Tramo
+                                class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-xl transition-all border border-blue-100">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                            Añadir Destino
                         </button>
                     </div>
                     
-                    <div id="itinerario-container" class="space-y-6">
-                        <!-- Primer tramo  -->
-                        <div class="tramo-row bg-gray-50/50 p-6 rounded-2xl border border-gray-100 relative group">
-                            <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                                <div class="md:col-span-5">
+                    <div id="itinerario-container" class="space-y-6 relative before:absolute before:left-[21px] before:top-10 before:bottom-10 before:w-0 before:border-l-2 before:border-dashed before:border-blue-200">
+                        <!-- Primer tramo -->
+                        <div class="tramo-row bg-white p-6 rounded-[22px] border border-gray-100 relative shadow-sm ml-10">
+                            <div class="absolute -left-[51px] top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200">
+                                <i data-lucide="bus" class="w-5 h-5"></i>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                                <div class="md:col-span-12 lg:col-span-5">
                                     <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Zona Geográfica</label>
                                     <select name="idZonas" required onchange="updateEstimation()"
-                                            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer text-sm">
+                                            class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer text-sm font-medium">
                                         <option value="" disabled selected>Seleccionar zona</option>
                                         <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}">Zona</option>
                                     </select>
                                 </div>
-                                <div class="md:col-span-4">
+                                <div class="md:col-span-12 lg:col-span-4">
                                     <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Ciudad / Sede</label>
                                     <input type="text" name="ciudades" required placeholder="Ej: Trujillo"
-                                           class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                                           class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
                                 </div>
-                                <div class="md:col-span-3">
+                                <div class="md:col-span-12 lg:col-span-3">
                                     <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Noches</label>
-                                    <input type="number" name="noches" required min="1" value="1" onchange="updateEstimation()"
-                                           class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                                    <div class="flex items-center gap-3">
+                                        <input type="number" name="noches" required min="1" value="2" onchange="updateEstimation()"
+                                               class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-blue-600">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <p class="mt-4 text-[11px] text-gray-400 italic">
-                        * Los viáticos se calculan sumando las noches en cada zona más un día adicional de retorno al tarifario del último destino.
+                    <p class="mt-8 text-[11px] text-gray-400 italic flex items-center gap-2">
+                        <i data-lucide="info" class="w-3 h-3"></i>
+                        Los viáticos se calculan por noche en cada zona, sumando 1 día de retorno al final.
                     </p>
                 </div>
 
-                <!-- Cálculo en tiempo real -->
-                <div id="estimacionCard" class="hidden animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div class="bg-blue-600 rounded-[28px] p-8 text-white shadow-xl shadow-blue-200">
-                        <div class="flex justify-between items-start mb-6">
+                <!-- Cálculo en tiempo real  -->
+                <div id="estimacionCard" class="hidden animate-in fade-in slide-in-from-top-2 duration-500">
+                    <div class="bg-blue-600 rounded-[28px] p-8 text-white shadow-xl shadow-blue-100/50">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
                             <div>
-                                <p class="text-blue-100 text-xs uppercase tracking-widest font-bold mb-1">Presupuesto Estimado Total</p>
-                                <h2 class="text-4xl font-bold" id="montoTotalDisplay">S/ 0.00</h2>
+                                <p class="text-blue-200 text-[10px] uppercase tracking-[0.15em] font-bold mb-1">Presupuesto Total</p>
+                                <h2 class="text-5xl font-bold tracking-tight" id="montoTotalDisplay">S/ 0.00</h2>
                             </div>
-                            <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
-                                <i data-lucide="calculator" class="w-6 h-6"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4 pt-6 border-t border-white/10">
-                            <div>
-                                <p class="text-blue-100 text-[10px] uppercase tracking-wider mb-1">Total Días (Noches + Retorno)</p>
-                                <p class="text-lg font-semibold" id="diasDisplay">0 días</p>
-                            </div>
-                            <div>
-                                <p class="text-blue-100 text-[10px] uppercase tracking-wider mb-1">Estado del Tarifario</p>
-                                <p class="text-lg font-semibold">Vigente 2024</p>
+                            
+                            <div class="flex gap-8 border-l border-white/10 pl-8">
+                                <div>
+                                    <p class="text-blue-200 text-[10px] uppercase tracking-widest font-bold mb-0.5">Días</p>
+                                    <p class="text-xl font-semibold" id="diasDisplay">0</p>
+                                </div>
+                                <div>
+                                    <p class="text-blue-200 text-[10px] uppercase tracking-widest font-bold mb-0.5">Retorno</p>
+                                    <p class="text-xl font-semibold" id="finalRetornoDisplay">-</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-end gap-4">
-                    <a href="/" class="px-6 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">Cancelar</a>
+                <div class="flex items-center justify-end gap-6 pt-4">
+                    <a href="/" class="text-sm font-semibold text-gray-400 hover:text-gray-900 transition-colors">Cancelar</a>
                     <button type="submit" 
-                            class="px-10 py-3 bg-black text-white font-medium rounded-xl hover:bg-gray-800 transition-all transform active:scale-95 shadow-md">
-                        Crear Solicitud
+                            class="px-12 py-4 bg-black text-white font-bold rounded-2xl hover:bg-gray-800 transition-all transform active:scale-95 shadow-lg flex items-center gap-2">
+                        Solicitar Viáticos
+                        <i data-lucide="arrow-right" class="w-4 h-4 text-blue-400"></i>
                     </button>
                 </div>
             </form>
@@ -140,29 +150,34 @@
     </main>
 
     <template id="tramo-template">
-        <div class="tramo-row bg-gray-50/50 p-6 rounded-2xl border border-gray-100 relative group animate-in slide-in-from-right-4 duration-300">
+        <div class="tramo-row bg-white p-6 rounded-[22px] border border-gray-50 relative group shadow-sm ml-10 animate-in slide-in-from-top-4 duration-300">
+            <div class="absolute -left-[51px] top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-100 text-gray-400 rounded-2xl flex items-center justify-center border border-gray-200 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-500 transition-all duration-300">
+                <i data-lucide="bus" class="w-5 h-5"></i>
+            </div>
+            
             <button type="button" onclick="this.closest('.tramo-row').remove(); updateEstimation();" 
-                    class="absolute -top-3 -right-3 w-8 h-8 bg-white text-red-500 shadow-sm border border-gray-100 rounded-full flex items-center justify-center hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100">
+                    class="absolute -top-3 -right-3 w-8 h-8 bg-white text-red-500 shadow-md border border-red-50 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                <div class="md:col-span-5">
+            
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <div class="md:col-span-12 lg:col-span-5">
                     <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Zona Geográfica</label>
                     <select name="idZonas" required onchange="updateEstimation()"
-                            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer text-sm">
+                            class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer text-sm font-medium">
                         <option value="" disabled selected>Seleccionar zona</option>
                         <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}">Zona</option>
                     </select>
                 </div>
-                <div class="md:col-span-4">
+                <div class="md:col-span-12 lg:col-span-4">
                     <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Ciudad / Sede</label>
                     <input type="text" name="ciudades" required placeholder="Ej: Trujillo"
-                           class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                           class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
                 </div>
-                <div class="md:col-span-3">
+                <div class="md:col-span-12 lg:col-span-3">
                     <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Noches</label>
-                    <input type="number" name="noches" required min="1" value="1" onchange="updateEstimation()"
-                           class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                    <input type="number" name="noches" required min="1" value="2" onchange="updateEstimation()"
+                           class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-blue-600">
                 </div>
             </div>
         </div>
@@ -177,6 +192,7 @@
         const montoTotalDisplay = document.getElementById('montoTotalDisplay');
         const diasDisplay = document.getElementById('diasDisplay');
         const fechaRetornoDisplay = document.getElementById('fechaRetornoDisplay');
+        const finalRetornoDisplay = document.getElementById('finalRetornoDisplay');
         const inputFechaInicio = document.getElementById('fechaInicio');
 
         function agregarTramo() {
@@ -191,12 +207,14 @@
             const noches = Array.from(document.getElementsByName('noches')).map(el => parseInt(el.value) || 0);
             const fechaInicioVal = inputFechaInicio.value;
 
-       
             if (fechaInicioVal) {
                 const totalNoches = noches.reduce((a, b) => a + b, 0);
                 const fecha = new Date(fechaInicioVal + 'T00:00:00');
                 fecha.setDate(fecha.getDate() + totalNoches);
-                fechaRetornoDisplay.innerText = fecha.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', year: 'numeric' });
+                
+                const formattedDate = fecha.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', year: 'numeric' });
+                fechaRetornoDisplay.innerText = formattedDate;
+                finalRetornoDisplay.innerText = formattedDate;
             }
 
             if (idZonas.every(z => z !== "")) {
