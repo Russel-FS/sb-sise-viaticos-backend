@@ -410,8 +410,41 @@
                   <span
                     class="font-medium text-gray-900 flex items-center gap-1.5"
                   >
-                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                    Completado
+                    <!-- Dinámico según estado -->
+                    <th:block th:switch="${sol.estado.name()}">
+                      <span
+                        th:case="'BORRADOR'"
+                        class="flex items-center gap-1.5 opacity-60"
+                      >
+                        <span class="w-2 h-2 rounded-full bg-gray-400"></span>
+                        No Solicitado
+                      </span>
+                      <span
+                        th:case="'PENDIENTE'"
+                        class="flex items-center gap-1.5 text-amber-600"
+                      >
+                        <span
+                          class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"
+                        ></span>
+                        En Trámite
+                      </span>
+                      <span
+                        th:case="${sol.estado.name() == 'RECHAZADO' || sol.estado.name() == 'CANCELADO' ? sol.estado.name() : 'NONE'}"
+                        class="flex items-center gap-1.5 text-gray-400"
+                      >
+                        <span class="w-2 h-2 rounded-full bg-gray-300"></span>
+                        Suspendido
+                      </span>
+                      <span
+                        th:case="*"
+                        class="flex items-center gap-1.5 text-green-600"
+                      >
+                        <span
+                          class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]"
+                        ></span>
+                        Depositado
+                      </span>
+                    </th:block>
                   </span>
                 </div>
               </div>
