@@ -24,8 +24,9 @@ public class Tarifario {
     @JoinColumn(name = "ID_NIVEL")
     private NivelJerarquico nivelJerarquico;
 
-    @Column(name = "ID_TIPO_GASTO")
-    private Long idTipoGasto;
+    @ManyToOne
+    @JoinColumn(name = "ID_TIPO_GASTO")
+    private TipoGasto tipoGasto;
 
     @Column(name = "MONTO_LIMITE_DIARIO", precision = 10, scale = 2)
     private BigDecimal montoDiario;

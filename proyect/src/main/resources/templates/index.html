@@ -86,9 +86,10 @@
             </li>
             <li>
               <a
-                href="#"
-                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
-                >Tarifarios</a
+                th:if="${isAdmin}"
+                href="/admin/tarifarios"
+                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity font-bold text-blue-600"
+                >Administrar</a
               >
             </li>
             <li>
