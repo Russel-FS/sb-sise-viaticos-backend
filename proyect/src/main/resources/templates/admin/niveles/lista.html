@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zonas Geográficas - ISS Viáticos</title>
+    <title>Niveles Jerárquicos - ISS Viáticos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -18,8 +18,8 @@
             <div class="flex gap-6">
                 <a href="/admin/tarifarios" class="text-gray-500 hover:text-gray-900">Tarifarios</a>
                 <a href="/admin/conceptos" class="text-gray-500 hover:text-gray-900">Conceptos</a>
-                <a href="/admin/zonas" class="text-blue-600">Zonas</a>
-                <a href="/admin/niveles" class="text-gray-500 hover:text-gray-900">Niveles</a>
+                <a href="/admin/zonas" class="text-gray-500 hover:text-gray-900">Zonas</a>
+                <a href="/admin/niveles" class="text-blue-600">Niveles</a>
             </div>
         </div>
     </nav>
@@ -28,13 +28,13 @@
         <div class="max-w-4xl mx-auto">
             <div class="flex justify-between items-end mb-12">
                 <div>
-                    <h1 class="text-4xl font-semibold tracking-tight text-gray-900 mb-2">Zonas Geográficas</h1>
-                    <p class="text-xl text-gray-500">Administra las ubicaciones y zonas de destino para comisiones.</p>
+                    <h1 class="text-4xl font-semibold tracking-tight text-gray-900 mb-2">Niveles Jerárquicos</h1>
+                    <p class="text-xl text-gray-500">Define los rangos y cargos para la asignación de viáticos.</p>
                 </div>
                 <button onclick="document.getElementById('modalNuevo').classList.remove('hidden')" 
                         class="px-6 py-3 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
                     <i data-lucide="plus" class="w-4 h-4"></i>
-                    Nueva Zona
+                    Nuevo Nivel
                 </button>
             </div>
 
@@ -42,27 +42,27 @@
                 <table class="w-full text-sm text-left">
                     <thead>
                         <tr class="bg-white/50 border-b border-gray-100">
-                            <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px]">Nombre de la Zona</th>
+                            <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px]">Nombre del Nivel</th>
                             <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px]">Descripción</th>
                             <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px] text-right">Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
-                        <tr th:each="z : ${zonas}" class="hover:bg-white/40 transition-colors">
-                            <td class="px-6 py-4 font-medium text-gray-900" th:text="${z.nombre}">NOMBRE</td>
-                            <td class="px-6 py-4 text-gray-400" th:text="${z.descripcion ?: 'Sin descripción'}">DESCRIPCIÓN</td>
+                        <tr th:each="n : ${niveles}" class="hover:bg-white/40 transition-colors">
+                            <td class="px-6 py-4 font-bold text-gray-900 uppercase tracking-tight" th:text="${n.nombre}">NOMBRE</td>
+                            <td class="px-6 py-4 text-gray-400" th:text="${n.descripcion ?: 'Sin descripción'}">DESCRIPCIÓN</td>
                             <td class="px-6 py-4 text-right">
-                                <a th:href="@{'/admin/zonas/eliminar/' + ${z.id}}" 
+                                <a th:href="@{'/admin/niveles/eliminar/' + ${n.id}}" 
                                    class="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded-xl transition-all"
-                                   onclick="return confirm('¿Eliminar esta zona?')">
+                                   onclick="return confirm('¿Eliminar este nivel?')">
                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                                 </a>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(zonas)}">
+                        <tr th:if="${#lists.isEmpty(niveles)}">
                             <td colspan="3" class="px-6 py-20 text-center text-gray-400">
-                                <i data-lucide="map" class="w-10 h-10 mx-auto mb-4 opacity-20"></i>
-                                <p>No hay zonas registradas.</p>
+                                <i data-lucide="award" class="w-10 h-10 mx-auto mb-4 opacity-20"></i>
+                                <p>No hay niveles registrados.</p>
                             </td>
                         </tr>
                     </tbody>
@@ -74,13 +74,13 @@
     <div id="modalNuevo" class="hidden fixed inset-0 z-[100] flex items-center justify-center px-6">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onclick="document.getElementById('modalNuevo').classList.add('hidden')"></div>
         <div class="relative w-full max-w-md bg-white rounded-[32px] p-10 shadow-2xl animate-in zoom-in-90 duration-200">
-            <h2 class="text-3xl font-bold mb-8 tracking-tight">Nueva Zona</h2>
+            <h2 class="text-3xl font-bold mb-8 tracking-tight">Nuevo Nivel</h2>
             
-            <form th:action="@{/admin/zonas/guardar}" method="post" class="space-y-6">
+            <form th:action="@{/admin/niveles/guardar}" method="post" class="space-y-6">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Nombre (Ej: COSTA - TRUJILLO)</label>
-                    <input type="text" name="nombre" required placeholder="Nombre de la zona"
-                           class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Nombre (Ej: GERENTE)</label>
+                    <input type="text" name="nombre" required placeholder="Nombre del nivel"
+                           class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-bold">
                 </div>
 
                 <div>
