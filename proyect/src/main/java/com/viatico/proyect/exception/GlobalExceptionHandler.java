@@ -4,6 +4,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,8 +20,8 @@ public class GlobalExceptionHandler {
         return "error/500";
     }
 
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public String handleNotFoundException(NoHandlerFoundException ex, Model model) {
+    @ExceptionHandler({ NoHandlerFoundException.class, NoResourceFoundException.class })
+    public String handleNotFoundException(Exception ex, Model model) {
         model.addAttribute("error", "La página que buscas no existe.");
         return "error/404";
     }
