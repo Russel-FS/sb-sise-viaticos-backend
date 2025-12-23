@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sise Viáticos - Gestión de Comisiones</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              apple: {
+                bg: "#f5f5f7",
+                card: "rgba(255, 255, 255, 0.72)",
+                text: "#1d1d1f",
+                secondary: "#86868b",
+                blue: "#0071e3",
+                border: "rgba(0, 0, 0, 0.1)",
+              },
+            },
+            fontFamily: {
+              sans: [
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "SF Pro Text",
+                "Helvetica Neue",
+                "Arial",
+                "sans-serif",
+              ],
+            },
+            backdropBlur: {
+              apple: "20px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @layer utilities {
+        .glass {
+          background: rgba(255, 255, 255, 0.72);
+          backdrop-filter: saturate(180%) blur(20px);
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .apple-card {
+          background: rgba(255, 255, 255, 0.8);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+      }
+      body {
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+      }
+    </style>
+  </head>
+  <body class="antialiased font-sans"> 
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+      <div
+        class="absolute -top-[50%] -left-[50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.05)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(255,45,85,0.05)_0%,transparent_40%)]"
+      ></div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="fixed top-0 w-full z-50 glass">
+      <div
+        class="max-w-5xl mx-auto px-6 h-11 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-8">
+          <a
+            href="#"
+            class="text-[12px] font-semibold tracking-tight opacity-90 hover:opacity-100 transition-opacity"
+            >Sise Viáticos</a
+          >
+          <ul class="hidden md:flex gap-8 list-none">
+            <li>
+              <a
+                href="#"
+                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
+                >Solicitudes</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
+                >Tarifarios</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
+                >Rendiciones</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
+                >Liquidaciones</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div>
+          <a
+            href="#"
+            class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
+            >Mi Perfil</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-20">
+      <div class="max-w-5xl mx-auto px-6 text-center">
+        <h1
+          class="text-5xl md:text-7xl font-semibold tracking-tight mb-4 animate-in fade-in slide-in-from-bottom-4 duration-1000"
+        >
+          Gestión de Viáticos.
+        </h1>
+        <p
+          class="text-2xl md:text-3xl text-apple-secondary font-normal mb-16 max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200"
+        >
+          Simplificando el control de comisiones de servicio e infraestructura.
+        </p>
+
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-left">
+          <!-- Card 1 -->
+          <div
+            class="apple-card p-8 rounded-[28px] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer group"
+          >
+            <div
+              class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform"
+            >
+              <i data-lucide="file-plus-2" class="w-6 h-6 text-apple-blue"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Nueva Solicitud</h3>
+            <p class="text-apple-secondary text-sm leading-relaxed">
+              Inicia un nuevo proceso para comisiones de servicio y cálculo de
+              viáticos automáticos.
+            </p>
+          </div>
+
+          <!-- Card 2 -->
+          <div
+            class="apple-card p-8 rounded-[28px] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer group"
+          >
+            <div
+              class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform"
+            >
+              <i data-lucide="clipboard-check" class="w-6 h-6 text-apple-blue"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Mis Rendiciones</h3>
+            <p class="text-apple-secondary text-sm leading-relaxed">
+              Carga tus comprobantes y haz seguimiento a la validación de tus
+              gastos en tiempo real.
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div
+            class="apple-card p-8 rounded-[28px] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer group"
+          >
+            <div
+              class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform"
+            >
+              <i data-lucide="pie-chart" class="w-6 h-6 text-apple-blue"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Liquidaciones</h3>
+            <p class="text-apple-secondary text-sm leading-relaxed">
+              Consulta el estado final de tus comisiones y balances de
+              reembolsos o devoluciones.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="mt-20 py-12 border-t border-apple-border text-center">
+      <p class="text-[12px] text-apple-secondary">
+        Copyright © 2024 Ingeniería y Servicios del Sur S.A.C. Todos los
+        derechos reservados.
+      </p>
+    </footer>
+      <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
