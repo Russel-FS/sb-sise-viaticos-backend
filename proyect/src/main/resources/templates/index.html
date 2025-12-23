@@ -7,9 +7,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ISS Viáticos - Gestión de Comisiones</title>
-    <!-- Tailwind CSS Play CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
       tailwind.config = {
@@ -18,124 +17,115 @@
             colors: {
               apple: {
                 bg: "#f5f5f7",
-                card: "rgba(255, 255, 255, 0.72)",
+                card: "#ffffff",
                 text: "#1d1d1f",
                 secondary: "#86868b",
                 blue: "#0071e3",
-                border: "rgba(0, 0, 0, 0.1)",
+                border: "rgba(0, 0, 0, 0.05)",
               },
             },
             fontFamily: {
               sans: [
                 "-apple-system",
                 "BlinkMacSystemFont",
-                "SF Pro Text",
+                '"SF Pro Display"',
+                '"SF Pro Text"',
                 "Helvetica Neue",
                 "Arial",
                 "sans-serif",
               ],
-            },
-            backdropBlur: {
-              apple: "20px",
             },
           },
         },
       };
     </script>
     <style>
-      @layer utilities {
-        .glass {
-          background: rgba(255, 255, 255, 0.72);
-          backdrop-filter: saturate(180%) blur(20px);
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        .apple-card {
-          background: rgba(255, 255, 255, 0.8);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-      }
       body {
         background-color: #f5f5f7;
         color: #1d1d1f;
+        letter-spacing: -0.015em;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: saturate(180%) blur(20px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      }
+      .apple-card-refined {
+        background: #ffffff;
+        border-radius: 28px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+      }
+      .apple-card-refined:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+      }
+      .text-gradient {
+        background: linear-gradient(180deg, #1d1d1f 0%, #86868b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .icon-box {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
       }
     </style>
   </head>
-  <body class="antialiased font-sans">
-    <div class="fixed inset-0 -z-10 overflow-hidden">
-      <div
-        class="absolute -top-[50%] -left-[50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.05)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(255,45,85,0.05)_0%,transparent_40%)]"
-      ></div>
-    </div>
-
-    <!-- Nav -->
+  <body class="antialiased selection:bg-apple-blue selection:text-white pb-20">
+    <!-- Navbar -->
     <nav class="fixed top-0 w-full z-50 glass">
       <div
-        class="max-w-5xl mx-auto px-6 h-11 flex items-center justify-between"
+        class="max-w-6xl mx-auto px-8 h-12 flex items-center justify-between"
       >
-        <div class="flex items-center gap-8">
-          <a
-            href="/"
-            class="text-[12px] font-semibold tracking-tight opacity-90 hover:opacity-100 transition-opacity"
+        <div class="flex items-center gap-10">
+          <a href="/" class="text-[14px] font-bold tracking-tight text-gray-900"
             >ISS Viáticos</a
           >
           <ul class="hidden md:flex gap-8 list-none">
             <li>
               <a
                 href="/solicitudes"
-                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
+                class="text-[12px] font-medium text-apple-secondary hover:text-black transition-colors"
                 >Solicitudes</a
               >
             </li>
-            <li>
+            <li th:if="${isAdmin}">
               <a
-                th:if="${isAdmin}"
                 href="/admin/aprobaciones"
-                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity font-bold text-red-600"
+                class="text-[12px] font-medium text-red-500 hover:text-red-700 transition-colors"
                 >Aprobaciones</a
               >
             </li>
-            <li>
+            <li th:if="${isAdmin}">
               <a
-                th:if="${isAdmin}"
                 href="/admin/tarifarios"
-                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity font-bold text-blue-600"
+                class="text-[12px] font-medium text-apple-blue transition-colors"
                 >Administrar</a
               >
             </li>
-            <li>
+            <li th:if="${isAdmin}">
               <a
-                th:if="${isAdmin}"
                 href="/admin/validaciones"
-                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity font-bold text-green-600"
-                >Validar Rendiciones</a
-              >
-            </li>
-            <li>
-              <a
-                href="/solicitudes"
-                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
-                >Rendiciones</a
-              >
-            </li>
-            <li>
-              <a
-                href="/solicitudes"
-                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
-                >Liquidaciones</a
+                class="text-[12px] font-medium text-green-600 transition-colors"
+                >Validar</a
               >
             </li>
           </ul>
         </div>
         <div class="flex items-center gap-6" th:if="${currentUser != null}">
-          <div class="flex flex-col items-end">
+          <div class="text-right">
             <span
-              class="text-[10px] font-medium text-apple-secondary uppercase tracking-widest leading-none mb-1"
-              th:text="${isAdmin ? 'Administrador' : 'Usuario'}"
+              class="text-[9px] font-bold text-apple-secondary uppercase tracking-[0.1em] block mb-0.5"
+              th:text="${isAdmin ? 'ADMINISTRADOR' : 'PERSONAL'}"
               >ROL</span
             >
             <span
-              class="text-[12px] font-semibold text-apple-text leading-none"
+              class="text-[12px] font-bold text-apple-text tracking-tight"
               th:text="${currentUser.nombreCompleto}"
               >Nombre</span
             >
@@ -143,174 +133,178 @@
           <form th:action="@{/logout}" method="post">
             <button
               type="submit"
-              class="text-[12px] text-red-500 font-medium hover:text-red-600 transition-colors uppercase tracking-widest"
+              class="w-8 h-8 rounded-full bg-apple-bg flex items-center justify-center border border-gray-100 hover:bg-red-50 transition-colors group"
             >
-              Salir
+              <i
+                data-lucide="log-out"
+                class="w-3.5 h-3.5 text-gray-400 group-hover:text-red-500"
+              ></i>
             </button>
           </form>
         </div>
       </div>
     </nav>
 
-    <main class="pt-32 pb-20">
-      <!-- Notificación -->
+    <main class="pt-24">
       <div th:replace="~{fragments/common :: toaster}"></div>
 
-      <div class="max-w-5xl mx-auto px-6 text-center">
-        <h1
-          class="text-5xl md:text-7xl font-semibold tracking-tight mb-4 animate-in fade-in slide-in-from-bottom-4 duration-1000"
+      <div class="max-w-6xl mx-auto px-8">
+        <!-- Dashboard Header: Direct and Professional -->
+        <div
+          class="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700"
         >
-          Gestión de Viáticos.
-        </h1>
-        <p
-          class="text-2xl md:text-3xl text-apple-secondary font-normal mb-16 max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200"
-        >
-          Simplificando el control de comisiones de servicio e infraestructura.
-        </p>
+          <h1 class="text-4xl font-bold tracking-tight text-gray-900 mb-2">
+            Hola,
+            <span th:text="${currentUser.nombreCompleto.split(' ')[0]}"
+              >Usuario</span
+            >
+          </h1>
+          <p
+            class="text-lg text-apple-secondary font-medium transition-opacity"
+          >
+            Bienvenido al Panel de Gestión de Viáticos de Ingeniería y Servicios
+            del Sur.
+          </p>
+        </div>
 
-        <!-- Dashboard Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-left">
-          <!-- Card 1 -->
+        <!-- Cards Minimalistas sin Fondos -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+          <!-- Solicitud -->
           <a
             href="/solicitudes/nueva"
-            class="apple-card p-8 rounded-[28px] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer group"
+            class="apple-card-refined p-10 flex flex-col items-start group"
           >
             <div
-              class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform"
+              class="mb-8 group-hover:scale-110 transition-transform duration-500 text-gray-900"
             >
-              <i data-lucide="file-plus-2" class="w-6 h-6 text-apple-blue"></i>
+              <i data-lucide="map-pin" class="w-8 h-8"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-2 text-apple-text">
-              Nueva Solicitud
+            <h3 class="text-2xl font-bold mb-4 tracking-tight text-gray-900">
+              Comenzar
             </h3>
-            <p class="text-apple-secondary text-sm leading-relaxed">
-              Inicia un nuevo proceso para comisiones de servicio y cálculo de
-              viáticos automáticos.
+            <p class="text-apple-secondary text-[16px] leading-[1.6]">
+              Inicia un nuevo proceso de viáticos y recibe fondos automáticos
+              para tu viaje.
             </p>
           </a>
 
-          <!-- Card 2 -->
+          <!-- Rendición -->
           <a
             href="/solicitudes"
-            class="apple-card p-8 rounded-[28px] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer group"
+            class="apple-card-refined p-10 flex flex-col items-start group"
           >
             <div
-              class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform"
+              class="mb-8 group-hover:scale-110 transition-transform duration-500 text-gray-900"
             >
-              <i
-                data-lucide="clipboard-check"
-                class="w-6 h-6 text-apple-blue"
-              ></i>
+              <i data-lucide="receipt" class="w-8 h-8"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-2">Mis Rendiciones</h3>
-            <p class="text-apple-secondary text-sm leading-relaxed">
-              Carga tus comprobantes y haz seguimiento a la validación de tus
-              gastos en tiempo real.
+            <h3 class="text-2xl font-bold mb-4 tracking-tight text-gray-900">
+              Rendición
+            </h3>
+            <p class="text-apple-secondary text-[16px] leading-[1.6]">
+              Carga tus comprobantes y justifica tus gastos en tiempo real desde
+              la plataforma.
             </p>
           </a>
 
-          <!-- Card 3 -->
+          <!-- Liquidación -->
           <a
             href="/solicitudes"
-            class="apple-card p-8 rounded-[28px] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer group"
+            class="apple-card-refined p-10 flex flex-col items-start group"
           >
             <div
-              class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform"
+              class="mb-8 group-hover:scale-110 transition-transform duration-500 text-gray-900"
             >
-              <i data-lucide="award" class="w-6 h-6 text-apple-blue"></i>
+              <i data-lucide="shield-check" class="w-8 h-8"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-2">Liquidaciones</h3>
-            <p class="text-apple-secondary text-sm leading-relaxed">
-              Consulta el estado final de tus comisiones y balances de
-              reembolsos o devoluciones.
+            <h3 class="text-2xl font-bold mb-4 tracking-tight text-gray-900">
+              Cierre Final
+            </h3>
+            <p class="text-apple-secondary text-[16px] leading-[1.6]">
+              Revisa el estado de tus liquidaciones y devuelve o solicita
+              reembolsos pendientes.
             </p>
           </a>
         </div>
 
-        <!-- Tabla de Solicitudes Recientes -->
-        <div class="mt-20 text-left">
-          <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
-            <i data-lucide="list" class="w-6 h-6 text-apple-blue"></i>
-            <span th:text="${viewTitle}">Mis Solicitudes Recientes</span>
-          </h2>
-          <div class="apple-card rounded-[28px] overflow-hidden shadow-sm">
-            <table class="w-full text-sm">
+        <!-- Recent Activity Table Integration -->
+        <div
+          class="animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500"
+        >
+          <div class="flex items-center justify-between mb-10 px-2">
+            <h2
+              class="text-3xl font-bold tracking-tighter"
+              th:text="${viewTitle}"
+            >
+              Actividad Reciente
+            </h2>
+            <a
+              href="/solicitudes"
+              class="text-[13px] font-bold text-apple-blue hover:underline"
+              >Ver todas</a
+            >
+          </div>
+
+          <div class="apple-card-refined overflow-hidden">
+            <table class="w-full text-left">
               <thead>
-                <tr class="bg-white/50 border-b border-apple-border">
+                <tr class="border-b border-gray-50">
                   <th
-                    class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]"
+                    class="px-10 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-10"
                   >
                     ID
                   </th>
                   <th
-                    class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]"
+                    class="px-10 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest"
                   >
-                    <span th:if="${isAdmin}">Empleado / Motivo</span>
-                    <span th:if="${!isAdmin}">Motivo</span>
+                    Información de Comisión
                   </th>
                   <th
-                    class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]"
+                    class="px-10 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right"
                   >
-                    Periodo
+                    Monto Total
                   </th>
                   <th
-                    class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]"
-                  >
-                    Viáticos
-                  </th>
-                  <th
-                    class="px-6 py-4 font-semibold text-apple-secondary text-center uppercase tracking-tighter text-[11px]"
+                    class="px-10 py-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center"
                   >
                     Estado
                   </th>
-                  <th
-                    class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]"
-                  >
-                    Acciones
-                  </th>
+                  <th class="px-10 py-6"></th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="divide-y divide-gray-50">
                 <tr
                   th:each="sol : ${solicitudes}"
-                  class="border-b border-apple-border hover:bg-white/40 transition-all duration-300"
+                  class="group hover:bg-gray-50/50 transition-colors"
                 >
-                  <td
-                    class="px-6 py-4 font-medium text-apple-text"
-                    th:text="${sol.id}"
-                  >
-                    #
+                  <td class="px-10 py-8">
+                    <span
+                      class="text-[13px] font-bold text-gray-300 group-hover:text-black transition-colors"
+                      th:text="${'#' + sol.id}"
+                      >#</span
+                    >
                   </td>
-                  <td class="px-6 py-4">
-                    <div class="font-medium text-apple-text">
-                      <span
-                        th:if="${isAdmin}"
-                        th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos + ' - '}"
-                        >Nombre</span
-                      >
-                      <span th:text="${sol.motivoViaje}">Motivo</span>
+                  <td class="px-10 py-8">
+                    <div
+                      class="font-bold text-gray-900 text-sm mb-1"
+                      th:text="${sol.motivoViaje}"
+                    >
+                      Motivo
                     </div>
                     <div
-                      class="text-[11px] text-apple-secondary"
-                      th:text="${'Creado por: ' + sol.userCrea}"
+                      class="text-gray-400 text-[12px] font-medium"
+                      th:text="${sol.fechaInicio + ' — ' + sol.fechaFin}"
                     >
-                      User
+                      Fecha
                     </div>
                   </td>
                   <td
-                    class="px-6 py-4 text-apple-secondary"
-                    th:text="${sol.fechaInicio + ' al ' + sol.fechaFin}"
+                    class="px-10 py-8 text-right font-bold text-gray-900 tracking-tight tabular-nums"
+                    th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}"
                   >
-                    Fecha
+                    0.00
                   </td>
-                  <td class="px-6 py-4 text-right">
-                    <span
-                      class="font-bold text-apple-text"
-                      th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}"
-                      >0.00</span
-                    >
-                  </td>
-                  <td class="px-6 py-4 text-center">
+                  <td class="px-10 py-8 text-center">
                     <span
                       th:if="${sol.estado.name() == 'BORRADOR'}"
                       class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider"
@@ -327,79 +321,33 @@
                       >Aprobado</span
                     >
                     <span
+                      th:if="${sol.estado.name() == 'LIQUIDADO'}"
+                      class="px-3 py-2 bg-black text-white rounded-full text-[10px] font-bold uppercase tracking-widest"
+                      >Liquidado</span
+                    >
+                    <span
                       th:if="${sol.estado.name() == 'RECHAZADO'}"
                       class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
                       >Rechazado</span
                     >
                     <span
                       th:if="${sol.estado.name() == 'RENDIDO'}"
-                      class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                      class="px-3 py-1 bg-blue-50 text-apple-blue rounded-full text-[10px] font-bold uppercase tracking-wider"
                       >Rendido</span
                     >
                     <span
-                      th:if="${sol.estado.name() == 'LIQUIDADO'}"
-                      class="px-3 py-1 bg-green-500 text-white rounded-full text-[10px] font-bold uppercase tracking-wider"
-                      >Liquidado</span
-                    >
-                    <span
                       th:if="${sol.estado.name() == 'CANCELADO'}"
-                      class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                      class="px-3 py-1 bg-gray-100 text-gray-400 rounded-full text-[10px] font-bold uppercase tracking-wider line-through"
                       >Cancelado</span
                     >
-                    <div
-                      th:if="${sol.estado.name() == 'RECHAZADO' && sol.comentarioRechazo != null}"
-                      class="mt-1 text-[9px] text-red-400 italic font-medium leading-tight max-w-[120px] mx-auto"
-                      th:text="${'Nota: ' + sol.comentarioRechazo}"
-                    ></div>
                   </td>
-                  <td class="px-6 py-4 text-right">
-                    <div class="flex justify-end gap-2">
-                      <form
-                        th:if="${sol.estado.name() == 'BORRADOR'}"
-                        th:action="@{'/solicitudes/enviar/' + ${sol.id}}"
-                        method="post"
-                      >
-                        <button
-                          type="submit"
-                          class="px-3 py-1 bg-black text-white text-[10px] font-bold uppercase rounded-full hover:bg-gray-800 transition-all shadow-sm"
-                        >
-                          Enviar
-                        </button>
-                      </form>
-                      <a
-                        th:if="${sol.estado.name() == 'APROBADO'}"
-                        th:href="@{'/rendiciones/solicitud/' + ${sol.id}}"
-                        class="px-3 py-1 bg-apple-blue text-white text-[10px] font-bold uppercase rounded-full hover:opacity-90 transition-all shadow-sm"
-                      >
-                        Rendir
-                      </a>
-                      <a
-                        th:href="@{'/solicitudes/' + ${sol.id}}"
-                        class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group"
-                      >
-                        <i
-                          data-lucide="chevron-right"
-                          class="w-4 h-4 text-apple-blue group-hover:translate-x-0.5 transition-transform"
-                        ></i>
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(solicitudes)}">
-                  <td
-                    colspan="5"
-                    class="px-6 py-20 text-center text-apple-secondary"
-                  >
-                    <i
-                      data-lucide="layers"
-                      class="w-10 h-10 mx-auto mb-4 opacity-20"
-                    ></i>
-                    <p class="italic text-base">
-                      No tienes solicitudes registradas aún.
-                    </p>
-                    <p class="text-xs mt-1">
-                      Las solicitudes que crees aparecerán aquí.
-                    </p>
+                  <td class="px-10 py-8 text-right">
+                    <a
+                      th:href="@{'/solicitudes/' + ${sol.id}}"
+                      class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-apple-bg text-gray-400 hover:bg-black hover:text-white transition-all transform hover:scale-105"
+                    >
+                      <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </a>
                   </td>
                 </tr>
               </tbody>
@@ -409,13 +357,17 @@
       </div>
     </main>
 
-    <footer class="mt-20 py-12 border-t border-apple-border text-center">
-      <p class="text-[12px] text-apple-secondary">
-        Copyright © 2024 Ingeniería y Servicios del Sur S.A.C. Todos los
-        derechos reservados.
+    <footer class="py-24 text-center">
+      <span
+        class="text-[11px] font-bold text-gray-300 uppercase tracking-[0.4em]"
+        >INGENIERÍA Y SERVICIOS DEL SUR</span
+      >
+      <p class="text-[12px] text-gray-400 font-medium mt-4">
+        Copyright © 2024 · Todos los derechos reservados.
       </p>
     </footer>
-    <script>
+
+    <script th:inline="javascript">
       lucide.createIcons();
     </script>
   </body>
