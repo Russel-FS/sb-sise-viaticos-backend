@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -58,7 +61,7 @@
       }
     </style>
   </head>
-  <body class="antialiased font-sans"> 
+  <body class="antialiased font-sans">
     <div class="fixed inset-0 -z-10 overflow-hidden">
       <div
         class="absolute -top-[50%] -left-[50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,rgba(0,113,227,0.05)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(255,45,85,0.05)_0%,transparent_40%)]"
@@ -118,20 +121,29 @@
         </div>
         <div class="flex items-center gap-6" th:if="${currentUser != null}">
           <div class="flex flex-col items-end">
-            <span class="text-[10px] font-medium text-apple-secondary uppercase tracking-widest leading-none mb-1" 
-                  th:text="${isAdmin ? 'Administrador' : 'Usuario'}">ROL</span>
-            <span class="text-[12px] font-semibold text-apple-text leading-none" 
-                  th:text="${currentUser.nombreCompleto}">Nombre</span>
+            <span
+              class="text-[10px] font-medium text-apple-secondary uppercase tracking-widest leading-none mb-1"
+              th:text="${isAdmin ? 'Administrador' : 'Usuario'}"
+              >ROL</span
+            >
+            <span
+              class="text-[12px] font-semibold text-apple-text leading-none"
+              th:text="${currentUser.nombreCompleto}"
+              >Nombre</span
+            >
           </div>
           <form th:action="@{/logout}" method="post">
-            <button type="submit" class="text-[12px] text-red-500 font-medium hover:text-red-600 transition-colors uppercase tracking-widest">
+            <button
+              type="submit"
+              class="text-[12px] text-red-500 font-medium hover:text-red-600 transition-colors uppercase tracking-widest"
+            >
               Salir
             </button>
           </form>
         </div>
       </div>
     </nav>
- 
+
     <main class="pt-32 pb-20">
       <!-- Notificación -->
       <div th:replace="~{fragments/common :: toaster}"></div>
@@ -151,7 +163,8 @@
         <!-- Dashboard Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-left">
           <!-- Card 1 -->
-          <a href="/solicitudes/nueva"
+          <a
+            href="/solicitudes/nueva"
             class="apple-card p-8 rounded-[28px] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer group"
           >
             <div
@@ -159,7 +172,9 @@
             >
               <i data-lucide="file-plus-2" class="w-6 h-6 text-apple-blue"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-2 text-apple-text">Nueva Solicitud</h3>
+            <h3 class="text-xl font-semibold mb-2 text-apple-text">
+              Nueva Solicitud
+            </h3>
             <p class="text-apple-secondary text-sm leading-relaxed">
               Inicia un nuevo proceso para comisiones de servicio y cálculo de
               viáticos automáticos.
@@ -173,7 +188,10 @@
             <div
               class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform"
             >
-              <i data-lucide="clipboard-check" class="w-6 h-6 text-apple-blue"></i>
+              <i
+                data-lucide="clipboard-check"
+                class="w-6 h-6 text-apple-blue"
+              ></i>
             </div>
             <h3 class="text-xl font-semibold mb-2">Mis Rendiciones</h3>
             <p class="text-apple-secondary text-sm leading-relaxed">
@@ -201,73 +219,165 @@
 
         <!-- Tabla de Solicitudes Recientes -->
         <div class="mt-20 text-left">
-            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
-                <i data-lucide="list" class="w-6 h-6 text-apple-blue"></i>
-                <span th:text="${viewTitle}">Mis Solicitudes Recientes</span>
-            </h2>
-            <div class="apple-card rounded-[28px] overflow-hidden shadow-sm">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="bg-white/50 border-b border-apple-border">
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]">ID</th>
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]">
-                                <span th:if="${isAdmin}">Empleado / Motivo</span>
-                                <span th:if="${!isAdmin}">Motivo</span>
-                            </th>
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]">Periodo</th>
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]">Viáticos</th>
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-center uppercase tracking-tighter text-[11px]">Estado</th>
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="sol : ${solicitudes}" class="border-b border-apple-border hover:bg-white/40 transition-all duration-300">
-                            <td class="px-6 py-4 font-medium text-apple-text" th:text="${sol.id}">#</td>
-                            <td class="px-6 py-4">
-                                <div class="font-medium text-apple-text">
-                                    <span th:if="${isAdmin}" 
-                                          th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos + ' - '}">Nombre</span>
-                                    <span th:text="${sol.motivoViaje}">Motivo</span>
-                                </div>
-                                <div class="text-[11px] text-apple-secondary" th:text="${'Creado por: ' + sol.userCrea}">User</div>
-                            </td>
-                            <td class="px-6 py-4 text-apple-secondary" th:text="${sol.fechaInicio + ' al ' + sol.fechaFin}">Fecha</td>
-                            <td class="px-6 py-4 text-right">
-                                <span class="font-bold text-apple-text" th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}">0.00</span>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <span th:if="${sol.estado.name() == 'BORRADOR'}" class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider">Borrador</span>
-                                <span th:if="${sol.estado.name() == 'PENDIENTE'}" class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Pendiente</span>
-                                <span th:if="${sol.estado.name() == 'APROBADO'}" class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Aprobado</span>
-                                <span th:if="${sol.estado.name() == 'RECHAZADO'}" class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Rechazado</span>
-                                <div th:if="${sol.estado.name() == 'RECHAZADO' && sol.comentarioRechazo != null}" 
-                                     class="mt-1 text-[9px] text-red-400 italic font-medium leading-tight max-w-[120px] mx-auto"
-                                     th:text="${'Nota: ' + sol.comentarioRechazo}">
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex justify-end gap-2">
-                                    <form th:if="${sol.estado.name() == 'BORRADOR'}" th:action="@{'/solicitudes/enviar/' + ${sol.id}}" method="post">
-                                        <button type="submit" class="px-3 py-1 bg-black text-white text-[10px] font-bold uppercase rounded-full hover:bg-gray-800 transition-all shadow-sm">
-                                            Enviar
-                                        </button>
-                                    </form>
-                                    <a th:href="@{'/solicitudes/' + ${sol.id}}" class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group">
-                                        <i data-lucide="chevron-right" class="w-4 h-4 text-apple-blue group-hover:translate-x-0.5 transition-transform"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(solicitudes)}">
-                            <td colspan="5" class="px-6 py-20 text-center text-apple-secondary">
-                                <i data-lucide="layers" class="w-10 h-10 mx-auto mb-4 opacity-20"></i>
-                                <p class="italic text-base">No tienes solicitudes registradas aún.</p>
-                                <p class="text-xs mt-1">Las solicitudes que crees aparecerán aquí.</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+          <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+            <i data-lucide="list" class="w-6 h-6 text-apple-blue"></i>
+            <span th:text="${viewTitle}">Mis Solicitudes Recientes</span>
+          </h2>
+          <div class="apple-card rounded-[28px] overflow-hidden shadow-sm">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-white/50 border-b border-apple-border">
+                  <th
+                    class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]"
+                  >
+                    ID
+                  </th>
+                  <th
+                    class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]"
+                  >
+                    <span th:if="${isAdmin}">Empleado / Motivo</span>
+                    <span th:if="${!isAdmin}">Motivo</span>
+                  </th>
+                  <th
+                    class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]"
+                  >
+                    Periodo
+                  </th>
+                  <th
+                    class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]"
+                  >
+                    Viáticos
+                  </th>
+                  <th
+                    class="px-6 py-4 font-semibold text-apple-secondary text-center uppercase tracking-tighter text-[11px]"
+                  >
+                    Estado
+                  </th>
+                  <th
+                    class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]"
+                  >
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  th:each="sol : ${solicitudes}"
+                  class="border-b border-apple-border hover:bg-white/40 transition-all duration-300"
+                >
+                  <td
+                    class="px-6 py-4 font-medium text-apple-text"
+                    th:text="${sol.id}"
+                  >
+                    #
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="font-medium text-apple-text">
+                      <span
+                        th:if="${isAdmin}"
+                        th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos + ' - '}"
+                        >Nombre</span
+                      >
+                      <span th:text="${sol.motivoViaje}">Motivo</span>
+                    </div>
+                    <div
+                      class="text-[11px] text-apple-secondary"
+                      th:text="${'Creado por: ' + sol.userCrea}"
+                    >
+                      User
+                    </div>
+                  </td>
+                  <td
+                    class="px-6 py-4 text-apple-secondary"
+                    th:text="${sol.fechaInicio + ' al ' + sol.fechaFin}"
+                  >
+                    Fecha
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <span
+                      class="font-bold text-apple-text"
+                      th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}"
+                      >0.00</span
+                    >
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <span
+                      th:if="${sol.estado.name() == 'BORRADOR'}"
+                      class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                      >Borrador</span
+                    >
+                    <span
+                      th:if="${sol.estado.name() == 'PENDIENTE'}"
+                      class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                      >Pendiente</span
+                    >
+                    <span
+                      th:if="${sol.estado.name() == 'APROBADO'}"
+                      class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                      >Aprobado</span
+                    >
+                    <span
+                      th:if="${sol.estado.name() == 'RECHAZADO'}"
+                      class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                      >Rechazado</span
+                    >
+                    <span
+                      th:if="${sol.estado.name() == 'CANCELADO'}"
+                      class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                      >Cancelado</span
+                    >
+                    <div
+                      th:if="${sol.estado.name() == 'RECHAZADO' && sol.comentarioRechazo != null}"
+                      class="mt-1 text-[9px] text-red-400 italic font-medium leading-tight max-w-[120px] mx-auto"
+                      th:text="${'Nota: ' + sol.comentarioRechazo}"
+                    ></div>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <div class="flex justify-end gap-2">
+                      <form
+                        th:if="${sol.estado.name() == 'BORRADOR'}"
+                        th:action="@{'/solicitudes/enviar/' + ${sol.id}}"
+                        method="post"
+                      >
+                        <button
+                          type="submit"
+                          class="px-3 py-1 bg-black text-white text-[10px] font-bold uppercase rounded-full hover:bg-gray-800 transition-all shadow-sm"
+                        >
+                          Enviar
+                        </button>
+                      </form>
+                      <a
+                        th:href="@{'/solicitudes/' + ${sol.id}}"
+                        class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group"
+                      >
+                        <i
+                          data-lucide="chevron-right"
+                          class="w-4 h-4 text-apple-blue group-hover:translate-x-0.5 transition-transform"
+                        ></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(solicitudes)}">
+                  <td
+                    colspan="5"
+                    class="px-6 py-20 text-center text-apple-secondary"
+                  >
+                    <i
+                      data-lucide="layers"
+                      class="w-10 h-10 mx-auto mb-4 opacity-20"
+                    ></i>
+                    <p class="italic text-base">
+                      No tienes solicitudes registradas aún.
+                    </p>
+                    <p class="text-xs mt-1">
+                      Las solicitudes que crees aparecerán aquí.
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </main>
@@ -278,8 +388,8 @@
         derechos reservados.
       </p>
     </footer>
-      <script>
-        lucide.createIcons();
+    <script>
+      lucide.createIcons();
     </script>
-</body>
+  </body>
 </html>

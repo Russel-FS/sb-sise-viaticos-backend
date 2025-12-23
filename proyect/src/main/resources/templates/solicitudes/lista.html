@@ -1,129 +1,280 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mis Solicitudes - ISS Viáticos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        apple: {
-                            bg: "#f5f5f7",
-                            card: "rgba(255, 255, 255, 0.72)",
-                            text: "#1d1d1f",
-                            secondary: "#86868b",
-                            blue: "#0071e3",
-                            border: "rgba(0, 0, 0, 0.1)",
-                        }
-                    }
-                }
-            }
-        };
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              apple: {
+                bg: "#f5f5f7",
+                card: "rgba(255, 255, 255, 0.72)",
+                text: "#1d1d1f",
+                secondary: "#86868b",
+                blue: "#0071e3",
+                border: "rgba(0, 0, 0, 0.1)",
+              },
+            },
+          },
+        },
+      };
     </script>
     <style>
-        body { background-color: #f5f5f7; color: #1d1d1f; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.72); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
-        .apple-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); }
+      body {
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: saturate(180%) blur(20px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      .apple-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
     </style>
-</head>
-<body class="antialiased">
+  </head>
+  <body class="antialiased">
     <!-- Nav -->
     <nav class="fixed top-0 w-full z-50 glass">
-        <div class="max-w-5xl mx-auto px-6 h-11 flex items-center justify-between">
-            <div class="flex items-center gap-8">
-                <a href="/" class="text-[12px] font-semibold tracking-tight opacity-90 hover:opacity-100 transition-opacity">ISS Viáticos</a>
-                <ul class="hidden md:flex gap-8 list-none">
-                    <li><a href="/solicitudes" class="text-[12px] font-bold text-apple-blue">Solicitudes</a></li>
-                    <li><a th:if="${isAdmin}" href="/admin/aprobaciones" class="text-[12px] opacity-80 hover:opacity-100 font-bold text-red-600">Aprobaciones</a></li>
-                    <li><a th:if="${isAdmin}" href="/admin/tarifarios" class="text-[12px] opacity-80 hover:opacity-100 font-bold text-apple-blue">Administrar</a></li>
-                </ul>
-            </div>
-            <div class="flex items-center gap-6" th:if="${currentUser != null}">
-                <div class="flex flex-col items-end">
-                    <span class="text-[10px] font-medium text-apple-secondary uppercase tracking-widest leading-none mb-1" th:text="${isAdmin ? 'Administrador' : 'Usuario'}">ROL</span>
-                    <span class="text-[12px] font-semibold text-apple-text leading-none" th:text="${currentUser.nombreCompleto}">Nombre</span>
-                </div>
-            </div>
+      <div
+        class="max-w-5xl mx-auto px-6 h-11 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-8">
+          <a
+            href="/"
+            class="text-[12px] font-semibold tracking-tight opacity-90 hover:opacity-100 transition-opacity"
+            >ISS Viáticos</a
+          >
+          <ul class="hidden md:flex gap-8 list-none">
+            <li>
+              <a
+                href="/solicitudes"
+                class="text-[12px] font-bold text-apple-blue"
+                >Solicitudes</a
+              >
+            </li>
+            <li>
+              <a
+                th:if="${isAdmin}"
+                href="/admin/aprobaciones"
+                class="text-[12px] opacity-80 hover:opacity-100 font-bold text-red-600"
+                >Aprobaciones</a
+              >
+            </li>
+            <li>
+              <a
+                th:if="${isAdmin}"
+                href="/admin/tarifarios"
+                class="text-[12px] opacity-80 hover:opacity-100 font-bold text-apple-blue"
+                >Administrar</a
+              >
+            </li>
+          </ul>
         </div>
+        <div class="flex items-center gap-6" th:if="${currentUser != null}">
+          <div class="flex flex-col items-end">
+            <span
+              class="text-[10px] font-medium text-apple-secondary uppercase tracking-widest leading-none mb-1"
+              th:text="${isAdmin ? 'Administrador' : 'Usuario'}"
+              >ROL</span
+            >
+            <span
+              class="text-[12px] font-semibold text-apple-text leading-none"
+              th:text="${currentUser.nombreCompleto}"
+              >Nombre</span
+            >
+          </div>
+        </div>
+      </div>
     </nav>
 
     <main class="pt-32 pb-20 px-6">
-        <div class="max-w-5xl mx-auto">
-            <div class="flex items-end justify-between mb-12">
-                <div>
-                    <h1 class="text-4xl font-semibold tracking-tight text-apple-text mb-2">Mis Solicitudes</h1>
-                    <p class="text-xl text-apple-secondary">Historial completo de tus comisiones de servicio.</p>
-                </div>
-                <a href="/solicitudes/nueva" class="px-6 py-3 bg-black text-white text-sm font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
-                    <i data-lucide="plus" class="w-4 h-4"></i>
-                    Nueva Solicitud
-                </a>
-            </div>
-
-            <div class="apple-card rounded-[28px] overflow-hidden shadow-sm">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="bg-white/50 border-b border-apple-border">
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]">ID</th>
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]">Motivo</th>
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]">Periodo</th>
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]">Monto</th>
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-center uppercase tracking-tighter text-[11px]">Estado</th>
-                            <th class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="sol : ${solicitudes}" class="border-b border-apple-border hover:bg-white/40 transition-all duration-300">
-                            <td class="px-6 py-4 font-medium text-apple-text" th:text="${'#' + sol.id}">#</td>
-                            <td class="px-6 py-4">
-                                <div class="font-medium text-apple-text" th:text="${sol.motivoViaje}">Motivo</div>
-                                <div class="text-[10px] text-apple-secondary uppercase tracking-widest" 
-                                     th:text="${sol.itinerarios[0].zonaDestino.nombre}">Zona</div>
-                            </td>
-                            <td class="px-6 py-4 text-apple-secondary" th:text="${sol.fechaInicio + ' al ' + sol.fechaFin}">Fecha</td>
-                            <td class="px-6 py-4 text-right">
-                                <span class="font-bold text-apple-text" th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}">0.00</span>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <span th:if="${sol.estado.name() == 'BORRADOR'}" class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider">Borrador</span>
-                                <span th:if="${sol.estado.name() == 'PENDIENTE'}" class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Pendiente</span>
-                                <span th:if="${sol.estado.name() == 'APROBADO'}" class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Aprobado</span>
-                                <span th:if="${sol.estado.name() == 'RECHAZADO'}" class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Rechazado</span>
-                                
-                                <div th:if="${sol.estado.name() == 'RECHAZADO' && sol.comentarioRechazo != null}" 
-                                     class="mt-1 text-[9px] text-red-400 italic font-medium leading-tight max-w-[120px] mx-auto"
-                                     th:text="${'Nota: ' + sol.comentarioRechazo}">
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex justify-end gap-2">
-                                    <form th:if="${sol.estado.name() == 'BORRADOR'}" th:action="@{'/solicitudes/enviar/' + ${sol.id}}" method="post">
-                                        <button type="submit" class="px-3 py-1 bg-black text-white text-[10px] font-bold uppercase rounded-full hover:bg-gray-800 transition-all shadow-sm">
-                                            Enviar
-                                        </button>
-                                    </form>
-                                    <a th:href="@{'/solicitudes/' + ${sol.id}}" class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group">
-                                        <i data-lucide="eye" class="w-4 h-4 text-apple-blue group-hover:scale-110 transition-transform"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(solicitudes)}">
-                            <td colspan="6" class="px-6 py-20 text-center text-apple-secondary">
-                                <i data-lucide="layers" class="w-10 h-10 mx-auto mb-4 opacity-20"></i>
-                                <p class="italic text-base">No hay solicitudes para mostrar.</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+      <div class="max-w-5xl mx-auto">
+        <div class="flex items-end justify-between mb-12">
+          <div>
+            <h1
+              class="text-4xl font-semibold tracking-tight text-apple-text mb-2"
+            >
+              Mis Solicitudes
+            </h1>
+            <p class="text-xl text-apple-secondary">
+              Historial completo de tus comisiones de servicio.
+            </p>
+          </div>
+          <a
+            href="/solicitudes/nueva"
+            class="px-6 py-3 bg-black text-white text-sm font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2"
+          >
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Nueva Solicitud
+          </a>
         </div>
+
+        <div class="apple-card rounded-[28px] overflow-hidden shadow-sm">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-white/50 border-b border-apple-border">
+                <th
+                  class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]"
+                >
+                  ID
+                </th>
+                <th
+                  class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]"
+                >
+                  Motivo
+                </th>
+                <th
+                  class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]"
+                >
+                  Periodo
+                </th>
+                <th
+                  class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]"
+                >
+                  Monto
+                </th>
+                <th
+                  class="px-6 py-4 font-semibold text-apple-secondary text-center uppercase tracking-tighter text-[11px]"
+                >
+                  Estado
+                </th>
+                <th
+                  class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]"
+                >
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                th:each="sol : ${solicitudes}"
+                class="border-b border-apple-border hover:bg-white/40 transition-all duration-300"
+              >
+                <td
+                  class="px-6 py-4 font-medium text-apple-text"
+                  th:text="${'#' + sol.id}"
+                >
+                  #
+                </td>
+                <td class="px-6 py-4">
+                  <div
+                    class="font-medium text-apple-text"
+                    th:text="${sol.motivoViaje}"
+                  >
+                    Motivo
+                  </div>
+                  <div
+                    class="text-[10px] text-apple-secondary uppercase tracking-widest"
+                    th:text="${sol.itinerarios[0].zonaDestino.nombre}"
+                  >
+                    Zona
+                  </div>
+                </td>
+                <td
+                  class="px-6 py-4 text-apple-secondary"
+                  th:text="${sol.fechaInicio + ' al ' + sol.fechaFin}"
+                >
+                  Fecha
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <span
+                    class="font-bold text-apple-text"
+                    th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}"
+                    >0.00</span
+                  >
+                </td>
+                <td class="px-6 py-4 text-center">
+                  <span
+                    th:if="${sol.estado.name() == 'BORRADOR'}"
+                    class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    >Borrador</span
+                  >
+                  <span
+                    th:if="${sol.estado.name() == 'PENDIENTE'}"
+                    class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    >Pendiente</span
+                  >
+                  <span
+                    th:if="${sol.estado.name() == 'APROBADO'}"
+                    class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    >Aprobado</span
+                  >
+                  <span
+                    th:if="${sol.estado.name() == 'RECHAZADO'}"
+                    class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    >Rechazado</span
+                  >
+                  <span
+                    th:if="${sol.estado.name() == 'CANCELADO'}"
+                    class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    >Cancelado</span
+                  >
+
+                  <div
+                    th:if="${sol.estado.name() == 'RECHAZADO' && sol.comentarioRechazo != null}"
+                    class="mt-1 text-[9px] text-red-400 italic font-medium leading-tight max-w-[120px] mx-auto"
+                    th:text="${'Nota: ' + sol.comentarioRechazo}"
+                  ></div>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex justify-end gap-2">
+                    <form
+                      th:if="${sol.estado.name() == 'BORRADOR'}"
+                      th:action="@{'/solicitudes/enviar/' + ${sol.id}}"
+                      method="post"
+                    >
+                      <button
+                        type="submit"
+                        class="px-3 py-1 bg-black text-white text-[10px] font-bold uppercase rounded-full hover:bg-gray-800 transition-all shadow-sm"
+                      >
+                        Enviar
+                      </button>
+                    </form>
+                    <a
+                      th:href="@{'/solicitudes/' + ${sol.id}}"
+                      class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group"
+                    >
+                      <i
+                        data-lucide="eye"
+                        class="w-4 h-4 text-apple-blue group-hover:scale-110 transition-transform"
+                      ></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(solicitudes)}">
+                <td
+                  colspan="6"
+                  class="px-6 py-20 text-center text-apple-secondary"
+                >
+                  <i
+                    data-lucide="layers"
+                    class="w-10 h-10 mx-auto mb-4 opacity-20"
+                  ></i>
+                  <p class="italic text-base">
+                    No hay solicitudes para mostrar.
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </main>
 
-    <script>lucide.createIcons();</script>
-</body>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
 </html>
