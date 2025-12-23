@@ -232,9 +232,10 @@
                     <a
                       th:href="@{'/admin/tarifarios/eliminar/' + ${tar.id}}"
                       class="w-10 h-10 rounded-full bg-apple-bg text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center mx-auto"
-                      onclick="return confirm('¿Eliminar esta tarifa?')"
+                      onclick="return confirm('¿Desactivar esta tarifa?')"
+                      title="Desactivar"
                     >
-                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                      <i data-lucide="power" class="w-4 h-4"></i>
                     </a>
                   </td>
                 </tr>

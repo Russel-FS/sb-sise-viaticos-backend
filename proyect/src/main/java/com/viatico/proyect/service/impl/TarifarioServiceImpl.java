@@ -18,7 +18,7 @@ public class TarifarioServiceImpl implements TarifarioService {
 
     @Override
     public List<Tarifario> listarTodos() {
-        return tarifarioRepository.findAll();
+        return tarifarioRepository.findByActivo(1);
     }
 
     @Override
@@ -37,6 +37,8 @@ public class TarifarioServiceImpl implements TarifarioService {
     @Override
     @Transactional
     public void eliminar(Long id) {
-        tarifarioRepository.deleteById(id);
+        Tarifario t = tarifarioRepository.findById(id).orElseThrow();
+        t.setActivo(0);
+        tarifarioRepository.save(t);
     }
 }

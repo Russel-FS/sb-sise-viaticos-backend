@@ -38,4 +38,7 @@ public class Tarifario {
 
     @Column(name = "FECHA_CREA")
     private LocalDateTime fechaCrea;
+
+    @Column(name = "ACTIVO")
+    private Integer activo = 1;
 }

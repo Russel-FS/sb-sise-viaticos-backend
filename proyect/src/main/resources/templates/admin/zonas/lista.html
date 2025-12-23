@@ -196,9 +196,10 @@
                     <a
                       th:href="@{'/admin/zonas/eliminar/' + ${z.id}}"
                       class="w-10 h-10 rounded-full bg-apple-bg text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center ml-auto"
-                      onclick="return confirm('¿Eliminar esta zona?')"
+                      onclick="return confirm('¿Desactivar esta zona?')"
+                      title="Desactivar"
                     >
-                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                      <i data-lucide="power" class="w-4 h-4"></i>
                     </a>
                   </td>
                 </tr>

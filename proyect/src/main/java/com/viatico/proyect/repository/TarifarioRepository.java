@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface TarifarioRepository extends JpaRepository<Tarifario, Long> {
     List<Tarifario> findAllByNivelJerarquicoAndZonaGeografica(NivelJerarquico nivel, ZonaGeografica zona);
+
+    List<Tarifario> findByActivo(Integer activo);
 }

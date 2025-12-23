@@ -18,7 +18,7 @@ public class ZonaGeograficaServiceImpl implements ZonaGeograficaService {
 
     @Override
     public List<ZonaGeografica> listarTodas() {
-        return zonaRepository.findAll();
+        return zonaRepository.findByActivo(1);
     }
 
     @Override
@@ -34,6 +34,8 @@ public class ZonaGeograficaServiceImpl implements ZonaGeograficaService {
     @Override
     @Transactional
     public void eliminar(Long id) {
-        zonaRepository.deleteById(id);
+        ZonaGeografica zg = zonaRepository.findById(id).orElseThrow();
+        zg.setActivo(0);
+        zonaRepository.save(zg);
     }
 }

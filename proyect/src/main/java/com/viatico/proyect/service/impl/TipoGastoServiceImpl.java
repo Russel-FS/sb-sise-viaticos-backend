@@ -18,7 +18,7 @@ public class TipoGastoServiceImpl implements TipoGastoService {
 
     @Override
     public List<TipoGasto> listarTodos() {
-        return tipoGastoRepository.findAll();
+        return tipoGastoRepository.findByActivo(1);
     }
 
     @Override
@@ -40,6 +40,8 @@ public class TipoGastoServiceImpl implements TipoGastoService {
     @Override
     @Transactional
     public void eliminar(Long id) {
-        tipoGastoRepository.deleteById(id);
+        TipoGasto tg = tipoGastoRepository.findById(id).orElseThrow();
+        tg.setActivo(0);
+        tipoGastoRepository.save(tg);
     }
 }

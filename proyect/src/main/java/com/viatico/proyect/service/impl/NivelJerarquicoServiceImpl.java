@@ -18,7 +18,7 @@ public class NivelJerarquicoServiceImpl implements NivelJerarquicoService {
 
     @Override
     public List<NivelJerarquico> listarTodos() {
-        return nivelRepository.findAll();
+        return nivelRepository.findByActivo(1);
     }
 
     @Override
@@ -34,6 +34,8 @@ public class NivelJerarquicoServiceImpl implements NivelJerarquicoService {
     @Override
     @Transactional
     public void eliminar(Long id) {
-        nivelRepository.deleteById(id);
+        NivelJerarquico nj = nivelRepository.findById(id).orElseThrow();
+        nj.setActivo(0);
+        nivelRepository.save(nj);
     }
 }
