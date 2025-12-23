@@ -1,131 +1,380 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrar Tarifarios - ISS Viáticos</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configuración de Tarifas - ISS Viáticos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: [
+                "-apple-system",
+                "BlinkMacSystemFont",
+                '"SF Pro Display"',
+                '"SF Pro Text"',
+                "Helvetica Neue",
+                "Arial",
+                "sans-serif",
+              ],
+            },
+            colors: {
+              apple: {
+                bg: "#f5f5f7",
+                card: "#ffffff",
+                text: "#1d1d1f",
+                secondary: "#86868b",
+                blue: "#0071e3",
+                border: "rgba(0, 0, 0, 0.05)",
+              },
+            },
+          },
+        },
+      };
+    </script>
     <style>
-        body { background-color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); }
+      body {
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+        letter-spacing: -0.015em;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: saturate(180%) blur(20px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      }
+      .apple-card-refined {
+        background: #ffffff;
+        border-radius: 28px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+      }
+      .apple-card-refined:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+      }
+      select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2386868b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 5 3 3 3-3'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1.5rem center;
+      }
     </style>
-</head>
-<body class="antialiased">
-    <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-md border-b border-gray-100 uppercase tracking-widest text-[10px] font-bold">
-        <div class="max-w-6xl mx-auto px-6 h-11 flex items-center justify-between">
-            <a href="/" class="hover:opacity-70 transition-opacity">ISS Viáticos / Admin</a>
-            <div class="flex gap-6">
-                <a href="/admin/aprobaciones" class="text-gray-500 hover:text-gray-900">Aprobaciones</a>
-                <a href="/admin/tarifarios" class="text-blue-600">Tarifarios</a>
-                <a href="/admin/conceptos" class="text-gray-500 hover:text-gray-900">Conceptos</a>
-                <a href="/admin/zonas" class="text-gray-500 hover:text-gray-900">Zonas</a>
-                <a href="/admin/niveles" class="text-gray-500 hover:text-gray-900">Niveles</a>
-            </div>
+  </head>
+  <body class="antialiased selection:bg-apple-blue selection:text-white pb-20">
+    <!-- Nav -->
+    <nav class="fixed top-0 w-full z-50 glass">
+      <div
+        class="max-w-6xl mx-auto px-8 h-12 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-10">
+          <a href="/" class="text-[14px] font-bold tracking-tight text-gray-900"
+            >ISS Viáticos / Admin</a
+          >
+          <ul class="hidden md:flex gap-8 list-none">
+            <li>
+              <a
+                href="/admin/aprobaciones"
+                class="text-[12px] font-medium text-apple-secondary hover:text-black transition-colors"
+                >Aprobaciones</a
+              >
+            </li>
+            <li>
+              <a
+                href="/admin/tarifarios"
+                class="text-[12px] font-bold text-apple-blue"
+                >Tarifarios</a
+              >
+            </li>
+            <li>
+              <a
+                href="/admin/conceptos"
+                class="text-[12px] font-medium text-apple-secondary hover:text-black transition-colors"
+                >Conceptos</a
+              >
+            </li>
+            <li>
+              <a
+                href="/admin/zonas"
+                class="text-[12px] font-medium text-apple-secondary hover:text-black transition-colors"
+                >Zonas</a
+              >
+            </li>
+            <li>
+              <a
+                href="/admin/niveles"
+                class="text-[12px] font-medium text-apple-secondary hover:text-black transition-colors"
+                >Niveles</a
+              >
+            </li>
+          </ul>
         </div>
+        <div class="flex gap-6">
+          <a
+            href="/"
+            class="text-[12px] font-bold text-apple-blue hover:underline"
+            >Ir al Portal</a
+          >
+        </div>
+      </div>
     </nav>
 
-    <main class="pt-24 pb-20 px-6">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex justify-between items-end mb-12">
-                <div>
-                    <h1 class="text-4xl font-semibold tracking-tight text-gray-900 mb-2">Configuración de Tarifarios</h1>
-                    <p class="text-xl text-gray-500">Define los límites diarios por nivel, zona y concepto.</p>
-                </div>
-                <button onclick="document.getElementById('modalNuevo').classList.remove('hidden')" 
-                        class="px-6 py-3 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
-                    <i data-lucide="plus" class="w-4 h-4"></i>
-                    Nueva Tarifa
-                </button>
+    <main class="pt-32 px-8">
+      <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div
+          class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700"
+        >
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <div
+                class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600"
+              >
+                <i data-lucide="calculator" class="w-5 h-5"></i>
+              </div>
+              <span
+                class="text-[10px] font-bold text-orange-600 uppercase tracking-[0.2em]"
+                >Configuración Base</span
+              >
             </div>
-
-            <!-- Tabla de Tarifas -->
-            <div class="glass-card rounded-[28px] overflow-hidden shadow-sm">
-                <table class="w-full text-sm text-left">
-                    <thead>
-                        <tr class="bg-white/50 border-b border-gray-100">
-                            <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px]">Zona</th>
-                            <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px]">Nivel Jerárquico</th>
-                            <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px]">Concepto / Gasto</th>
-                            <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px]">Monto Diario</th>
-                            <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px] text-right">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-50">
-                        <tr th:each="tar : ${tarifarios}" class="hover:bg-white/40 transition-colors">
-                            <td class="px-6 py-4 font-medium text-gray-900" th:text="${tar.zonaGeografica.nombre}">ZONA</td>
-                            <td class="px-6 py-4 text-gray-600" th:text="${tar.nivelJerarquico.nombre}">NIVEL</td>
-                            <td class="px-6 py-4">
-                                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                                      th:text="${tar.tipoGasto.nombre}">CONCEPTO</span>
-                            </td>
-                            <td class="px-6 py-4 font-bold text-gray-900" th:text="${'S/ ' + tar.montoDiario}">0.00</td>
-                            <td class="px-6 py-4 text-right">
-                                <a th:href="@{'/admin/tarifarios/eliminar/' + ${tar.id}}" 
-                                   class="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded-xl transition-all"
-                                   onclick="return confirm('¿Eliminar esta tarifa?')">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(tarifarios)}">
-                            <td colspan="5" class="px-6 py-20 text-center text-gray-400">
-                                <i data-lucide="database" class="w-10 h-10 mx-auto mb-4 opacity-20"></i>
-                                <p>No hay tarifas configuradas aún.</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <h1
+              class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-2"
+            >
+              Tarifarios
+            </h1>
+            <p class="text-xl text-apple-secondary font-medium">
+              Define los límites diarios por nivel, zona y concepto.
+            </p>
+          </div>
+          <button
+            onclick="document.getElementById('modalNuevo').classList.remove('hidden')"
+            class="px-8 py-4 bg-black text-white text-[13px] font-bold rounded-full hover:bg-gray-800 transition-all active:scale-95 shadow-xl shadow-black/10 flex items-center gap-2"
+          >
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Nueva Tarifa
+          </button>
         </div>
+
+        <!-- Tabla de Tarifas -->
+        <div class="apple-card-refined overflow-hidden mb-20">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead>
+                <tr
+                  class="border-b border-gray-50 uppercase tracking-widest text-[10px] text-gray-400 font-bold"
+                >
+                  <th class="px-10 py-6 pl-10">Región / Zona</th>
+                  <th class="px-10 py-6">Nivel Jerárquico</th>
+                  <th class="px-10 py-6">Concepto</th>
+                  <th class="px-10 py-6 text-right">Monto Límite</th>
+                  <th class="px-10 py-6"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50">
+                <tr
+                  th:each="tar : ${tarifarios}"
+                  class="group hover:bg-gray-50/50 transition-colors"
+                >
+                  <td class="px-10 py-8">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-lg bg-apple-bg flex items-center justify-center text-apple-secondary"
+                      >
+                        <i data-lucide="map" class="w-4 h-4"></i>
+                      </div>
+                      <div
+                        class="font-bold text-gray-900 text-sm"
+                        th:text="${tar.zonaGeografica.nombre}"
+                      >
+                        ZONA
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-10 py-8">
+                    <div
+                      class="text-[11px] font-bold text-apple-secondary uppercase tracking-widest bg-gray-100 px-3 py-1 rounded-full inline-block"
+                      th:text="${tar.nivelJerarquico.nombre}"
+                    >
+                      NIVEL
+                    </div>
+                  </td>
+                  <td class="px-10 py-8">
+                    <div
+                      class="flex items-center gap-2 group-hover:translate-x-1 transition-transform"
+                    >
+                      <span
+                        class="w-1.5 h-1.5 rounded-full bg-apple-blue"
+                      ></span>
+                      <span
+                        class="text-sm font-bold text-gray-900"
+                        th:text="${tar.tipoGasto.nombre}"
+                        >CONCEPTO</span
+                      >
+                    </div>
+                  </td>
+                  <td class="px-10 py-8 text-right">
+                    <div
+                      class="text-xl font-bold tracking-tighter text-gray-900 tabular-nums"
+                    >
+                      <span class="text-[10px] text-apple-secondary mr-1"
+                        >S/</span
+                      >
+                      <span
+                        th:text="${#numbers.formatDecimal(tar.montoDiario, 1, 'COMMA', 2, 'POINT')}"
+                        >0.00</span
+                      >
+                    </div>
+                  </td>
+                  <td class="px-10 py-8 text-right">
+                    <a
+                      th:href="@{'/admin/tarifarios/eliminar/' + ${tar.id}}"
+                      class="w-10 h-10 rounded-full bg-apple-bg text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center mx-auto"
+                      onclick="return confirm('¿Eliminar esta tarifa?')"
+                    >
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(tarifarios)}">
+                  <td
+                    colspan="5"
+                    class="px-10 py-32 text-center text-apple-secondary"
+                  >
+                    <i
+                      data-lucide="database"
+                      class="w-12 h-12 mx-auto mb-6 opacity-10"
+                    ></i>
+                    <p class="text-lg font-bold text-gray-900">
+                      Sin tarifas configuradas
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </main>
 
-    <div id="modalNuevo" class="hidden fixed inset-0 z-[100] flex items-center justify-center px-6">
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onclick="document.getElementById('modalNuevo').classList.add('hidden')"></div>
-        <div class="relative w-full max-w-lg bg-white rounded-[32px] p-10 shadow-2xl animate-in zoom-in-90 duration-200">
-            <h2 class="text-3xl font-bold mb-8 tracking-tight">Nueva Tarifa</h2>
-            
-            <form th:action="@{/admin/tarifarios/guardar}" method="post" class="space-y-6">
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Zona Geográfica</label>
-                    <select name="zonaGeografica.id" required class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 appearance-none outline-none transition-all">
-                        <option th:each="z : ${zonas}" th:value="${z.id}" th:text="${z.nombre}"></option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Nivel Jerárquico</label>
-                    <select name="nivelJerarquico.id" required class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 appearance-none outline-none transition-all">
-                        <option th:each="n : ${niveles}" th:value="${n.id}" th:text="${n.nombre}"></option>
-                    </select>
-                </div>
+    <!-- Modal Nuevo Refinado -->
+    <div
+      id="modalNuevo"
+      class="hidden fixed inset-0 z-[100] flex items-center justify-center px-6"
+    >
+      <div
+        class="absolute inset-0 bg-black/40 backdrop-blur-[4px]"
+        onclick="document.getElementById('modalNuevo').classList.add('hidden')"
+      ></div>
+      <div
+        class="relative w-full max-w-[500px] bg-white rounded-[40px] p-12 shadow-2xl animate-in zoom-in-95 duration-200"
+      >
+        <h2 class="text-3xl font-bold mb-1 tracking-tight text-gray-900">
+          Nueva Tarifa
+        </h2>
+        <p class="text-apple-secondary font-medium mb-10">
+          Asigna un límite de gasto diario específico.
+        </p>
 
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Concepto de Gasto</label>
-                    <select name="tipoGasto.id" required class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 appearance-none outline-none transition-all">
-                        <option th:each="tg : ${tiposGasto}" th:value="${tg.id}" th:text="${tg.nombre}"></option>
-                    </select>
-                </div>
+        <form
+          th:action="@{/admin/tarifarios/guardar}"
+          method="post"
+          class="space-y-8"
+        >
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label
+                class="block text-[10px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3 px-1"
+                >Zona Geográfica</label
+              >
+              <select
+                name="zonaGeografica.id"
+                required
+                class="w-full px-6 py-4 bg-apple-bg border-transparent rounded-[20px] text-sm font-bold focus:bg-white focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all"
+              >
+                <option
+                  th:each="z : ${zonas}"
+                  th:value="${z.id}"
+                  th:text="${z.nombre}"
+                ></option>
+              </select>
+            </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Monto Límite Diario (S/)</label>
-                    <input type="number" step="0.01" name="montoDiario" required placeholder="0.00"
-                           class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-semibold text-lg">
-                </div>
+            <div>
+              <label
+                class="block text-[10px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3 px-1"
+                >Nivel Jerárquico</label
+              >
+              <select
+                name="nivelJerarquico.id"
+                required
+                class="w-full px-6 py-4 bg-apple-bg border-transparent rounded-[20px] text-sm font-bold focus:bg-white focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all"
+              >
+                <option
+                  th:each="n : ${niveles}"
+                  th:value="${n.id}"
+                  th:text="${n.nombre}"
+                ></option>
+              </select>
+            </div>
+          </div>
 
-                <div class="flex gap-4 pt-4">
-                    <button type="button" onclick="document.getElementById('modalNuevo').classList.add('hidden')"
-                            class="flex-1 px-6 py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-200 transition-all">
-                        Cerrar
-                    </button>
-                    <button type="submit" class="flex-1 px-6 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
-                        Guardar Tarifa
-                    </button>
-                </div>
-            </form>
-        </div>
+          <div>
+            <label
+              class="block text-[10px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3 px-1"
+              >Concepto de Gasto</label
+            >
+            <select
+              name="tipoGasto.id"
+              required
+              class="w-full px-6 py-4 bg-apple-bg border-transparent rounded-[20px] text-sm font-bold focus:bg-white focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all"
+            >
+              <option
+                th:each="tg : ${tiposGasto}"
+                th:value="${tg.id}"
+                th:text="${tg.nombre}"
+              ></option>
+            </select>
+          </div>
+
+          <div>
+            <label
+              class="block text-[10px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3 px-1"
+              >Monto Límite Diario (S/)</label
+            >
+            <input
+              type="number"
+              step="0.01"
+              name="montoDiario"
+              required
+              placeholder="0.00"
+              class="w-full px-6 py-6 bg-apple-bg border-transparent rounded-[24px] text-3xl font-bold tracking-tighter focus:bg-white focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all"
+            />
+          </div>
+
+          <div class="flex flex-col gap-3 pt-4">
+            <button
+              type="submit"
+              class="w-full py-5 bg-black text-white text-sm font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-xl active:scale-95"
+            >
+              Guardar Configuración
+            </button>
+            <button
+              type="button"
+              onclick="document.getElementById('modalNuevo').classList.add('hidden')"
+              class="w-full py-5 text-apple-secondary text-sm font-bold hover:bg-apple-bg rounded-2xl transition-all"
+            >
+              Cerrar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
-    <script>lucide.createIcons();</script>
-</body>
+    <script th:inline="javascript">
+      lucide.createIcons();
+    </script>
+  </body>
 </html>
