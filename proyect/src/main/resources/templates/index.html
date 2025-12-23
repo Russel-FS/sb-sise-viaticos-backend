@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -107,19 +107,24 @@
             </li>
           </ul>
         </div>
-        <div>
-          <a
-            href="#"
-            class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
-            >Mi Perfil</a
-          >
+        <div class="flex items-center gap-6" th:if="${currentUser != null}">
+          <div class="flex flex-col items-end">
+            <span class="text-[10px] font-medium text-apple-secondary uppercase tracking-widest leading-none mb-1" 
+                  th:text="${isAdmin ? 'Administrador' : 'Usuario'}">ROL</span>
+            <span class="text-[12px] font-semibold text-apple-text leading-none" 
+                  th:text="${currentUser.nombreCompleto}">Nombre</span>
+          </div>
+          <form th:action="@{/logout}" method="post">
+            <button type="submit" class="text-[12px] text-red-500 font-medium hover:text-red-600 transition-colors uppercase tracking-widest">
+              Salir
+            </button>
+          </form>
         </div>
       </div>
     </nav>
-
-    <!-- Main Content -->
+ 
     <main class="pt-32 pb-20">
-      <!-- Notificación   -->
+      <!-- Notificación -->
       <div th:replace="~{fragments/common :: toaster}"></div>
 
       <div class="max-w-5xl mx-auto px-6 text-center">
@@ -183,6 +188,62 @@
               reembolsos o devoluciones.
             </p>
           </div>
+        </div>
+
+        <!-- Tabla de Solicitudes Recientes -->
+        <div class="mt-20 text-left">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <i data-lucide="list" class="w-6 h-6 text-apple-blue"></i>
+                <span th:text="${viewTitle}">Mis Solicitudes Recientes</span>
+            </h2>
+            <div class="apple-card rounded-[28px] overflow-hidden shadow-sm">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-white/50 border-b border-apple-border">
+                            <th class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]">ID</th>
+                            <th class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]">
+                                <span th:if="${isAdmin}">Empleado / Motivo</span>
+                                <span th:if="${!isAdmin}">Motivo</span>
+                            </th>
+                            <th class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]">Periodo</th>
+                            <th class="px-6 py-4 font-semibold text-apple-secondary text-center uppercase tracking-tighter text-[11px]">Estado</th>
+                            <th class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="sol : ${solicitudes}" class="border-b border-apple-border hover:bg-white/40 transition-all duration-300">
+                            <td class="px-6 py-4 font-medium text-apple-text" th:text="${sol.id}">#</td>
+                            <td class="px-6 py-4">
+                                <div class="font-medium text-apple-text">
+                                    <span th:if="${isAdmin}" 
+                                          th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos + ' - '}">Nombre</span>
+                                    <span th:text="${sol.motivoViaje}">Motivo</span>
+                                </div>
+                                <div class="text-[11px] text-apple-secondary" th:text="${'Creado por: ' + sol.userCrea}">User</div>
+                            </td>
+                            <td class="px-6 py-4 text-apple-secondary" th:text="${sol.fechaInicio + ' al ' + sol.fechaFin}">Fecha</td>
+                            <td class="px-6 py-4 text-center">
+                                <span th:text="${sol.estado}" 
+                                      th:class="${sol.estado == 'Borrador' ? 'px-3 py-1 bg-gray-100 text-gray-500' : 'px-3 py-1 bg-blue-50 text-blue-600'} + ' rounded-full text-[10px] font-bold uppercase tracking-wider'">
+                                    Estado
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group">
+                                    <i data-lucide="chevron-right" class="w-4 h-4 text-apple-blue group-hover:translate-x-0.5 transition-transform"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(solicitudes)}">
+                            <td colspan="5" class="px-6 py-20 text-center text-apple-secondary">
+                                <i data-lucide="layers" class="w-10 h-10 mx-auto mb-4 opacity-20"></i>
+                                <p class="italic text-base">No tienes solicitudes registradas aún.</p>
+                                <p class="text-xs mt-1">Las solicitudes que crees aparecerán aquí.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
       </div>
     </main>
