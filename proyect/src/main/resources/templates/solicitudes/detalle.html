@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Solicitud - ISS Viáticos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        apple: {
+                            bg: "#f5f5f7",
+                            card: "rgba(255, 255, 255, 0.72)",
+                            text: "#1d1d1f",
+                            secondary: "#86868b",
+                            blue: "#0071e3",
+                            border: "rgba(0, 0, 0, 0.1)",
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        body { background-color: #f5f5f7; color: #1d1d1f; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.72); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+        .apple-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Nav -->
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="max-w-4xl mx-auto px-6 h-11 flex items-center justify-between">
+            <a href="/" class="text-[12px] font-semibold tracking-tight opacity-90 hover:opacity-100 transition-opacity">ISS Viáticos</a>
+            <div class="flex gap-6">
+                <a href="/solicitudes" class="text-[12px] font-bold text-apple-blue">Regresar</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header Detalle -->
+            <div class="flex items-start justify-between mb-10">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <h1 class="text-4xl font-semibold tracking-tight text-apple-text" th:text="${'Solicitud #' + sol.id}">#000</h1>
+                        <span th:if="${sol.estado.name() == 'BORRADOR'}" class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider">Borrador</span>
+                        <span th:if="${sol.estado.name() == 'PENDIENTE'}" class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Pendiente</span>
+                        <span th:if="${sol.estado.name() == 'APROBADO'}" class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Aprobado</span>
+                        <span th:if="${sol.estado.name() == 'RECHAZADO'}" class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Rechazado</span>
+                    </div>
+                    <p class="text-xl text-apple-secondary" th:text="${sol.motivoViaje}">Motivo de la comisión</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-1">Fecha de Solicitud</p>
+                    <p class="text-lg font-medium" th:text="${sol.fechaSolicitud}">01/01/2024</p>
+                </div>
+            </div>
+
+            <!-- Grid de Información -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="apple-card p-6 rounded-[24px]">
+                    <p class="text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-4">Solicitante</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-apple-blue/10 text-apple-blue rounded-full flex items-center justify-center font-bold">
+                            <span th:text="${#strings.substring(sol.empleado.nombres,0,1)}">U</span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-sm" th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos}">Nombre</p>
+                            <p class="text-[11px] text-apple-secondary" th:text="${sol.empleado.nivel.nombre}">Nivel</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="apple-card p-6 rounded-[24px]">
+                    <p class="text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-4">Periodo de Viaje</p>
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="calendar" class="w-5 h-5 text-apple-blue"></i>
+                        <div>
+                            <p class="font-bold text-sm" th:text="${sol.fechaInicio + ' - ' + sol.fechaFin}">Fechas</p>
+                            <p class="text-[11px] text-apple-secondary" th:text="${sol.itinerarios[0].noches + ' noches de estadía'}">0 noches</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="apple-card p-6 rounded-[24px] bg-black text-white">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Monto Total Asignado</p>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-bold" th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}">0.00</span>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mt-2 font-medium">Sujeto a rendición de cuentas</p>
+                </div>
+            </div>
+
+            <!-- Detalles del Itinerario -->
+            <div class="apple-card rounded-[28px] overflow-hidden mb-10 shadow-sm">
+                <div class="px-8 py-5 border-b border-apple-border flex justify-between items-center">
+                    <h3 class="font-bold text-apple-text">Itinerario y Viáticos Calculados</h3>
+                </div>
+                <div class="p-8">
+                    <div th:each="iti : ${sol.itinerarios}" class="flex items-start gap-6 border-l-2 border-apple-blue pl-6 relative">
+                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-apple-blue border-4 border-white"></div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <p class="text-xl font-bold mb-1" th:text="${iti.zonaDestino.nombre}">Zona de Destino</p>
+                                    <p class="text-apple-secondary text-sm" th:text="${'Ciudad: ' + iti.ciudadEspecifica}">Ciudad</p>
+                                </div>
+                                <div class="px-4 py-2 bg-gray-50 rounded-xl text-center">
+                                    <p class="text-[9px] font-bold text-apple-secondary uppercase">Noches</p>
+                                    <p class="font-bold" th:text="${iti.noches + ' Noches'}">0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sección de Rechazo si existe -->
+            <div th:if="${sol.estado.name() == 'RECHAZADO'}" class="bg-red-50 border border-red-100 p-8 rounded-[28px] mb-10">
+                <div class="flex gap-4">
+                    <div class="w-12 h-12 bg-white text-red-500 rounded-2xl flex items-center justify-center shadow-sm">
+                        <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-red-600 font-bold mb-1">Motivo del Rechazo</h4>
+                        <p class="text-red-500/80 leading-relaxed text-sm" th:text="${sol.comentarioRechazo ?: 'No se especificó un motivo.'}">Comentario</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones Finales -->
+            <div class="flex justify-between items-center bg-white p-6 rounded-[28px] border border-apple-border">
+                <div class="flex items-center gap-2 text-apple-secondary text-xs italic">
+                    <i data-lucide="info" class="w-4 h-4"></i>
+                    <span th:text="${'Creado por ' + sol.userCrea + ' el ' + sol.fechaCrea}">Auditoria</span>
+                </div>
+                <div class="flex gap-4">
+                    <form th:if="${sol.estado.name() == 'BORRADOR'}" th:action="@{'/solicitudes/enviar/' + ${sol.id}}" method="post">
+                        <button type="submit" class="px-8 py-3 bg-black text-white font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-lg">
+                            Enviar Solicitud
+                        </button>
+                    </form>
+                    <button th:if="${sol.estado.name() == 'APROBADO'}" class="px-8 py-3 bg-apple-blue text-white font-bold rounded-2xl hover:opacity-90 transition-all shadow-lg">
+                        Iniciar Rendición
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -252,9 +252,9 @@
                                             Enviar
                                         </button>
                                     </form>
-                                    <button class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group">
+                                    <a th:href="@{'/solicitudes/' + ${sol.id}}" class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group">
                                         <i data-lucide="chevron-right" class="w-4 h-4 text-apple-blue group-hover:translate-x-0.5 transition-transform"></i>
-                                    </button>
+                                    </a>
                                 </div>
                             </td>
                         </tr>

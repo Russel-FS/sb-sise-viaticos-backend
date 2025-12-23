@@ -136,4 +136,10 @@ public class SolicitudServiceImpl implements SolicitudService {
                 solicitud.setComentarioRechazo(comentario);
                 solicitudRepository.save(solicitud);
         }
+
+        @Override
+        public SolicitudComision obtenerPorId(Long id) {
+                return solicitudRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+        }
 }

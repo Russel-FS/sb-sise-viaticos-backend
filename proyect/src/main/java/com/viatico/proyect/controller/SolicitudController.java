@@ -1,5 +1,6 @@
 package com.viatico.proyect.controller;
 
+import com.viatico.proyect.entity.SolicitudComision;
 import com.viatico.proyect.security.UsuarioPrincipal;
 import com.viatico.proyect.service.SolicitudService;
 import lombok.RequiredArgsConstructor;
@@ -66,5 +67,17 @@ public class SolicitudController {
     public String enviarAprobacion(@PathVariable Long id) {
         solicitudService.enviarAprobacion(id);
         return "redirect:/?sent";
+    }
+
+    @GetMapping("/{id}")
+    public String verDetalle(@PathVariable Long id, Model model, @AuthenticationPrincipal UsuarioPrincipal user) {
+        SolicitudComision sol = solicitudService.obtenerPorId(id);
+        model.addAttribute("sol", sol);
+
+        boolean isAdmin = user.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
+
+        return "solicitudes/detalle";
     }
 }
