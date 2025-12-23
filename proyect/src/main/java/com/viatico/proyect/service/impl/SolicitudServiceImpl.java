@@ -151,4 +151,20 @@ public class SolicitudServiceImpl implements SolicitudService {
                 return solicitudRepository.findById(id)
                                 .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
         }
+
+        @Override
+        @Transactional
+        public void cancelar(Long id) {
+                SolicitudComision solicitud = solicitudRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+
+                if (solicitud.getEstado() != EstadoSolicitud.BORRADOR
+                                && solicitud.getEstado() != EstadoSolicitud.PENDIENTE) {
+                        throw new RuntimeException(
+                                        "No se puede cancelar una solicitud que ya ha sido aprobada o procesada.");
+                }
+
+                solicitud.setEstado(EstadoSolicitud.CANCELADO);
+                solicitudRepository.save(solicitud);
+        }
 }

@@ -26,4 +26,6 @@ public interface SolicitudService {
     void rechazar(Long id, String comentario, String username);
 
     SolicitudComision obtenerPorId(Long id);
+
+    void cancelar(Long id);
 }

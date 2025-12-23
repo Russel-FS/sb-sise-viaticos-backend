@@ -82,4 +82,10 @@ public class SolicitudController {
 
         return "solicitudes/detalle";
     }
+
+    @PostMapping("/cancelar/{id}")
+    public String cancelarSolicitud(@PathVariable Long id) {
+        solicitudService.cancelar(id);
+        return "redirect:/solicitudes";
+    }
 }

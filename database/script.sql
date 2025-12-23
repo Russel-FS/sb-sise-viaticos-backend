@@ -111,7 +111,8 @@ CREATE TABLE solicitud_comision (
             'APROBADO',
             'RECHAZADO',
             'RENDIDO',
-            'LIQUIDADO'
+            'LIQUIDADO',
+            'CANCELADO'
         )
     ),
     CONSTRAINT fk_sol_empleado FOREIGN KEY (id_empleado) REFERENCES empleados (id_empleado)

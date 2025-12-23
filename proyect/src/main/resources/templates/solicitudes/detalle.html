@@ -52,6 +52,7 @@
                         <span th:if="${sol.estado.name() == 'PENDIENTE'}" class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Pendiente</span>
                         <span th:if="${sol.estado.name() == 'APROBADO'}" class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Aprobado</span>
                         <span th:if="${sol.estado.name() == 'RECHAZADO'}" class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Rechazado</span>
+                        <span th:if="${sol.estado.name() == 'CANCELADO'}" class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider">Cancelado</span>
                     </div>
                     <p class="text-xl text-apple-secondary" th:text="${sol.motivoViaje}">Motivo de la comisión</p>
                 </div>
@@ -145,6 +146,8 @@
                 </div>
             </div>
             
+         
+
             <!-- Sección de Rechazo si existe -->
             <div th:if="${sol.estado.name() == 'RECHAZADO'}" class="bg-red-50 border border-red-100 p-8 rounded-[28px] mb-10">
                 <div class="flex gap-4">
@@ -158,23 +161,51 @@
                 </div>
             </div>
 
+            <!-- Sección de Cancelación si existe -->
+            <div th:if="${sol.estado.name() == 'CANCELADO'}" class="bg-gray-100 border border-gray-200 p-8 rounded-[28px] mb-10">
+                <div class="flex gap-4">
+                    <div class="w-12 h-12 bg-white text-gray-500 rounded-2xl flex items-center justify-center shadow-sm">
+                        <i data-lucide="x-circle" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-gray-900 font-bold mb-1">Solicitud Cancelada</h4>
+                        <p class="text-gray-500 leading-relaxed text-sm">Esta solicitud fue cancelada voluntariamente por el usuario y no será procesada.</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Acciones Finales -->
             <div class="flex justify-between items-center bg-white p-6 rounded-[28px] border border-apple-border">
                 <div class="flex items-center gap-2 text-apple-secondary text-xs italic">
                     <i data-lucide="info" class="w-4 h-4"></i>
                     <span th:text="${'Creado por ' + sol.userCrea + ' el ' + sol.fechaCrea}">Auditoria</span>
                 </div>
-                <div class="flex gap-4">
-                    <form th:if="${sol.estado.name() == 'BORRADOR'}" th:action="@{'/solicitudes/enviar/' + ${sol.id}}" method="post">
-                        <button type="submit" class="px-8 py-3 bg-black text-white font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-lg">
-                            Enviar Solicitud
+                <div class="flex gap-4 items-center">
+                    <!-- Botón Cancelar   -->
+                    <form th:if="${sol.estado.name() == 'BORRADOR' || sol.estado.name() == 'PENDIENTE'}" 
+                          th:action="@{'/solicitudes/cancelar/' + ${sol.id}}" method="post"
+                          onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta solicitud?');">
+                        <button type="submit" class="px-6 py-3 text-red-500 font-bold text-sm hover:bg-red-50 rounded-2xl transition-all">
+                            Cancelar Solicitud
                         </button>
                     </form>
-                    <button th:if="${sol.estado.name() == 'APROBADO'}" class="px-8 py-3 bg-apple-blue text-white font-bold rounded-2xl hover:opacity-90 transition-all shadow-lg">
+
+                    <!-- Botón Enviar   -->
+                    <form th:if="${sol.estado.name() == 'BORRADOR'}" th:action="@{'/solicitudes/enviar/' + ${sol.id}}" method="post">
+                        <button type="submit" class="px-8 py-3 bg-black text-white font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
+                            Enviar Solicitud
+                            <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400"></i>
+                        </button>
+                    </form>
+
+                    <!-- Botón Rendición   -->
+                 <button th:if="${sol.estado.name() == 'APROBADO'}" class="px-8 py-3 bg-apple-blue text-white font-bold rounded-2xl hover:opacity-90 transition-all shadow-lg flex items-center gap-2">
                         Iniciar Rendición
+                        <i data-lucide="file-check" class="w-4 h-4 text-white/70"></i>
                     </button>
                 </div>
             </div>
+          </div>
         </div>
     </main>
 
