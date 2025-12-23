@@ -19,6 +19,23 @@ public class SolicitudController {
 
     private final SolicitudService solicitudService;
 
+    @GetMapping
+    public String listarSolicitudes(Model model, @AuthenticationPrincipal UsuarioPrincipal user) {
+        boolean isAdmin = user.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("currentUser", user);
+
+        if (isAdmin) {
+            model.addAttribute("solicitudes", solicitudService.listarTodas());
+        } else {
+            model.addAttribute("solicitudes", solicitudService.listarPorEmpleado(user.getIdEmpleado()));
+        }
+
+        return "solicitudes/lista";
+    }
+
     @GetMapping("/nueva")
     public String nuevaSolicitudForm(Model model) {
         model.addAttribute("zonas", solicitudService.listarZonas());
