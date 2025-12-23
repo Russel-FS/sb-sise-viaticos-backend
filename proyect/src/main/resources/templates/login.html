@@ -49,8 +49,15 @@
                            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-apple-blue focus:border-transparent transition-all">
                 </div>
                 
-                <div th:if="${param.error}" class="text-red-500 text-xs text-center">
-                    Credenciales incorrectas. Inténtalo de nuevo.
+                <div th:if="${param.error}" class="p-3 bg-red-50 border border-red-100 rounded-xl mb-4">
+                    <p class="text-red-500 text-xs text-center font-medium">
+                        <span th:if="${session.SPRING_SECURITY_LAST_EXCEPTION != null}" 
+                              th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message == 'Bad credentials' ? 'Usuario o contraseña incorrectos' : 'Error en el acceso'}">
+                        </span>
+                        <span th:if="${session.SPRING_SECURITY_LAST_EXCEPTION == null}">
+                            Credenciales incorrectas.
+                        </span>
+                    </p>
                 </div>
 
                 <button type="submit" 
