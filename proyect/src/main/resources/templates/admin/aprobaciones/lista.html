@@ -27,12 +27,29 @@
 
     <main class="pt-24 pb-20 px-6">
         <div class="max-w-6xl mx-auto">
-            <div class="mb-12">
-                <h1 class="text-4xl font-semibold tracking-tight text-gray-900 mb-2">Bandeja de Aprobaciones</h1>
-                <p class="text-xl text-gray-500">Revisa y gestiona las solicitudes de viáticos pendientes de revisión.</p>
+            <div class="mb-12 flex items-end justify-between">
+                <div>
+                    <h1 class="text-4xl font-semibold tracking-tight text-gray-900 mb-2">Bandeja de Aprobaciones</h1>
+                    <p class="text-xl text-gray-500">Revisa y gestiona las solicitudes de viáticos.</p>
+                </div>
+                
+                <!-- Tab Switcher -->
+                <div class="flex p-1 bg-gray-200/50 rounded-2xl backdrop-blur-sm">
+                    <button onclick="cambiarTab('pendientes')" id="tab-pendientes"
+                            class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all bg-white shadow-sm text-gray-900">
+                        Pendientes
+                        <span class="ml-2 px-2 py-0.5 bg-amber-100 text-amber-600 rounded-lg text-[10px]" th:text="${#lists.size(pendientes)}">0</span>
+                    </button>
+                    <button onclick="cambiarTab('rechazadas')" id="tab-rechazadas"
+                            class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-500 hover:text-gray-900">
+                        Historial Rechazos
+                        <span class="ml-2 px-2 py-0.5 bg-gray-100 text-gray-400 rounded-lg text-[10px]" th:text="${#lists.size(rechazadas)}">0</span>
+                    </button>
+                </div>
             </div>
 
-            <div class="glass-card rounded-[28px] overflow-hidden shadow-sm">
+            <!-- Tabla Pendientes -->
+            <div id="seccion-pendientes" class="glass-card rounded-[28px] overflow-hidden shadow-sm">
                 <table class="w-full text-sm text-left">
                     <thead>
                         <tr class="bg-white/50 border-b border-gray-100">
@@ -86,6 +103,44 @@
                             <td colspan="5" class="px-6 py-20 text-center text-gray-400">
                                 <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-4 opacity-20"></i>
                                 <p>No hay solicitudes pendientes de aprobación.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tabla Rechazadas (Hidden by default) -->
+            <div id="seccion-rechazadas" class="hidden glass-card rounded-[28px] overflow-hidden shadow-sm">
+                <table class="w-full text-sm text-left">
+                    <thead>
+                        <tr class="bg-white/50 border-b border-gray-100">
+                            <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px]">Solicitante</th>
+                            <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px]">Motivo de Rechazo</th>
+                            <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px]">Monto</th>
+                            <th class="px-6 py-4 font-semibold text-gray-500 uppercase tracking-tighter text-[11px] text-right">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        <tr th:each="sol : ${rechazadas}" class="hover:bg-white/40 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="font-medium text-gray-900" th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos}">NOMBRE</div>
+                                <div class="text-[10px] text-gray-400" th:text="${sol.fechaInicio + ' - ' + sol.fechaFin}">FECHAS</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-red-500 font-medium mb-1 italic" th:text="${sol.comentarioRechazo ?: '(Sin motivo especificado)'}">MOTIVO</div>
+                                <div class="text-gray-400 text-xs" th:text="${'Original: ' + sol.motivoViaje}">DESTINO</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900" th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}">0.00</div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <span class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Rechazado</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(rechazadas)}">
+                            <td colspan="5" class="px-6 py-20 text-center text-gray-400">
+                                <i data-lucide="archive" class="w-10 h-10 mx-auto mb-4 opacity-20"></i>
+                                <p>No hay registro de solicitudes rechazadas.</p>
                             </td>
                         </tr>
                     </tbody>
@@ -167,6 +222,33 @@
 
         function cerrarModal(id) {
             document.getElementById(id).classList.add('hidden');
+        }
+
+        function cambiarTab(tab) {
+            const secPendientes = document.getElementById('seccion-pendientes');
+            const secRechazadas = document.getElementById('seccion-rechazadas');
+            const btnPendientes = document.getElementById('tab-pendientes');
+            const btnRechazadas = document.getElementById('tab-rechazadas');
+
+            if (tab === 'pendientes') {
+                secPendientes.classList.remove('hidden');
+                secRechazadas.classList.add('hidden');
+                
+                btnPendientes.classList.add('bg-white', 'shadow-sm', 'text-gray-900');
+                btnPendientes.classList.remove('text-gray-500');
+                
+                btnRechazadas.classList.remove('bg-white', 'shadow-sm', 'text-gray-900');
+                btnRechazadas.classList.add('text-gray-500');
+            } else {
+                secPendientes.classList.add('hidden');
+                secRechazadas.classList.remove('hidden');
+                
+                btnRechazadas.classList.add('bg-white', 'shadow-sm', 'text-gray-900');
+                btnRechazadas.classList.remove('text-gray-500');
+                
+                btnPendientes.classList.remove('bg-white', 'shadow-sm', 'text-gray-900');
+                btnPendientes.classList.add('text-gray-500');
+            }
         }
     </script>
 </body>

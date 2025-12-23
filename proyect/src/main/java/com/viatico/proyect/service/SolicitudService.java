@@ -17,6 +17,8 @@ public interface SolicitudService {
 
     List<SolicitudComision> listarPendientes();
 
+    List<SolicitudComision> listarRechazadas();
+
     void enviarAprobacion(Long id);
 
     void aprobar(Long id, String username);

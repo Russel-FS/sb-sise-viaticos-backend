@@ -102,6 +102,11 @@ public class SolicitudServiceImpl implements SolicitudService {
         }
 
         @Override
+        public List<SolicitudComision> listarRechazadas() {
+                return solicitudRepository.findByEstadoOrderByFechaCreaDesc(EstadoSolicitud.RECHAZADO);
+        }
+
+        @Override
         @Transactional
         public void enviarAprobacion(Long id) {
                 SolicitudComision solicitud = solicitudRepository.findById(id)

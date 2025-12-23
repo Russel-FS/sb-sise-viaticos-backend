@@ -20,6 +20,7 @@ public class AdminAprobacionController {
     @GetMapping
     public String listarPendientes(Model model) {
         model.addAttribute("pendientes", solicitudService.listarPendientes());
+        model.addAttribute("rechazadas", solicitudService.listarRechazadas());
         return "admin/aprobaciones/lista";
     }
 
