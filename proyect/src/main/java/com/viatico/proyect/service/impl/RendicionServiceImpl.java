@@ -2,6 +2,7 @@ package com.viatico.proyect.service.impl;
 
 import com.viatico.proyect.entity.*;
 import com.viatico.proyect.repository.*;
+import com.viatico.proyect.service.LiquidacionService;
 import com.viatico.proyect.service.RendicionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class RendicionServiceImpl implements RendicionService {
         private final DetalleComprobanteRepository detalleRepository;
         private final SolicitudComisionRepository solicitudRepository;
         private final TipoGastoRepository tipoGastoRepository;
+        private final LiquidacionService liquidacionService;
 
         @Override
         @Transactional
@@ -131,5 +133,8 @@ public class RendicionServiceImpl implements RendicionService {
                 SolicitudComision sol = ren.getSolicitud();
                 sol.setEstado(EstadoSolicitud.LIQUIDADO);
                 solicitudRepository.save(sol);
+
+                // Generamos la liquidación final automáticamente
+                liquidacionService.generarLiquidacion(solicitudId);
         }
 }

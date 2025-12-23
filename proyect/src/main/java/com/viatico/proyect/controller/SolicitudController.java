@@ -2,6 +2,7 @@ package com.viatico.proyect.controller;
 
 import com.viatico.proyect.entity.SolicitudComision;
 import com.viatico.proyect.security.UsuarioPrincipal;
+import com.viatico.proyect.service.LiquidacionService;
 import com.viatico.proyect.service.SolicitudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +22,7 @@ import java.util.List;
 public class SolicitudController {
 
     private final SolicitudService solicitudService;
+    private final LiquidacionService liquidacionService;
 
     @GetMapping
     public String listarSolicitudes(Model model, @AuthenticationPrincipal UsuarioPrincipal user) {
@@ -79,6 +81,11 @@ public class SolicitudController {
         boolean isAdmin = user.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         model.addAttribute("isAdmin", isAdmin);
+
+        // Si está liquidado, traer la liquidación final
+        if (sol.getEstado().name().equals("LIQUIDADO")) {
+            model.addAttribute("liq", liquidacionService.obtenerPorSolicitud(id));
+        }
 
         return "solicitudes/detalle";
     }

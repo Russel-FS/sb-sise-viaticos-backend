@@ -212,7 +212,7 @@ CREATE TABLE liquidacion_final (
     saldo_a_favor_empresa NUMBER(10, 2) DEFAULT 0.00,
     saldo_a_favor_empleado NUMBER(10, 2) DEFAULT 0.00,
     fecha_cierre DATE,
-    estado_cierre VARCHAR2(20) DEFAULT 'ABIERTO',
+    estado_cierre VARCHAR2(20) DEFAULT 'PENDIENTE',
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -221,8 +221,8 @@ CREATE TABLE liquidacion_final (
     -- Constraints
     CONSTRAINT ck_liq_estado CHECK (
         estado_cierre IN (
-            'ABIERTO',
-            'CERRADO',
+            'PENDIENTE',
+            'FINALIZADO',
             'REEMBOLSADO'
         )
     ),
