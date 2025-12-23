@@ -206,6 +206,7 @@
                                 <span th:if="${!isAdmin}">Motivo</span>
                             </th>
                             <th class="px-6 py-4 font-semibold text-apple-secondary text-left uppercase tracking-tighter text-[11px]">Periodo</th>
+                            <th class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]">Viáticos</th>
                             <th class="px-6 py-4 font-semibold text-apple-secondary text-center uppercase tracking-tighter text-[11px]">Estado</th>
                             <th class="px-6 py-4 font-semibold text-apple-secondary text-right uppercase tracking-tighter text-[11px]">Acciones</th>
                         </tr>
@@ -222,6 +223,9 @@
                                 <div class="text-[11px] text-apple-secondary" th:text="${'Creado por: ' + sol.userCrea}">User</div>
                             </td>
                             <td class="px-6 py-4 text-apple-secondary" th:text="${sol.fechaInicio + ' al ' + sol.fechaFin}">Fecha</td>
+                            <td class="px-6 py-4 text-right">
+                                <span class="font-bold text-apple-text" th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}">0.00</span>
+                            </td>
                             <td class="px-6 py-4 text-center">
                                 <span th:text="${sol.estado}" 
                                       th:class="${sol.estado == 'Borrador' ? 'px-3 py-1 bg-gray-100 text-gray-500' : 'px-3 py-1 bg-blue-50 text-blue-600'} + ' rounded-full text-[10px] font-bold uppercase tracking-wider'">

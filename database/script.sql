@@ -122,7 +122,7 @@ CREATE TABLE itinerario_viaje (
     id_comision NUMBER NOT NULL,
     id_zona_destino NUMBER NOT NULL,
     ciudad_especifica VARCHAR2(100),
-    dias_pernocte NUMBER NOT NULL,
+    noches NUMBER NOT NULL,
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

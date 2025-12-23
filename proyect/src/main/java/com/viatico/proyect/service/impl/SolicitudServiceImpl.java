@@ -1,20 +1,17 @@
 package com.viatico.proyect.service.impl;
 
-import com.viatico.proyect.entity.Empleado;
-import com.viatico.proyect.entity.ItinerarioViaje;
-import com.viatico.proyect.entity.SolicitudComision;
-import com.viatico.proyect.entity.ZonaGeografica;
-import com.viatico.proyect.repository.EmpleadoRepository;
-import com.viatico.proyect.repository.SolicitudComisionRepository;
-import com.viatico.proyect.repository.ZonaGeograficaRepository;
+import com.viatico.proyect.entity.*;
+import com.viatico.proyect.repository.*;
 import com.viatico.proyect.security.UsuarioPrincipal;
 import com.viatico.proyect.service.SolicitudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,63 +19,80 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SolicitudServiceImpl implements SolicitudService {
 
-    private final ZonaGeograficaRepository zonaRepository;
-    private final SolicitudComisionRepository solicitudRepository;
-    private final EmpleadoRepository empleadoRepository;
+        private final ZonaGeograficaRepository zonaRepository;
+        private final SolicitudComisionRepository solicitudRepository;
+        private final EmpleadoRepository empleadoRepository;
+        private final TarifarioRepository tarifarioRepository;
 
-    @Override
-    public List<ZonaGeografica> listarZonas() {
-        return zonaRepository.findAll();
-    }
+        @Override
+        public List<ZonaGeografica> listarZonas() {
+                return zonaRepository.findAll();
+        }
 
-    @Override
-    @Transactional
-    public SolicitudComision guardarNuevaSolicitud(String motivo, String fechaInicio, String fechaFin, Long idZona,
-            String ciudad, UsuarioPrincipal user) {
+        @Override
+        @Transactional
+        public SolicitudComision guardarNuevaSolicitud(String motivo, String fechaInicio, String fechaFin, Long idZona,
+                        String ciudad, UsuarioPrincipal user) {
 
-        // empleado
-        Empleado empleado = empleadoRepository.findById(user.getIdEmpleado())
-                .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
+                // empleado
+                Empleado empleado = empleadoRepository.findById(user.getIdEmpleado())
+                                .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
 
-        // Solicitud
-        SolicitudComision solicitud = new SolicitudComision();
-        solicitud.setEmpleado(empleado);
-        solicitud.setMotivoViaje(motivo);
-        solicitud.setFechaSolicitud(LocalDate.now());
-        solicitud.setFechaInicio(LocalDate.parse(fechaInicio));
-        solicitud.setFechaFin(LocalDate.parse(fechaFin));
-        solicitud.setEstado("Borrador");
-        solicitud.setUserCrea(user.getUsername());
-        solicitud.setFechaCrea(LocalDateTime.now());
+                // Fechas
+                LocalDate start = LocalDate.parse(fechaInicio);
+                LocalDate end = LocalDate.parse(fechaFin);
+                long diasComision = ChronoUnit.DAYS.between(start, end) + 1;
 
-        // Itinerario base
-        ZonaGeografica zona = zonaRepository.findById(idZona)
-                .orElseThrow(() -> new RuntimeException("Zona no encontrada"));
+                // Solicitud
+                SolicitudComision solicitud = new SolicitudComision();
+                solicitud.setEmpleado(empleado);
+                solicitud.setMotivoViaje(motivo);
+                solicitud.setFechaSolicitud(LocalDate.now());
+                solicitud.setFechaInicio(start);
+                solicitud.setFechaFin(end);
+                solicitud.setEstado("Borrador");
+                solicitud.setUserCrea(user.getUsername());
+                solicitud.setFechaCrea(LocalDateTime.now());
 
-        ItinerarioViaje itinerario = new ItinerarioViaje();
-        itinerario.setSolicitud(solicitud);
-        itinerario.setZonaDestino(zona);
-        itinerario.setCiudadEspecifica(ciudad);
-        itinerario.setDiasPernocte(0);
-        itinerario.setUserCrea(user.getUsername());
-        itinerario.setFechaCrea(LocalDateTime.now());
+                // Cálculo de Viáticos
+                ZonaGeografica zona = zonaRepository.findById(idZona)
+                                .orElseThrow(() -> new RuntimeException("Zona no encontrada"));
 
-        List<ItinerarioViaje> itinerarios = new ArrayList<>();
-        itinerarios.add(itinerario);
-        solicitud.setItinerarios(itinerarios);
+                List<Tarifario> tarifarios = tarifarioRepository.findAllByNivelJerarquicoAndZonaGeografica(
+                                empleado.getNivel(), zona);
 
-        return solicitudRepository.save(solicitud);
-    }
+                BigDecimal montoDiarioTotal = tarifarios.stream()
+                                .map(Tarifario::getMontoDiario)
+                                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-    @Override
-    public List<SolicitudComision> listarPorEmpleado(Long empleadoId) {
-        return solicitudRepository.findByEmpleadoIdOrderByFechaCreaDesc(empleadoId);
-    }
+                BigDecimal montoTotal = montoDiarioTotal.multiply(new BigDecimal(diasComision));
+                solicitud.setMontoTotal(montoTotal);
 
-    @Override
-    public List<SolicitudComision> listarTodas() {
-        return solicitudRepository.findAll().stream()
-                .sorted((s1, s2) -> s2.getFechaCrea().compareTo(s1.getFechaCrea()))
-                .toList();
-    }
+                // Itinerario base
+                ItinerarioViaje itinerario = new ItinerarioViaje();
+                itinerario.setSolicitud(solicitud);
+                itinerario.setZonaDestino(zona);
+                itinerario.setCiudadEspecifica(ciudad);
+                itinerario.setNoches((int) (diasComision - 1));
+                itinerario.setUserCrea(user.getUsername());
+                itinerario.setFechaCrea(LocalDateTime.now());
+
+                List<ItinerarioViaje> itinerarios = new ArrayList<>();
+                itinerarios.add(itinerario);
+                solicitud.setItinerarios(itinerarios);
+
+                return solicitudRepository.save(solicitud);
+        }
+
+        @Override
+        public List<SolicitudComision> listarPorEmpleado(Long empleadoId) {
+                return solicitudRepository.findByEmpleadoIdOrderByFechaCreaDesc(empleadoId);
+        }
+
+        @Override
+        public List<SolicitudComision> listarTodas() {
+                return solicitudRepository.findAll().stream()
+                                .sorted((s1, s2) -> s2.getFechaCrea().compareTo(s1.getFechaCrea()))
+                                .toList();
+        }
 }

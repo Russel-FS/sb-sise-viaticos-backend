@@ -2,6 +2,8 @@ package com.viatico.proyect.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +39,9 @@ public class SolicitudComision {
 
     @OneToMany(mappedBy = "solicitud", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItinerarioViaje> itinerarios;
+
+    @Column(name = "MONTO_TOTAL", precision = 12, scale = 2)
+    private BigDecimal montoTotal;
 
     @Column(name = "USER_CREA")
     private String userCrea;

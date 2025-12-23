@@ -26,8 +26,8 @@ public class ItinerarioViaje {
     @Column(name = "CIUDAD_ESPECIFICA")
     private String ciudadEspecifica;
 
-    @Column(name = "DIAS_PERNOCTE")
-    private Integer diasPernocte;
+    @Column(name = "NOCHES")
+    private Integer noches;
 
     @Column(name = "USER_CREA")
     private String userCrea;
