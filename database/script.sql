@@ -96,6 +96,7 @@ CREATE TABLE solicitud_comision (
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,
     estado VARCHAR2(20) DEFAULT 'Borrador',
+    monto_total NUMBER(12, 2),
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
