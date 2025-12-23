@@ -62,57 +62,82 @@
             </div>
 
             <!-- Grid de Información -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                <div class="apple-card p-6 rounded-[24px]">
-                    <p class="text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-4">Solicitante</p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-apple-blue/10 text-apple-blue rounded-full flex items-center justify-center font-bold">
-                            <span th:text="${#strings.substring(sol.empleado.nombres,0,1)}">U</span>
-                        </div>
-                        <div>
-                            <p class="font-bold text-sm" th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos}">Nombre</p>
-                            <p class="text-[11px] text-apple-secondary" th:text="${sol.empleado.nivel.nombre}">Nivel</p>
-                        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- Solicitante -->
+                <div class="bg-white p-6 rounded-[28px] border border-gray-100 shadow-sm flex items-center gap-5">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center border border-blue-100">
+                        <i data-lucide="user" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Solicitante</p>
+                        <p class="text-lg font-bold text-gray-900" th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos}">Nombre</p>
+                        <p class="text-[11px] text-gray-500 font-medium" th:text="${sol.empleado.nivel.nombre}">Nivel</p>
                     </div>
                 </div>
 
-                <div class="apple-card p-6 rounded-[24px]">
-                    <p class="text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-4">Periodo de Viaje</p>
-                    <div class="flex items-center gap-3">
-                        <i data-lucide="calendar" class="w-5 h-5 text-apple-blue"></i>
-                        <div>
-                            <p class="font-bold text-sm" th:text="${sol.fechaInicio + ' - ' + sol.fechaFin}">Fechas</p>
-                            <p class="text-[11px] text-apple-secondary" th:text="${sol.itinerarios[0].noches + ' noches de estadía'}">0 noches</p>
-                        </div>
+                <!-- Periodo -->
+                <div class="bg-white p-6 rounded-[28px] border border-gray-100 shadow-sm flex items-center gap-5">
+                    <div class="w-14 h-14 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center border border-gray-100">
+                        <i data-lucide="calendar" class="w-7 h-7"></i>
                     </div>
-                </div>
-
-                <div class="apple-card p-6 rounded-[24px] bg-black text-white">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Monto Total Asignado</p>
-                    <div class="flex items-baseline gap-2">
-                        <span class="text-3xl font-bold" th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}">0.00</span>
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Periodo de Viaje</p>
+                        <p class="text-lg font-bold text-gray-900" th:text="${sol.fechaInicio + ' — ' + (sol.fechaFin ?: 'Pendiente')}">Fechas</p>
+                        <p class="text-[11px] text-gray-500 font-medium" th:text="${sol.fechaInicio != null ? 'Comisión Programada' : 'Fecha por confirmar'}">Estado</p>
                     </div>
-                    <p class="text-[10px] text-gray-400 mt-2 font-medium">Sujeto a rendición de cuentas</p>
                 </div>
             </div>
 
-            <!-- Detalles del Itinerario -->
-            <div class="apple-card rounded-[28px] overflow-hidden mb-10 shadow-sm">
-                <div class="px-8 py-5 border-b border-apple-border flex justify-between items-center">
-                    <h3 class="font-bold text-apple-text">Itinerario y Viáticos Calculados</h3>
-                </div>
-                <div class="p-8">
-                    <div th:each="iti : ${sol.itinerarios}" class="flex items-start gap-6 border-l-2 border-apple-blue pl-6 relative">
-                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-apple-blue border-4 border-white"></div>
+            <!-- Presupuesto Autorizado  -->
+            <div class="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div class="bg-black rounded-[28px] p-8 text-white shadow-2xl shadow-gray-200/50">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-10">
                         <div class="flex-1">
-                            <div class="flex justify-between items-start mb-4">
+                            <p class="text-gray-400 text-[10px] uppercase tracking-[0.15em] font-bold mb-1">Presupuesto Total</p>
+                            <h2 class="text-5xl font-bold tracking-tight" th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 2, 'POINT')}">S/ 0.00</h2>
+                        </div>
+                        
+                        <div class="flex gap-8 border-l border-white/10 pl-8 overflow-hidden">
+                            <div>
+                                <p class="text-gray-400 text-[10px] uppercase tracking-widest font-bold mb-0.5">Días</p>
+                                <p class="text-xl font-semibold text-white" th:text="${sol.itinerarios.size() > 0 ? (sol.itinerarios[sol.itinerarios.size()-1].noches + 1) : 0}">0</p>
+                            </div>
+                            <div class="px-8 border-l border-white/10">
+                                <p class="text-gray-400 text-[10px] uppercase tracking-widest font-bold mb-0.5">Retorno</p>
+                                <p class="text-xl font-semibold text-white whitespace-nowrap" th:text="${sol.fechaFin ?: '—'}">01/01</p>
+                            </div>
+                            <div class="pl-8 border-l border-white/10">
+                                <p class="text-gray-400 text-[10px] uppercase tracking-widest font-bold mb-0.5">Empresa</p>
+                                <p class="text-xl font-semibold text-white tracking-tight whitespace-nowrap">ISS Corp</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalles del Itinerario (Visual Car Route) -->
+            <div class="mb-12">
+                <h3 class="text-xl font-bold mb-8 flex items-center gap-3">
+                    <i data-lucide="map-pin" class="w-6 h-6 text-blue-600"></i>
+                    Hoja de Ruta e Itinerario
+                </h3>
+                
+                <div class="space-y-6 relative before:absolute before:left-[21px] before:top-4 before:bottom-4 before:w-0.5 before:bg-gray-200 ml-2">
+                    <div th:each="iti : ${sol.itinerarios}" class="tramo-row relative ml-12 group">
+                        <!-- Car Marker -->
+                        <div class="absolute -left-[53px] top-4 w-10 h-10 bg-white border border-gray-100 rounded-xl flex items-center justify-center shadow-sm z-10 transition-all group-hover:border-blue-500 group-hover:shadow-md">
+                            <i data-lucide="car" class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors"></i>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
+                            <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-xl font-bold mb-1" th:text="${iti.zonaDestino.nombre}">Zona de Destino</p>
-                                    <p class="text-apple-secondary text-sm" th:text="${'Ciudad: ' + iti.ciudadEspecifica}">Ciudad</p>
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2" th:text="${iti.zonaDestino.nombre}">Zona</p>
+                                    <h4 class="text-xl font-bold text-gray-900" th:text="${iti.ciudadEspecifica}">Ciudad</h4>
                                 </div>
-                                <div class="px-4 py-2 bg-gray-50 rounded-xl text-center">
-                                    <p class="text-[9px] font-bold text-apple-secondary uppercase">Noches</p>
-                                    <p class="font-bold" th:text="${iti.noches + ' Noches'}">0</p>
+                                <div class="px-5 py-2 bg-gray-50/50 rounded-[18px] text-center border border-gray-100">
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-0.5">Noches</p>
+                                    <p class="text-lg font-bold text-blue-600" th:text="${iti.noches}">0</p>
                                 </div>
                             </div>
                         </div>
