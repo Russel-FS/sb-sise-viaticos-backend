@@ -4,11 +4,13 @@ import com.viatico.proyect.entity.Empleado;
 import com.viatico.proyect.entity.NivelJerarquico;
 import com.viatico.proyect.entity.Rol;
 import com.viatico.proyect.entity.Usuario;
+import com.viatico.proyect.entity.ZonaGeografica;
 import com.viatico.proyect.enums.RolNombre;
 import com.viatico.proyect.repository.EmpleadoRepository;
 import com.viatico.proyect.repository.NivelJerarquicoRepository;
 import com.viatico.proyect.repository.RolRepository;
 import com.viatico.proyect.repository.UsuarioRepository;
+import com.viatico.proyect.repository.ZonaGeograficaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
+    private final ZonaGeograficaRepository zonaRepository;
     private final RolRepository rolRepository;
     private final NivelJerarquicoRepository nivelRepository;
     private final EmpleadoRepository empleadoRepository;
@@ -31,6 +34,26 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         log.info("Iniciando inicialización de datos...");
+
+        // zonas geograficas
+        if (zonaRepository.count() == 0) {
+            String[][] zonasData = {
+                    { "Costa Norte", "Piura, Tumbes, Lambayeque" },
+                    { "Costa Centro", "Lima, Ica, Ancash" },
+                    { "Costa Sur", "Arequipa, Moquegua, Tacna" },
+                    { "Sierra", "Cusco, Puno, Junín" },
+                    { "Selva", "Loreto, San Martín, Ucayali" }
+            };
+            for (String[] data : zonasData) {
+                ZonaGeografica z = new ZonaGeografica();
+                z.setNombre(data[0]);
+                z.setDescripcion(data[1]);
+                z.setFechaCrea(LocalDateTime.now());
+                z.setUserCrea("SYSTEM");
+                zonaRepository.save(z);
+            }
+            log.info("Zonas geográficas base creadas.");
+        }
 
         for (RolNombre rolEnum : RolNombre.values()) {
             if (rolRepository.findByCodigo(rolEnum.getCodigo()).isEmpty()) {
