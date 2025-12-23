@@ -8,8 +8,8 @@ import java.util.List;
 public interface SolicitudService {
     List<ZonaGeografica> listarZonas();
 
-    SolicitudComision guardarNuevaSolicitud(String motivo, String fechaInicio, String fechaFin, Long idZona,
-            String ciudad, UsuarioPrincipal user);
+    SolicitudComision guardarNuevaSolicitud(String motivo, String fechaInicio,
+            List<Long> idZonas, List<String> ciudades, List<Integer> noches, UsuarioPrincipal user);
 
     List<SolicitudComision> listarPorEmpleado(Long empleadoId);
 

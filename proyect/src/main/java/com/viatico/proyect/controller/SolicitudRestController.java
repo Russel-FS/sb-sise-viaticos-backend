@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,52 +25,56 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SolicitudRestController {
 
-    private final TarifarioRepository tarifarioRepository;
-    private final EmpleadoRepository empleadoRepository;
-    private final ZonaGeograficaRepository zonaRepository;
+        private final TarifarioRepository tarifarioRepository;
+        private final EmpleadoRepository empleadoRepository;
+        private final ZonaGeograficaRepository zonaRepository;
 
-    @GetMapping("/estimar")
-    public ResponseEntity<Map<String, Object>> estimarViaticos(
-            @RequestParam String fechaInicio,
-            @RequestParam String fechaFin,
-            @RequestParam Long idZona,
-            @AuthenticationPrincipal UsuarioPrincipal user) {
+        @GetMapping("/estimar")
+        public ResponseEntity<Map<String, Object>> estimarViaticos(
+                        @RequestParam List<Long> idZonas,
+                        @RequestParam List<Integer> noches,
+                        @AuthenticationPrincipal UsuarioPrincipal user) {
 
-        try {
-            LocalDate start = LocalDate.parse(fechaInicio);
-            LocalDate end = LocalDate.parse(fechaFin);
-            long dias = ChronoUnit.DAYS.between(start, end) + 1;
+                try {
+                        if (idZonas == null || idZonas.isEmpty()) {
+                                return ResponseEntity.badRequest()
+                                                .body(Map.of("error", "Debe incluir al menos un destino"));
+                        }
 
-            if (dias <= 0) {
-                return ResponseEntity.badRequest()
-                        .body(Map.of("error", "La fecha de fin debe ser posterior a la de inicio"));
-            }
+                        Empleado empleado = empleadoRepository.findById(user.getIdEmpleado())
+                                        .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
 
-            Empleado empleado = empleadoRepository.findById(user.getIdEmpleado())
-                    .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
+                        BigDecimal montoTotal = BigDecimal.ZERO;
+                        int totalDias = 0;
 
-            ZonaGeografica zona = zonaRepository.findById(idZona)
-                    .orElseThrow(() -> new RuntimeException("Zona no encontrada"));
+                        for (int i = 0; i < idZonas.size(); i++) {
+                                Long idZona = idZonas.get(i);
+                                Integer n = (noches != null && noches.size() > i) ? noches.get(i) : 0;
 
-            List<Tarifario> tarifarios = tarifarioRepository.findAllByNivelJerarquicoAndZonaGeografica(
-                    empleado.getNivel(), zona);
+                                ZonaGeografica zona = zonaRepository.findById(idZona)
+                                                .orElseThrow(() -> new RuntimeException("Zona no encontrada"));
 
-            BigDecimal montoDiarioTotal = tarifarios.stream()
-                    .map(Tarifario::getMontoDiario)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+                                List<Tarifario> tarifarios = tarifarioRepository
+                                                .findAllByNivelJerarquicoAndZonaGeografica(
+                                                                empleado.getNivel(), zona);
 
-            BigDecimal montoTotal = montoDiarioTotal.multiply(new BigDecimal(dias));
+                                BigDecimal montoDiarioTotal = tarifarios.stream()
+                                                .map(Tarifario::getMontoDiario)
+                                                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("dias", dias);
-            response.put("montoDiario", montoDiarioTotal);
-            response.put("montoTotal", montoTotal);
-            response.put("nivel", empleado.getNivel().getNombre());
-            response.put("zona", zona.getNombre());
+                                int diasTramo = (i == idZonas.size() - 1) ? n + 1 : n;
+                                montoTotal = montoTotal.add(montoDiarioTotal.multiply(new BigDecimal(diasTramo)));
+                                totalDias += diasTramo;
+                        }
 
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Datos inválidos"));
+                        Map<String, Object> response = new HashMap<>();
+                        response.put("dias", totalDias);
+                        response.put("montoTotal", montoTotal);
+                        response.put("nivel", empleado.getNivel().getNombre());
+
+                        return ResponseEntity.ok(response);
+                } catch (Exception e) {
+                        return ResponseEntity.badRequest().body(Map.of("error", "Datos inválidos"));
+                }
         }
-    }
 }

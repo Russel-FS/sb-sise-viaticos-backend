@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/solicitudes")
 @RequiredArgsConstructor
@@ -47,17 +49,17 @@ public class SolicitudController {
     public String guardarSolicitud(
             @RequestParam String motivoViaje,
             @RequestParam String fechaInicio,
-            @RequestParam String fechaFin,
-            @RequestParam Long idZona,
-            @RequestParam(required = false) String ciudad,
+            @RequestParam List<Long> idZonas,
+            @RequestParam List<String> ciudades,
+            @RequestParam List<Integer> noches,
             @AuthenticationPrincipal UsuarioPrincipal user) {
 
         solicitudService.guardarNuevaSolicitud(
                 motivoViaje,
                 fechaInicio,
-                fechaFin,
-                idZona,
-                ciudad,
+                idZonas,
+                ciudades,
+                noches,
                 user);
 
         return "redirect:/?success";

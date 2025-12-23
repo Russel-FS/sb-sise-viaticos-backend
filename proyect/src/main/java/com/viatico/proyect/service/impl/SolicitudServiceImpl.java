@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,17 +30,17 @@ public class SolicitudServiceImpl implements SolicitudService {
 
         @Override
         @Transactional
-        public SolicitudComision guardarNuevaSolicitud(String motivo, String fechaInicio, String fechaFin, Long idZona,
-                        String ciudad, UsuarioPrincipal user) {
+        public SolicitudComision guardarNuevaSolicitud(String motivo, String fechaInicio,
+                        List<Long> idZonas, List<String> ciudades, List<Integer> noches, UsuarioPrincipal user) {
 
                 // empleado
                 Empleado empleado = empleadoRepository.findById(user.getIdEmpleado())
                                 .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
 
-                // Fechas
+                // Cálculo de fechas basado en noches
                 LocalDate start = LocalDate.parse(fechaInicio);
-                LocalDate end = LocalDate.parse(fechaFin);
-                long diasComision = ChronoUnit.DAYS.between(start, end) + 1;
+                int totalNoches = (noches != null) ? noches.stream().mapToInt(v -> v).sum() : 0;
+                LocalDate end = start.plusDays(totalNoches);
 
                 // Solicitud
                 SolicitudComision solicitud = new SolicitudComision();
@@ -54,31 +53,41 @@ public class SolicitudServiceImpl implements SolicitudService {
                 solicitud.setUserCrea(user.getUsername());
                 solicitud.setFechaCrea(LocalDateTime.now());
 
-                // Cálculo de Viáticos
-                ZonaGeografica zona = zonaRepository.findById(idZona)
-                                .orElseThrow(() -> new RuntimeException("Zona no encontrada"));
-
-                List<Tarifario> tarifarios = tarifarioRepository.findAllByNivelJerarquicoAndZonaGeografica(
-                                empleado.getNivel(), zona);
-
-                BigDecimal montoDiarioTotal = tarifarios.stream()
-                                .map(Tarifario::getMontoDiario)
-                                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-                BigDecimal montoTotal = montoDiarioTotal.multiply(new BigDecimal(diasComision));
-                solicitud.setMontoTotal(montoTotal);
-
-                // Itinerario base
-                ItinerarioViaje itinerario = new ItinerarioViaje();
-                itinerario.setSolicitud(solicitud);
-                itinerario.setZonaDestino(zona);
-                itinerario.setCiudadEspecifica(ciudad);
-                itinerario.setNoches((int) (diasComision - 1));
-                itinerario.setUserCrea(user.getUsername());
-                itinerario.setFechaCrea(LocalDateTime.now());
-
+                BigDecimal montoTotal = BigDecimal.ZERO;
                 List<ItinerarioViaje> itinerarios = new ArrayList<>();
-                itinerarios.add(itinerario);
+
+                for (int i = 0; i < idZonas.size(); i++) {
+                        Long idZona = idZonas.get(i);
+                        String ciudad = ciudades.get(i);
+                        Integer n = (noches != null && noches.size() > i) ? noches.get(i) : 0;
+
+                        ZonaGeografica zona = zonaRepository.findById(idZona)
+                                        .orElseThrow(() -> new RuntimeException("Zona no encontrada: " + idZona));
+
+                        // Cálculo por tramo
+                        List<Tarifario> tarifarios = tarifarioRepository.findAllByNivelJerarquicoAndZonaGeografica(
+                                        empleado.getNivel(), zona);
+
+                        BigDecimal montoDiarioZona = tarifarios.stream()
+                                        .map(Tarifario::getMontoDiario)
+                                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                        // Si es el último tramo, sumamos 1 día (el de retorno)
+                        int diasACalcular = (i == idZonas.size() - 1) ? n + 1 : n;
+
+                        montoTotal = montoTotal.add(montoDiarioZona.multiply(new BigDecimal(diasACalcular)));
+
+                        ItinerarioViaje itinerario = new ItinerarioViaje();
+                        itinerario.setSolicitud(solicitud);
+                        itinerario.setZonaDestino(zona);
+                        itinerario.setCiudadEspecifica(ciudad);
+                        itinerario.setNoches(n);
+                        itinerario.setUserCrea(user.getUsername());
+                        itinerario.setFechaCrea(LocalDateTime.now());
+                        itinerarios.add(itinerario);
+                }
+
+                solicitud.setMontoTotal(montoTotal);
                 solicitud.setItinerarios(itinerarios);
 
                 return solicitudRepository.save(solicitud);
