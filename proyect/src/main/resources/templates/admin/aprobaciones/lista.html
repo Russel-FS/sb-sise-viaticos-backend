@@ -57,24 +57,28 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <div class="text-gray-600" th:text="${#temporals.format(sol.fechaInicio, 'dd MMM') + ' - ' + #temporals.format(sol.fechaFin, 'dd MMM')}">FECHAS</div>
+                                <div class="text-gray-600" th:text="${sol.fechaInicio + ' - ' + sol.fechaFin}">FECHAS</div>
                                 <div class="text-[10px] text-gray-400" th:text="${'Noches: ' + sol.itinerarios[0].noches}">NOCHES</div>
                             </td>
                             <td class="px-6 py-4">
-                                <div class="text-lg font-bold text-gray-900" th:text="${'S/ ' + sol.montoTotal}">0.00</div>
+                                <div class="text-lg font-bold text-gray-900" th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}">0.00</div>
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
-                                    <form th:action="@{'/admin/aprobaciones/rechazar/' + ${sol.id}}" method="post" onsubmit="return confirm('¿Seguro que deseas RECHAZAR esta solicitud?')">
-                                        <button type="submit" class="p-2 text-red-500 hover:bg-red-50 rounded-xl transition-all" title="Rechazar">
-                                            <i data-lucide="x-circle" class="w-5 h-5"></i>
-                                        </button>
-                                    </form>
-                                    <form th:action="@{'/admin/aprobaciones/aprobar/' + ${sol.id}}" method="post" onsubmit="return confirm('¿Aprobar esta solicitud?')">
-                                        <button type="submit" class="p-2 text-green-500 hover:bg-green-50 rounded-xl transition-all" title="Aprobar">
-                                            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button" 
+                                            th:data-id="${sol.id}"
+                                            th:data-nombre="${sol.empleado.nombres}"
+                                            onclick="btnAbrirModalRechazar(this)"
+                                            class="p-2 text-red-500 hover:bg-red-50 rounded-xl transition-all" title="Rechazar">
+                                        <i data-lucide="x-circle" class="w-5 h-5"></i>
+                                    </button>
+                                    <button type="button" 
+                                            th:data-id="${sol.id}"
+                                            th:data-nombre="${sol.empleado.nombres}"
+                                            onclick="btnAbrirModalAprobar(this)"
+                                            class="p-2 text-green-500 hover:bg-green-50 rounded-xl transition-all" title="Aprobar">
+                                        <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -90,6 +94,80 @@
         </div>
     </main>
 
-    <script>lucide.createIcons();</script>
+    <!-- Modal Aprobar -->
+    <div id="modalAprobar" class="hidden fixed inset-0 z-[100] flex items-center justify-center px-6">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onclick="cerrarModal('modalAprobar')"></div>
+        <div class="relative w-full max-w-sm bg-white rounded-[32px] p-10 shadow-2xl animate-in zoom-in-90 duration-200 text-center">
+            <div class="w-16 h-16 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2 tracking-tight">¿Aprobar Solicitud?</h2>
+            <p class="text-gray-500 mb-8">Vas a autorizar el presupuesto para la comisión de <span id="nombreAprobar" class="font-bold text-gray-900"></span>.</p>
+            
+            <form id="formAprobar" method="post" class="flex gap-3">
+                <button type="button" onclick="cerrarModal('modalAprobar')"
+                        class="flex-1 px-6 py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-200 transition-all">
+                    No
+                </button>
+                <button type="submit" class="flex-1 px-6 py-4 bg-black text-white font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-lg">
+                    Sí, Aprobar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Rechazar -->
+    <div id="modalRechazar" class="hidden fixed inset-0 z-[100] flex items-center justify-center px-6">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onclick="cerrarModal('modalRechazar')"></div>
+        <div class="relative w-full max-w-md bg-white rounded-[32px] p-10 shadow-2xl animate-in zoom-in-90 duration-200">
+            <div class="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mb-6">
+                <i data-lucide="alert-circle" class="w-8 h-8"></i>
+            </div>
+            <h2 class="text-3xl font-bold mb-2 tracking-tight">Rechazar Solicitud</h2>
+            <p class="text-gray-500 mb-8">Por favor, indica el motivo del rechazo para <span id="nombreRechazar" class="font-bold text-gray-900"></span>.</p>
+            
+            <form id="formRechazar" method="post" class="space-y-6">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Comentario / Motivo</label>
+                    <textarea name="comentario" required placeholder="Ej: Supera el presupuesto mensual..." rows="3"
+                           class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-red-500 outline-none resize-none transition-all"></textarea>
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="cerrarModal('modalRechazar')"
+                            class="flex-1 px-6 py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-200 transition-all">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 px-6 py-4 bg-red-500 text-white font-bold rounded-2xl hover:bg-red-600 transition-all shadow-lg">
+                        Rechazar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function btnAbrirModalAprobar(btn) {
+            const id = btn.getAttribute('data-id');
+            const nombre = btn.getAttribute('data-nombre');
+            document.getElementById('nombreAprobar').innerText = nombre;
+            document.getElementById('formAprobar').action = '/admin/aprobaciones/aprobar/' + id;
+            document.getElementById('modalAprobar').classList.remove('hidden');
+        }
+
+        function btnAbrirModalRechazar(btn) {
+            const id = btn.getAttribute('data-id');
+            const nombre = btn.getAttribute('data-nombre');
+            document.getElementById('nombreRechazar').innerText = nombre;
+            document.getElementById('formRechazar').action = '/admin/aprobaciones/rechazar/' + id;
+            document.getElementById('modalRechazar').classList.remove('hidden');
+        }
+
+        function cerrarModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+    </script>
 </body>
 </html>

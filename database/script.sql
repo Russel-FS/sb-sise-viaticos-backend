@@ -102,6 +102,7 @@ CREATE TABLE solicitud_comision (
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_mod VARCHAR2(30),
     fecha_mod TIMESTAMP,
+    comentario_rechazo VARCHAR2(500),
     -- Constraints
     CONSTRAINT ck_sol_estado CHECK (
         estado IN (

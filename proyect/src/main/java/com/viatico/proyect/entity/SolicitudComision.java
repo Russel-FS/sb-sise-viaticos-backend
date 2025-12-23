@@ -49,4 +49,7 @@ public class SolicitudComision {
 
     @Column(name = "FECHA_CREA")
     private LocalDateTime fechaCrea;
+
+    @Column(name = "COMENTARIO_RECHAZO")
+    private String comentarioRechazo;
 }

@@ -128,6 +128,7 @@ public class SolicitudServiceImpl implements SolicitudService {
                 SolicitudComision solicitud = solicitudRepository.findById(id)
                                 .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
                 solicitud.setEstado(EstadoSolicitud.RECHAZADO);
+                solicitud.setComentarioRechazo(comentario);
                 solicitudRepository.save(solicitud);
         }
 }

@@ -240,6 +240,10 @@
                                 <span th:if="${sol.estado.name() == 'PENDIENTE'}" class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Pendiente</span>
                                 <span th:if="${sol.estado.name() == 'APROBADO'}" class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Aprobado</span>
                                 <span th:if="${sol.estado.name() == 'RECHAZADO'}" class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Rechazado</span>
+                                <div th:if="${sol.estado.name() == 'RECHAZADO' && sol.comentarioRechazo != null}" 
+                                     class="mt-1 text-[9px] text-red-400 italic font-medium leading-tight max-w-[120px] mx-auto"
+                                     th:text="${'Nota: ' + sol.comentarioRechazo}">
+                                </div>
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
