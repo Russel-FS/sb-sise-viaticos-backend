@@ -81,6 +81,14 @@
             </li>
             <li>
               <a
+                th:if="${isAdmin}"
+                href="/admin/validaciones"
+                class="text-[12px] opacity-80 hover:opacity-100 font-bold text-green-600"
+                >Validar Rendiciones</a
+              >
+            </li>
+            <li>
+              <a
                 href="/solicitudes"
                 class="text-[12px] opacity-80 hover:opacity-100 font-bold text-apple-text"
                 >Rendiciones</a
@@ -88,7 +96,7 @@
             </li>
             <li>
               <a
-                href="#"
+                href="/solicitudes"
                 class="text-[12px] opacity-80 hover:opacity-100 font-bold text-apple-text"
                 >Liquidaciones</a
               >
@@ -228,6 +236,16 @@
                     th:if="${sol.estado.name() == 'RECHAZADO'}"
                     class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
                     >Rechazado</span
+                  >
+                  <span
+                    th:if="${sol.estado.name() == 'RENDIDO'}"
+                    class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    >Rendido</span
+                  >
+                  <span
+                    th:if="${sol.estado.name() == 'LIQUIDADO'}"
+                    class="px-3 py-1 bg-green-500 text-white rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    >Liquidado</span
                   >
                   <span
                     th:if="${sol.estado.name() == 'CANCELADO'}"

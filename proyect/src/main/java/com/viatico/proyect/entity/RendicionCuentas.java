@@ -28,11 +28,14 @@ public class RendicionCuentas {
     @Column(name = "TOTAL_GASTADO_BRUTO")
     private BigDecimal totalGastadoBruto = BigDecimal.ZERO;
 
+    @Column(name = "TOTAL_ACEPTADO")
+    private BigDecimal totalAceptado = BigDecimal.ZERO;
+
     @Column(name = "COMENTARIOS_EMPLEADO")
     private String comentariosEmpleado;
 
     @OneToMany(mappedBy = "rendicion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DetalleComprobante> detalles;
+    private List<DetalleComprobante> detalles = new java.util.ArrayList<>();
 
     // Auditoría
     @Column(name = "USER_CREA")

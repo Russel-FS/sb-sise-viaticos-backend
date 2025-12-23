@@ -14,4 +14,8 @@ public interface RendicionService {
     RendicionCuentas obtenerPorSolicitud(Long solicitudId);
 
     void finalizarRendicion(Long rendicionId);
+
+    void validarComprobante(Long detalleId, String estado, String motivo);
+
+    void finalizarValidacion(Long solicitudId);
 }

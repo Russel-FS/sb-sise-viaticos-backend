@@ -105,6 +105,14 @@
             </li>
             <li>
               <a
+                th:if="${isAdmin}"
+                href="/admin/validaciones"
+                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity font-bold text-green-600"
+                >Validar Rendiciones</a
+              >
+            </li>
+            <li>
+              <a
                 href="/solicitudes"
                 class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
                 >Rendiciones</a
@@ -112,7 +120,7 @@
             </li>
             <li>
               <a
-                href="#"
+                href="/solicitudes"
                 class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
                 >Liquidaciones</a
               >
@@ -202,20 +210,21 @@
           </a>
 
           <!-- Card 3 -->
-          <div
+          <a
+            href="/solicitudes"
             class="apple-card p-8 rounded-[28px] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer group"
           >
             <div
               class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform"
             >
-              <i data-lucide="pie-chart" class="w-6 h-6 text-apple-blue"></i>
+              <i data-lucide="award" class="w-6 h-6 text-apple-blue"></i>
             </div>
             <h3 class="text-xl font-semibold mb-2">Liquidaciones</h3>
             <p class="text-apple-secondary text-sm leading-relaxed">
               Consulta el estado final de tus comisiones y balances de
               reembolsos o devoluciones.
             </p>
-          </div>
+          </a>
         </div>
 
         <!-- Tabla de Solicitudes Recientes -->
@@ -321,6 +330,16 @@
                       th:if="${sol.estado.name() == 'RECHAZADO'}"
                       class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
                       >Rechazado</span
+                    >
+                    <span
+                      th:if="${sol.estado.name() == 'RENDIDO'}"
+                      class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                      >Rendido</span
+                    >
+                    <span
+                      th:if="${sol.estado.name() == 'LIQUIDADO'}"
+                      class="px-3 py-1 bg-green-500 text-white rounded-full text-[10px] font-bold uppercase tracking-wider"
+                      >Liquidado</span
                     >
                     <span
                       th:if="${sol.estado.name() == 'CANCELADO'}"

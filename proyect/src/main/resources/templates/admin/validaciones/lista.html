@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Validar Rendiciones - ISS Viáticos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              apple: {
+                bg: "#f5f5f7",
+                card: "rgba(255, 255, 255, 0.72)",
+                text: "#1d1d1f",
+                secondary: "#86868b",
+                blue: "#0071e3",
+                border: "rgba(0, 0, 0, 0.1)",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: saturate(180%) blur(20px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      .apple-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- Nav -->
+    <nav class="fixed top-0 w-full z-50 glass">
+      <div
+        class="max-w-6xl mx-auto px-6 h-11 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-8">
+          <a
+            href="/"
+            class="text-[12px] font-semibold tracking-tight opacity-90 hover:opacity-100 transition-opacity"
+            >ISS Viáticos / Admin</a
+          >
+          <ul class="hidden md:flex gap-8 list-none">
+            <li>
+              <a
+                href="/admin/aprobaciones"
+                class="text-[12px] opacity-80 hover:opacity-100 font-bold text-red-600"
+                >Aprobaciones</a
+              >
+            </li>
+            <li>
+              <a
+                href="/admin/validaciones"
+                class="text-[12px] font-bold text-green-600"
+                >Validaciones</a
+              >
+            </li>
+            <li>
+              <a
+                href="/admin/tarifarios"
+                class="text-[12px] opacity-80 hover:opacity-100 font-bold text-apple-blue"
+                >Administrar</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="flex items-center gap-6">
+          <a
+            href="/"
+            class="text-[12px] font-medium text-apple-blue hover:underline"
+            >Regresar al Inicio</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-12">
+          <div class="flex items-center gap-3 mb-2">
+            <span
+              class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
+              >Control de Gastos</span
+            >
+          </div>
+          <h1 class="text-4xl font-semibold tracking-tight text-apple-text">
+            Rendiciones por Validar
+          </h1>
+          <p class="text-xl text-apple-secondary mt-1">
+            Revisa y valida los comprobantes presentados por los empleados.
+          </p>
+        </div>
+
+        <!-- Tabla de Rendiciones -->
+        <div class="apple-card rounded-[28px] overflow-hidden shadow-sm">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-white/50 border-b border-apple-border">
+                <th
+                  class="px-8 py-4 text-left font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
+                >
+                  ID
+                </th>
+                <th
+                  class="px-8 py-4 text-left font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
+                >
+                  Colaborador
+                </th>
+                <th
+                  class="px-8 py-4 text-left font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
+                >
+                  Motivo del Viaje
+                </th>
+                <th
+                  class="px-8 py-4 text-left font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
+                >
+                  Periodo
+                </th>
+                <th
+                  class="px-8 py-4 text-right font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
+                >
+                  Total Rendido
+                </th>
+                <th
+                  class="px-8 py-4 text-center font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
+                >
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+              <tr
+                th:each="sol : ${solicitudes}"
+                class="hover:bg-white/40 transition-colors"
+              >
+                <td
+                  class="px-8 py-6 font-bold text-apple-text"
+                  th:text="${'#' + sol.id}"
+                >
+                  #001
+                </td>
+                <td class="px-8 py-6">
+                  <div
+                    class="font-bold text-apple-text"
+                    th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos}"
+                  >
+                    Nombre
+                  </div>
+                  <div
+                    class="text-[10px] text-apple-secondary uppercase tracking-widest"
+                    th:text="${sol.empleado.nivel.nombre}"
+                  >
+                    Nivel
+                  </div>
+                </td>
+                <td
+                  class="px-8 py-6 font-medium text-apple-text"
+                  th:text="${sol.motivoViaje}"
+                >
+                  Comisión técnica
+                </td>
+                <td
+                  class="px-8 py-6 text-apple-secondary"
+                  th:text="${sol.fechaInicio + ' — ' + sol.fechaFin}"
+                >
+                  01/01 - 05/01
+                </td>
+                <td
+                  class="px-8 py-6 text-right font-bold text-apple-blue text-lg"
+                  th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}"
+                >
+                  S/ 0.00
+                </td>
+                <td class="px-8 py-6 text-center">
+                  <a
+                    th:href="@{'/admin/validaciones/detalle/' + ${sol.id}}"
+                    class="px-6 py-2.5 bg-black text-white text-[10px] font-bold uppercase rounded-full hover:bg-gray-800 transition-all shadow-md inline-flex items-center gap-2"
+                  >
+                    Validar Gastos
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(solicitudes)}">
+                <td
+                  colspan="6"
+                  class="px-8 py-24 text-center text-apple-secondary italic"
+                >
+                  <div class="flex flex-col items-center">
+                    <div
+                      class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-4"
+                    >
+                      <i data-lucide="inbox" class="w-8 h-8 opacity-20"></i>
+                    </div>
+                    <p class="text-base font-medium">
+                      Bandeja de entrada vacía.
+                    </p>
+                    <p class="text-xs mt-1">
+                      No hay nuevas rendiciones presentadas el día de hoy.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

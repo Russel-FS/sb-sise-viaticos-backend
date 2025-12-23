@@ -147,8 +147,9 @@
               </div>
             </div>
 
-            <!-- Card Agregar Comprobante -->
+            <!-- Card Agregar Comprobante  -->
             <div
+              th:if="${sol.estado.name() == 'APROBADO'}"
               class="bg-white p-8 rounded-[32px] border border-apple-border shadow-sm"
             >
               <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
@@ -284,7 +285,7 @@
                 </h3>
                 <span
                   class="px-4 py-1.5 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-widest"
-                  th:text="${#lists.size(ren.detalles) + ' Documentos'}"
+                  th:text="${(ren.detalles != null ? #lists.size(ren.detalles) : 0) + ' Documentos'}"
                   >0 Doc</span
                 >
               </div>
@@ -314,6 +315,7 @@
                         Monto
                       </th>
                       <th
+                        th:if="${sol.estado.name() == 'APROBADO'}"
                         class="px-8 py-4 text-center font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
                       >
                         Acción
@@ -373,7 +375,10 @@
                       >
                         S/ 0.00
                       </td>
-                      <td class="px-8 py-5 text-center">
+                      <td
+                        th:if="${sol.estado.name() == 'APROBADO'}"
+                        class="px-8 py-5 text-center"
+                      >
                         <a
                           th:href="@{'/rendiciones/comprobante/eliminar/' + ${det.id} + '?solicitudId=' + ${sol.id}}"
                           class="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all inline-block group-hover:opacity-100 opacity-0"
@@ -399,8 +404,9 @@
               </div>
             </div>
 
-            <!-- Acciones Finales Rendición -->
+            <!-- Acciones Finales Rendición  -->
             <div
+              th:if="${sol.estado.name() == 'APROBADO'}"
               class="bg-white p-8 rounded-[32px] border border-apple-border flex justify-between items-center shadow-sm"
             >
               <div class="flex items-center gap-3">
@@ -426,6 +432,17 @@
                   <i data-lucide="send" class="w-4 h-4"></i>
                 </button>
               </form>
+            </div>
+
+            <!-- Boton de regresar si ya fue enviado -->
+            <div th:if="${sol.estado.name() != 'APROBADO'}" class="pt-10">
+              <a
+                th:href="@{'/solicitudes/' + ${sol.id}}"
+                class="inline-flex items-center gap-2 text-apple-blue font-bold px-8 py-4 bg-white rounded-[24px] border border-apple-border shadow-sm hover:translate-x-1 transition-all"
+              >
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                Volver al Detalle de la Solicitud
+              </a>
             </div>
           </div>
         </div>

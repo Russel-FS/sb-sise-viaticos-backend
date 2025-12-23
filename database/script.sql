@@ -162,6 +162,7 @@ CREATE TABLE rendicion_cuentas (
     id_comision NUMBER NOT NULL UNIQUE,
     fecha_presentacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total_gastado_bruto NUMBER(10, 2) DEFAULT 0.00,
+    total_aceptado NUMBER(10, 2) DEFAULT 0.00,
     comentarios_empleado CLOB,
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
