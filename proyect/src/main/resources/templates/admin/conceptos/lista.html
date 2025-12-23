@@ -81,31 +81,30 @@
         </div>
     </main>
 
-    <!-- Modal Nuevo -->
     <div id="modalNuevo" class="hidden fixed inset-0 z-[100] flex items-center justify-center px-6">
-        <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" onclick="document.getElementById('modalNuevo').classList.add('hidden')"></div>
-        <div class="relative w-full max-w-md glass-card rounded-[32px] p-10 shadow-2xl animate-in zoom-in-95 duration-200">
-            <h2 class="text-2xl font-semibold mb-8">Nuevo Concepto</h2>
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onclick="document.getElementById('modalNuevo').classList.add('hidden')"></div>
+        <div class="relative w-full max-w-md bg-white rounded-[32px] p-10 shadow-2xl animate-in zoom-in-90 duration-200">
+            <h2 class="text-3xl font-bold mb-8 tracking-tight">Nuevo Concepto</h2>
             
             <form th:action="@{/admin/conceptos/guardar}" method="post" class="space-y-6">
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Nombre del Gasto</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Nombre del Gasto</label>
                     <input type="text" name="nombre" required placeholder="Ej: Alimentación"
-                           class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                           class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Cuenta Contable (Opcional)</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Cuenta Contable (Opcional)</label>
                     <input type="text" name="cuentaContable" placeholder="Ej: 631101"
-                           class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                           class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                 </div>
 
-                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+                <div class="flex items-center justify-between p-5 bg-gray-50 rounded-2xl border border-gray-100">
                     <div class="flex items-center gap-3">
                         <i data-lucide="file-text" class="w-5 h-5 text-gray-400"></i>
                         <div>
                             <p class="text-sm font-semibold">Requiere Factura</p>
-                            <p class="text-[10px] text-gray-500">Obligatorio sustentar con comprobante</p>
+                            <p class="text-[10px] text-gray-500 uppercase">Sustento obligatorio</p>
                         </div>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
@@ -114,12 +113,12 @@
                     </label>
                 </div>
 
-                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+                <div class="flex items-center justify-between p-5 bg-gray-50 rounded-2xl border border-gray-100">
                     <div class="flex items-center gap-3">
                         <i data-lucide="layers" class="w-5 h-5 text-gray-400"></i>
                         <div>
                             <p class="text-sm font-semibold">Cálculo Diario</p>
-                            <p class="text-[10px] text-gray-500">Se multiplica por los días de viaje</p>
+                            <p class="text-[10px] text-gray-500 uppercase">Basado en días de viaje</p>
                         </div>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
@@ -130,10 +129,10 @@
 
                 <div class="flex gap-4 pt-4">
                     <button type="button" onclick="document.getElementById('modalNuevo').classList.add('hidden')"
-                            class="flex-1 px-6 py-3 bg-gray-100 text-gray-600 font-medium rounded-full hover:bg-gray-200 transition-all">
-                        Cancelar
+                            class="flex-1 px-6 py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-200 transition-all">
+                        Cerrar
                     </button>
-                    <button type="submit" class="flex-1 px-6 py-3 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition-all shadow-lg">
+                    <button type="submit" class="flex-1 px-6 py-4 bg-black text-white font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-lg">
                         Guardar
                     </button>
                 </div>

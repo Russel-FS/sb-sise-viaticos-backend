@@ -78,46 +78,45 @@
         </div>
     </main>
 
-    <!-- Modal Nuevo (Apple Style Drawer/Overlay) -->
     <div id="modalNuevo" class="hidden fixed inset-0 z-[100] flex items-center justify-center px-6">
-        <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" onclick="document.getElementById('modalNuevo').classList.add('hidden')"></div>
-        <div class="relative w-full max-w-lg glass-card rounded-[32px] p-10 shadow-2xl animate-in zoom-in-95 duration-200">
-            <h2 class="text-2xl font-semibold mb-8">Nueva Configuración</h2>
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onclick="document.getElementById('modalNuevo').classList.add('hidden')"></div>
+        <div class="relative w-full max-w-lg bg-white rounded-[32px] p-10 shadow-2xl animate-in zoom-in-90 duration-200">
+            <h2 class="text-3xl font-bold mb-8 tracking-tight">Nueva Tarifa</h2>
             
             <form th:action="@{/admin/tarifarios/guardar}" method="post" class="space-y-6">
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Zona Geográfica</label>
-                    <select name="zonaGeografica.id" required class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 appearance-none outline-none">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Zona Geográfica</label>
+                    <select name="zonaGeografica.id" required class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 appearance-none outline-none transition-all">
                         <option th:each="z : ${zonas}" th:value="${z.id}" th:text="${z.nombre}"></option>
                     </select>
                 </div>
                 
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Nivel Jerárquico</label>
-                    <select name="nivelJerarquico.id" required class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 appearance-none outline-none">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Nivel Jerárquico</label>
+                    <select name="nivelJerarquico.id" required class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 appearance-none outline-none transition-all">
                         <option th:each="n : ${niveles}" th:value="${n.id}" th:text="${n.nombre}"></option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Concepto de Gasto</label>
-                    <select name="tipoGasto.id" required class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 appearance-none outline-none">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Concepto de Gasto</label>
+                    <select name="tipoGasto.id" required class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 appearance-none outline-none transition-all">
                         <option th:each="tg : ${tiposGasto}" th:value="${tg.id}" th:text="${tg.nombre}"></option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Monto Límite Diario (S/)</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Monto Límite Diario (S/)</label>
                     <input type="number" step="0.01" name="montoDiario" required placeholder="0.00"
-                           class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                           class="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-semibold text-lg">
                 </div>
 
                 <div class="flex gap-4 pt-4">
                     <button type="button" onclick="document.getElementById('modalNuevo').classList.add('hidden')"
-                            class="flex-1 px-6 py-3 bg-gray-100 text-gray-600 font-medium rounded-full hover:bg-gray-200 transition-all">
-                        Cancelar
+                            class="flex-1 px-6 py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-200 transition-all">
+                        Cerrar
                     </button>
-                    <button type="submit" class="flex-1 px-6 py-3 bg-[#0071e3] text-white font-medium rounded-full hover:bg-[#0077ed] transition-all shadow-lg">
+                    <button type="submit" class="flex-1 px-6 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
                         Guardar Tarifa
                     </button>
                 </div>
