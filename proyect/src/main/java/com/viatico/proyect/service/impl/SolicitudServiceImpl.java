@@ -50,7 +50,7 @@ public class SolicitudServiceImpl implements SolicitudService {
                 solicitud.setFechaSolicitud(LocalDate.now());
                 solicitud.setFechaInicio(start);
                 solicitud.setFechaFin(end);
-                solicitud.setEstado("Borrador");
+                solicitud.setEstado(EstadoSolicitud.BORRADOR);
                 solicitud.setUserCrea(user.getUsername());
                 solicitud.setFechaCrea(LocalDateTime.now());
 
@@ -94,5 +94,40 @@ public class SolicitudServiceImpl implements SolicitudService {
                 return solicitudRepository.findAll().stream()
                                 .sorted((s1, s2) -> s2.getFechaCrea().compareTo(s1.getFechaCrea()))
                                 .toList();
+        }
+
+        @Override
+        public List<SolicitudComision> listarPendientes() {
+                return solicitudRepository.findByEstadoOrderByFechaCreaDesc(EstadoSolicitud.PENDIENTE);
+        }
+
+        @Override
+        @Transactional
+        public void enviarAprobacion(Long id) {
+                SolicitudComision solicitud = solicitudRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+                if (solicitud.getEstado() != EstadoSolicitud.BORRADOR) {
+                        throw new RuntimeException("Solo se pueden enviar solicitudes en estado Borrador");
+                }
+                solicitud.setEstado(EstadoSolicitud.PENDIENTE);
+                solicitudRepository.save(solicitud);
+        }
+
+        @Override
+        @Transactional
+        public void aprobar(Long id, String username) {
+                SolicitudComision solicitud = solicitudRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+                solicitud.setEstado(EstadoSolicitud.APROBADO);
+                solicitudRepository.save(solicitud);
+        }
+
+        @Override
+        @Transactional
+        public void rechazar(Long id, String comentario, String username) {
+                SolicitudComision solicitud = solicitudRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+                solicitud.setEstado(EstadoSolicitud.RECHAZADO);
+                solicitudRepository.save(solicitud);
         }
 }

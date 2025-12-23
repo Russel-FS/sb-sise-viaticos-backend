@@ -87,6 +87,14 @@
             <li>
               <a
                 th:if="${isAdmin}"
+                href="/admin/aprobaciones"
+                class="text-[12px] opacity-80 hover:opacity-100 transition-opacity font-bold text-red-600"
+                >Aprobaciones</a
+              >
+            </li>
+            <li>
+              <a
+                th:if="${isAdmin}"
                 href="/admin/tarifarios"
                 class="text-[12px] opacity-80 hover:opacity-100 transition-opacity font-bold text-blue-600"
                 >Administrar</a
@@ -228,15 +236,22 @@
                                 <span class="font-bold text-apple-text" th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}">0.00</span>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <span th:text="${sol.estado}" 
-                                      th:class="${sol.estado == 'Borrador' ? 'px-3 py-1 bg-gray-100 text-gray-500' : 'px-3 py-1 bg-blue-50 text-blue-600'} + ' rounded-full text-[10px] font-bold uppercase tracking-wider'">
-                                    Estado
-                                </span>
+                                <span th:if="${sol.estado.name() == 'BORRADOR'}" class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider">Borrador</span>
+                                <span th:if="${sol.estado.name() == 'PENDIENTE'}" class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Pendiente</span>
+                                <span th:if="${sol.estado.name() == 'APROBADO'}" class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Aprobado</span>
+                                <span th:if="${sol.estado.name() == 'RECHAZADO'}" class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Rechazado</span>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <button class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group">
-                                    <i data-lucide="chevron-right" class="w-4 h-4 text-apple-blue group-hover:translate-x-0.5 transition-transform"></i>
-                                </button>
+                                <div class="flex justify-end gap-2">
+                                    <form th:if="${sol.estado.name() == 'BORRADOR'}" th:action="@{'/solicitudes/enviar/' + ${sol.id}}" method="post">
+                                        <button type="submit" class="px-3 py-1 bg-black text-white text-[10px] font-bold uppercase rounded-full hover:bg-gray-800 transition-all shadow-sm">
+                                            Enviar
+                                        </button>
+                                    </form>
+                                    <button class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group">
+                                        <i data-lucide="chevron-right" class="w-4 h-4 text-apple-blue group-hover:translate-x-0.5 transition-transform"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(solicitudes)}">

@@ -95,7 +95,7 @@ CREATE TABLE solicitud_comision (
     fecha_solicitud DATE DEFAULT SYSDATE,
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,
-    estado VARCHAR2(20) DEFAULT 'Borrador',
+    estado VARCHAR2(20) DEFAULT 'BORRADOR',
     monto_total NUMBER(12, 2),
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
@@ -105,12 +105,12 @@ CREATE TABLE solicitud_comision (
     -- Constraints
     CONSTRAINT ck_sol_estado CHECK (
         estado IN (
-            'Borrador',
-            'Solicitado',
-            'Aprobado',
-            'Rechazado',
-            'Rendido',
-            'Liquidado'
+            'BORRADOR',
+            'PENDIENTE',
+            'APROBADO',
+            'RECHAZADO',
+            'RENDIDO',
+            'LIQUIDADO'
         )
     ),
     CONSTRAINT fk_sol_empleado FOREIGN KEY (id_empleado) REFERENCES empleados (id_empleado)
@@ -141,7 +141,7 @@ CREATE TABLE asignacion_dinero (
     monto_real_otorgado NUMBER(10, 2) NOT NULL,
     fecha_deposito DATE,
     numero_operacion_bancaria VARCHAR2(50),
-    estado_transferencia VARCHAR2(20) DEFAULT 'Pendiente',
+    estado_transferencia VARCHAR2(20) DEFAULT 'PENDIENTE',
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -149,7 +149,7 @@ CREATE TABLE asignacion_dinero (
     fecha_mod TIMESTAMP,
     -- Constraints
     CONSTRAINT ck_asig_estado CHECK (
-        estado_transferencia IN ('Pendiente', 'Completado')
+        estado_transferencia IN ('PENDIENTE', 'COMPLETADO')
     ),
     CONSTRAINT fk_asig_comision FOREIGN KEY (id_comision) REFERENCES solicitud_comision (id_comision)
 );
@@ -181,7 +181,7 @@ CREATE TABLE detalle_comprobantes (
     fecha_emision DATE NOT NULL,
     monto_total NUMBER(10, 2) NOT NULL,
     foto_evidencia_url VARCHAR2(255),
-    estado_validacion VARCHAR2(20) DEFAULT 'Pendiente',
+    estado_validacion VARCHAR2(20) DEFAULT 'PENDIENTE',
     motivo_rechazo VARCHAR2(255),
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
@@ -191,9 +191,9 @@ CREATE TABLE detalle_comprobantes (
     -- Constraints
     CONSTRAINT ck_det_estado CHECK (
         estado_validacion IN (
-            'Pendiente',
-            'Aceptado',
-            'Rechazado'
+            'PENDIENTE',
+            'ACEPTADO',
+            'RECHAZADO'
         )
     ),
     CONSTRAINT fk_det_rendicion FOREIGN KEY (id_rendicion) REFERENCES rendicion_cuentas (id_rendicion),
@@ -209,7 +209,7 @@ CREATE TABLE liquidacion_final (
     saldo_a_favor_empresa NUMBER(10, 2) DEFAULT 0.00,
     saldo_a_favor_empleado NUMBER(10, 2) DEFAULT 0.00,
     fecha_cierre DATE,
-    estado_cierre VARCHAR2(20) DEFAULT 'Abierto',
+    estado_cierre VARCHAR2(20) DEFAULT 'ABIERTO',
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -218,9 +218,9 @@ CREATE TABLE liquidacion_final (
     -- Constraints
     CONSTRAINT ck_liq_estado CHECK (
         estado_cierre IN (
-            'Abierto',
-            'Cerrado',
-            'Reembolsado'
+            'ABIERTO',
+            'CERRADO',
+            'REEMBOLSADO'
         )
     ),
     CONSTRAINT fk_liq_comision FOREIGN KEY (id_comision) REFERENCES solicitud_comision (id_comision)

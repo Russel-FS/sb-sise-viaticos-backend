@@ -14,4 +14,12 @@ public interface SolicitudService {
     List<SolicitudComision> listarPorEmpleado(Long empleadoId);
 
     List<SolicitudComision> listarTodas();
+
+    List<SolicitudComision> listarPendientes();
+
+    void enviarAprobacion(Long id);
+
+    void aprobar(Long id, String username);
+
+    void rechazar(Long id, String comentario, String username);
 }

@@ -35,7 +35,8 @@ public class SolicitudComision {
     @Column(name = "FECHA_FIN", nullable = false)
     private LocalDate fechaFin;
 
-    private String estado; // Borrador, Solicitado, Aprobado, etc.
+    @Enumerated(EnumType.STRING)
+    private EstadoSolicitud estado; // Borrador, Solicitado, Aprobado, etc.
 
     @OneToMany(mappedBy = "solicitud", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItinerarioViaje> itinerarios;
