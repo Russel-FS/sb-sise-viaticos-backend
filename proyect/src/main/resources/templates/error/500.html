@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Error del Servidor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { background-color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-6">
+    <div class="max-w-md w-full text-center">
+        <div class="mb-8 flex justify-center">
+            <div class="bg-white p-6 rounded-3xl shadow-sm inline-block">
+                <i data-lucide="alert-triangle" class="w-16 h-16 text-red-500"></i>
+            </div>
+        </div>
+        <h1 class="text-6xl font-bold text-gray-900 mb-4">500</h1>
+        <p class="text-2xl font-semibold text-gray-800 mb-2">Error del sistema</p>
+        <p class="text-gray-500 mb-4" th:text="${error}">Ha ocurrido un problema inesperado.</p>
+        
+        <div class="bg-gray-100 p-4 rounded-xl text-left text-xs text-gray-400 overflow-auto max-h-32 mb-10 font-mono" th:if="${message}">
+            <code th:text="${message}">Detalle del error técnico...</code>
+        </div>
+        
+        <a href="/" class="inline-flex items-center justify-center px-8 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-black transition-all transform hover:scale-105 shadow-md">
+            Intentar de nuevo
+        </a>
+    </div>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
