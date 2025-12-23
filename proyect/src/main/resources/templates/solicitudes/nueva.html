@@ -76,32 +76,32 @@
                         </button>
                     </div>
                     
-                    <div id="itinerario-container" class="space-y-6 relative before:absolute before:left-[21px] before:top-10 before:bottom-10 before:w-0 before:border-l-2 before:border-dashed before:border-blue-200">
+                    <div id="itinerario-container" class="space-y-6 relative before:absolute before:left-[21px] before:top-4 before:bottom-4 before:w-0.5 before:bg-gray-100">
                         <!-- Primer tramo -->
-                        <div class="tramo-row bg-white p-6 rounded-[22px] border border-gray-100 relative shadow-sm ml-10">
-                            <div class="absolute -left-[51px] top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200">
-                                <i data-lucide="bus" class="w-5 h-5"></i>
+                        <div class="tramo-row relative ml-12 group">
+                            <div class="absolute -left-[53px] top-4 w-10 h-10 bg-white border border-gray-100 rounded-xl flex items-center justify-center shadow-sm group-hover:border-blue-500 group-hover:shadow-md transition-all z-10">
+                                <i data-lucide="car" class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors"></i>
                             </div>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                                <div class="md:col-span-12 lg:col-span-5">
-                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Zona Geográfica</label>
-                                    <select name="idZonas" required onchange="updateEstimation()"
-                                            class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer text-sm font-medium">
-                                        <option value="" disabled selected>Seleccionar zona</option>
-                                        <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}">Zona</option>
-                                    </select>
-                                </div>
-                                <div class="md:col-span-12 lg:col-span-4">
-                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Ciudad / Sede</label>
-                                    <input type="text" name="ciudades" required placeholder="Ej: Trujillo"
-                                           class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-                                </div>
-                                <div class="md:col-span-12 lg:col-span-3">
-                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Noches</label>
-                                    <div class="flex items-center gap-3">
+                            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                                    <div class="md:col-span-12 lg:col-span-5">
+                                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Zona Geográfica</label>
+                                        <select name="idZonas" required onchange="updateEstimation()"
+                                                class="w-full px-4 py-3 bg-gray-50/50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer text-sm font-medium">
+                                            <option value="" disabled selected>Seleccionar zona</option>
+                                            <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}">Zona</option>
+                                        </select>
+                                    </div>
+                                    <div class="md:col-span-12 lg:col-span-4">
+                                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Ciudad / Sede</label>
+                                        <input type="text" name="ciudades" required placeholder="Ej: Trujillo"
+                                               class="w-full px-4 py-3 bg-gray-50/50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                                    </div>
+                                    <div class="md:col-span-12 lg:col-span-3">
+                                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Noches</label>
                                         <input type="number" name="noches" required min="1" value="2" onchange="updateEstimation()"
-                                               class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-blue-600">
+                                               class="w-full px-4 py-3 bg-gray-50/50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-blue-600">
                                     </div>
                                 </div>
                             </div>
@@ -150,34 +150,36 @@
     </main>
 
     <template id="tramo-template">
-        <div class="tramo-row bg-white p-6 rounded-[22px] border border-gray-50 relative group shadow-sm ml-10 animate-in slide-in-from-top-4 duration-300">
-            <div class="absolute -left-[51px] top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-100 text-gray-400 rounded-2xl flex items-center justify-center border border-gray-200 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-500 transition-all duration-300">
-                <i data-lucide="bus" class="w-5 h-5"></i>
+        <div class="tramo-row relative ml-12 group animate-in slide-in-from-top-4 duration-300">
+            <div class="absolute -left-[53px] top-4 w-10 h-10 bg-white border border-gray-100 rounded-xl flex items-center justify-center shadow-sm group-hover:border-blue-500 group-hover:shadow-md transition-all z-10">
+                <i data-lucide="car" class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors"></i>
             </div>
             
             <button type="button" onclick="this.closest('.tramo-row').remove(); updateEstimation();" 
-                    class="absolute -top-3 -right-3 w-8 h-8 bg-white text-red-500 shadow-md border border-red-50 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100">
+                    class="absolute -top-3 -right-3 w-8 h-8 bg-white text-red-500 shadow-md border border-red-50 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 z-20">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
             
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                <div class="md:col-span-12 lg:col-span-5">
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Zona Geográfica</label>
-                    <select name="idZonas" required onchange="updateEstimation()"
-                            class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer text-sm font-medium">
-                        <option value="" disabled selected>Seleccionar zona</option>
-                        <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}">Zona</option>
-                    </select>
-                </div>
-                <div class="md:col-span-12 lg:col-span-4">
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Ciudad / Sede</label>
-                    <input type="text" name="ciudades" required placeholder="Ej: Trujillo"
-                           class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-                </div>
-                <div class="md:col-span-12 lg:col-span-3">
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Noches</label>
-                    <input type="number" name="noches" required min="1" value="2" onchange="updateEstimation()"
-                           class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-blue-600">
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div class="md:col-span-12 lg:col-span-5">
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Zona Geográfica</label>
+                        <select name="idZonas" required onchange="updateEstimation()"
+                                class="w-full px-4 py-3 bg-gray-50/50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer text-sm font-medium">
+                            <option value="" disabled selected>Seleccionar zona</option>
+                            <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}">Zona</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-12 lg:col-span-4">
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Ciudad / Sede</label>
+                        <input type="text" name="ciudades" required placeholder="Ej: Trujillo"
+                               class="w-full px-4 py-3 bg-gray-50/50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                    </div>
+                    <div class="md:col-span-12 lg:col-span-3">
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Noches</label>
+                        <input type="number" name="noches" required min="1" value="2" onchange="updateEstimation()"
+                               class="w-full px-4 py-3 bg-gray-50/50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-blue-600">
+                    </div>
                 </div>
             </div>
         </div>
