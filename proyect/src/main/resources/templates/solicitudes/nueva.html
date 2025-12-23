@@ -83,10 +83,39 @@
                     </div>
                 </div>
 
+                <!-- Cálculo en tiempo real xdddddddddd -->
+                <div id="estimacionCard" class="hidden animate-in fade-in slide-in-from-top-4 duration-500">
+                    <div class="bg-blue-600 rounded-[28px] p-8 text-white shadow-xl shadow-blue-200">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <p class="text-blue-100 text-xs uppercase tracking-widest font-bold mb-1">Presupuesto Estimado</p>
+                                <h2 class="text-4xl font-bold" id="montoTotalDisplay">S/ 0.00</h2>
+                            </div>
+                            <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
+                                <i data-lucide="calculator" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 pt-6 border-t border-white/10">
+                            <div>
+                                <p class="text-blue-100 text-[10px] uppercase tracking-wider mb-1">Días de Comisión</p>
+                                <p class="text-lg font-semibold" id="diasDisplay">0 días</p>
+                            </div>
+                            <div>
+                                <p class="text-blue-100 text-[10px] uppercase tracking-wider mb-1">Asignación Diaria</p>
+                                <p class="text-lg font-semibold" id="montoDiarioDisplay">S/ 0.00</p>
+                            </div>
+                        </div>
+                        <p class="mt-6 text-[11px] text-blue-100 italic">
+                            * El monto final está sujeto a la aprobación de tesorería y validación de tarifarios vigentes.
+                        </p>
+                    </div>
+                </div>
+
                 <div class="flex items-center justify-end gap-4">
                     <a href="/" class="px-6 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">Cancelar</a>
                     <button type="submit" 
-                            class="px-10 py-3 bg-[#0071e3] text-white font-medium rounded-full hover:bg-[#0077ed] transition-all transform active:scale-95 shadow-md">
+                            class="px-10 py-3 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition-all transform active:scale-95 shadow-md">
                         Crear Solicitud
                     </button>
                 </div>
@@ -94,6 +123,51 @@
         </div>
     </main>
 
-    <script>lucide.createIcons();</script>
+    <script>
+        lucide.createIcons();
+
+        const form = document.querySelector('form');
+        const fechaInicio = document.querySelector('[name="fechaInicio"]');
+        const fechaFin = document.querySelector('[name="fechaFin"]');
+        const idZona = document.querySelector('[name="idZona"]');
+        
+        const estimacionCard = document.getElementById('estimacionCard');
+        const montoTotalDisplay = document.getElementById('montoTotalDisplay');
+        const diasDisplay = document.getElementById('diasDisplay');
+        const montoDiarioDisplay = document.getElementById('montoDiarioDisplay');
+
+        async function updateEstimation() {
+            const start = fechaInicio.value;
+            const end = fechaFin.value;
+            const zona = idZona.value;
+
+            if (start && end && zona) {
+                try {
+                    const response = await fetch(`/api/solicitudes/estimar?fechaInicio=${start}&fechaFin=${end}&idZona=${zona}`);
+                    const data = await response.json();
+
+                    if (data.montoTotal !== undefined) {
+                        montoTotalDisplay.innerText = `S/ ${data.montoTotal.toFixed(2)}`;
+                        diasDisplay.innerText = `${data.dias} ${data.dias === 1 ? 'día' : 'días'}`;
+                        montoDiarioDisplay.innerText = `S/ ${data.montoDiario.toFixed(2)}`;
+                        
+                        estimacionCard.classList.remove('hidden');
+                        lucide.createIcons();
+                    } else {
+                        estimacionCard.classList.add('hidden');
+                    }
+                } catch (error) {
+                    console.error('Error calculando estimado:', error);
+                    estimacionCard.classList.add('hidden');
+                }
+            } else {
+                estimacionCard.classList.add('hidden');
+            }
+        }
+
+        fechaInicio.addEventListener('change', updateEstimation);
+        fechaFin.addEventListener('change', updateEstimation);
+        idZona.addEventListener('change', updateEstimation);
+    </script>
 </body>
 </html>
