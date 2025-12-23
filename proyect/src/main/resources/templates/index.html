@@ -105,7 +105,7 @@
             </li>
             <li>
               <a
-                href="#"
+                href="/solicitudes"
                 class="text-[12px] opacity-80 hover:opacity-100 transition-opacity"
                 >Rendiciones</a
               >
@@ -182,7 +182,8 @@
           </a>
 
           <!-- Card 2 -->
-          <div
+          <a
+            href="/solicitudes"
             class="apple-card p-8 rounded-[28px] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer group"
           >
             <div
@@ -198,7 +199,7 @@
               Carga tus comprobantes y haz seguimiento a la validación de tus
               gastos en tiempo real.
             </p>
-          </div>
+          </a>
 
           <!-- Card 3 -->
           <div
@@ -346,6 +347,13 @@
                           Enviar
                         </button>
                       </form>
+                      <a
+                        th:if="${sol.estado.name() == 'APROBADO'}"
+                        th:href="@{'/rendiciones/solicitud/' + ${sol.id}}"
+                        class="px-3 py-1 bg-apple-blue text-white text-[10px] font-bold uppercase rounded-full hover:opacity-90 transition-all shadow-sm"
+                      >
+                        Rendir
+                      </a>
                       <a
                         th:href="@{'/solicitudes/' + ${sol.id}}"
                         class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group"

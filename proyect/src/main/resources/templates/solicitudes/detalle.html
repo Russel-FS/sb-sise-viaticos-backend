@@ -199,10 +199,12 @@
                     </form>
 
                     <!-- Botón Rendición   -->
-                 <button th:if="${sol.estado.name() == 'APROBADO'}" class="px-8 py-3 bg-apple-blue text-white font-bold rounded-2xl hover:opacity-90 transition-all shadow-lg flex items-center gap-2">
+                    <a th:if="${sol.estado.name() == 'APROBADO'}" 
+                       th:href="@{'/rendiciones/solicitud/' + ${sol.id}}"
+                       class="px-8 py-3 bg-apple-blue text-white font-bold rounded-2xl hover:opacity-90 transition-all shadow-lg flex items-center gap-2">
                         Iniciar Rendición
-                        <i data-lucide="file-check" class="w-4 h-4 text-white/70"></i>
-                    </button>
+                        <i data-lucide="arrow-right" class="w-4 h-4 text-white/70"></i>
+                    </a>
                 </div>
             </div>
           </div>

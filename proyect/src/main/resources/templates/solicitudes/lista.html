@@ -79,6 +79,20 @@
                 >Administrar</a
               >
             </li>
+            <li>
+              <a
+                href="/solicitudes"
+                class="text-[12px] opacity-80 hover:opacity-100 font-bold text-apple-text"
+                >Rendiciones</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-[12px] opacity-80 hover:opacity-100 font-bold text-apple-text"
+                >Liquidaciones</a
+              >
+            </li>
           </ul>
         </div>
         <div class="flex items-center gap-6" th:if="${currentUser != null}">
@@ -241,6 +255,13 @@
                         Enviar
                       </button>
                     </form>
+                    <a
+                      th:if="${sol.estado.name() == 'APROBADO'}"
+                      th:href="@{'/rendiciones/solicitud/' + ${sol.id}}"
+                      class="px-3 py-1 bg-apple-blue text-white text-[10px] font-bold uppercase rounded-full hover:opacity-90 transition-all shadow-sm"
+                    >
+                      Rendir
+                    </a>
                     <a
                       th:href="@{'/solicitudes/' + ${sol.id}}"
                       class="p-2 hover:bg-white rounded-xl transition-all shadow-sm group"

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rendición de Cuentas - ISS Viáticos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              apple: {
+                bg: "#f5f5f7",
+                card: "rgba(255, 255, 255, 0.72)",
+                text: "#1d1d1f",
+                secondary: "#86868b",
+                blue: "#0071e3",
+                border: "rgba(0, 0, 0, 0.1)",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: saturate(180%) blur(20px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      .apple-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .input-apple {
+        @apply w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-apple-blue outline-none transition-all;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- Nav -->
+    <nav class="fixed top-0 w-full z-50 glass">
+      <div
+        class="max-w-5xl mx-auto px-6 h-11 flex items-center justify-between"
+      >
+        <a
+          href="/"
+          class="text-[12px] font-semibold tracking-tight opacity-90 hover:opacity-100 transition-opacity"
+          >ISS Viáticos</a
+        >
+        <div class="flex gap-6">
+          <a
+            th:href="@{'/solicitudes/' + ${sol.id}}"
+            class="text-[12px] font-bold text-apple-blue"
+            >Regresar al Detalle</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <main class="pt-24 pb-20 px-6">
+      <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <div class="mb-10">
+          <div class="flex items-center gap-3 mb-2">
+            <span
+              class="px-3 py-1 bg-apple-blue/10 text-apple-blue rounded-full text-[10px] font-bold uppercase tracking-wider"
+              >Rendición Proactiva</span
+            >
+          </div>
+          <h1 class="text-4xl font-semibold tracking-tight text-apple-text">
+            Rendición de Cuentas
+          </h1>
+          <p
+            class="text-xl text-apple-secondary mt-1"
+            th:text="${sol.motivoViaje}"
+          >
+            Motivo del viaje
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Columna Izquierda: Resumen y Formulario -->
+          <div class="lg:col-span-1 space-y-6">
+            <!-- Card Resumen -->
+            <div
+              class="bg-black rounded-[32px] p-8 text-white shadow-2xl relative overflow-hidden"
+            >
+              <div class="relative z-10">
+                <p
+                  class="text-gray-400 text-[10px] uppercase tracking-[0.2em] font-bold mb-6"
+                >
+                  Estado de Gastos
+                </p>
+
+                <div class="space-y-6">
+                  <div>
+                    <p
+                      class="text-gray-400 text-[10px] uppercase font-bold mb-1"
+                    >
+                      Presupuesto Asignado
+                    </p>
+                    <p
+                      class="text-2xl font-bold"
+                      th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}"
+                    >
+                      S/ 0.00
+                    </p>
+                  </div>
+                  <div>
+                    <p
+                      class="text-gray-400 text-[10px] uppercase font-bold mb-1"
+                    >
+                      Total Rendido
+                    </p>
+                    <p
+                      class="text-4xl font-extrabold text-blue-400"
+                      th:text="${'S/ ' + #numbers.formatDecimal(ren.totalGastadoBruto, 1, 2)}"
+                    >
+                      S/ 0.00
+                    </p>
+                  </div>
+                  <div class="pt-4 border-t border-white/10">
+                    <p
+                      class="text-gray-400 text-[10px] uppercase font-bold mb-1"
+                    >
+                      Diferencia
+                    </p>
+                    <p
+                      class="text-xl font-bold"
+                      th:classappend="${sol.montoTotal.subtract(ren.totalGastadoBruto).signum() < 0 ? 'text-red-400' : 'text-green-400'}"
+                      th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal.subtract(ren.totalGastadoBruto), 1, 2)}"
+                    >
+                      S/ 0.00
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Agregar Comprobante -->
+            <div
+              class="bg-white p-8 rounded-[32px] border border-apple-border shadow-sm"
+            >
+              <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                <i
+                  data-lucide="plus-circle"
+                  class="w-5 h-5 text-apple-blue"
+                ></i>
+                Agregar Comprobante
+              </h3>
+
+              <form
+                th:action="@{/rendiciones/comprobante/guardar}"
+                method="post"
+                class="space-y-4"
+              >
+                <input type="hidden" name="rendicionId" th:value="${ren.id}" />
+                <input type="hidden" name="solicitudId" th:value="${sol.id}" />
+
+                <div>
+                  <label
+                    class="block text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 ml-1"
+                    >Tipo de Gasto</label
+                  >
+                  <select
+                    name="tipoGastoId"
+                    required
+                    class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-apple-blue outline-none transition-all text-sm appearance-none"
+                  >
+                    <option
+                      th:each="t : ${tiposGasto}"
+                      th:value="${t.id}"
+                      th:text="${t.nombre}"
+                    >
+                      Gasos
+                    </option>
+                  </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      class="block text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 ml-1"
+                      >RUC</label
+                    >
+                    <input
+                      type="text"
+                      name="ruc"
+                      maxlength="11"
+                      required
+                      placeholder="12345678901"
+                      class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-apple-blue outline-none transition-all text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      class="block text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 ml-1"
+                      >Serie/N°</label
+                    >
+                    <input
+                      type="text"
+                      name="serie"
+                      required
+                      placeholder="F001-123"
+                      class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-apple-blue outline-none transition-all text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    class="block text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 ml-1"
+                    >Razón Social</label
+                  >
+                  <input
+                    type="text"
+                    name="razonSocial"
+                    required
+                    placeholder="Nombre del proveedor"
+                    class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-apple-blue outline-none transition-all text-sm"
+                  />
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      class="block text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 ml-1"
+                      >Fecha Emisión</label
+                    >
+                    <input
+                      type="date"
+                      name="fecha"
+                      required
+                      class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-apple-blue outline-none transition-all text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      class="block text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 ml-1"
+                      >Monto Total</label
+                    >
+                    <input
+                      type="number"
+                      step="0.01"
+                      name="monto"
+                      required
+                      placeholder="0.00"
+                      class="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-apple-blue outline-none transition-all text-sm font-bold"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  class="w-full py-4 bg-black text-white font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-lg flex items-center justify-center gap-2 mt-4"
+                >
+                  <i data-lucide="save" class="w-4 h-4"></i>
+                  Guardar Comprobante
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Columna Derecha: Listado de Comprobantes -->
+          <div class="lg:col-span-2 space-y-6">
+            <div
+              class="bg-white rounded-[32px] border border-apple-border shadow-sm overflow-hidden"
+            >
+              <div
+                class="p-8 border-b border-gray-50 flex justify-between items-center"
+              >
+                <h3 class="text-xl font-bold tracking-tight">
+                  Detalle de Comprobantes
+                </h3>
+                <span
+                  class="px-4 py-1.5 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                  th:text="${#lists.size(ren.detalles) + ' Documentos'}"
+                  >0 Doc</span
+                >
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-gray-50/50">
+                    <tr>
+                      <th
+                        class="px-8 py-4 text-left font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
+                      >
+                        Gasto
+                      </th>
+                      <th
+                        class="px-8 py-4 text-left font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
+                      >
+                        Proveedor
+                      </th>
+                      <th
+                        class="px-8 py-4 text-left font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
+                      >
+                        Comprobante
+                      </th>
+                      <th
+                        class="px-8 py-4 text-right font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
+                      >
+                        Monto
+                      </th>
+                      <th
+                        class="px-8 py-4 text-center font-bold text-apple-secondary text-[10px] uppercase tracking-widest"
+                      >
+                        Acción
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-50">
+                    <tr
+                      th:each="det : ${ren.detalles}"
+                      class="hover:bg-gray-50/50 transition-colors group"
+                    >
+                      <td class="px-8 py-5">
+                        <div
+                          class="font-bold text-apple-text"
+                          th:text="${det.tipoGasto.nombre}"
+                        >
+                          Alimentación
+                        </div>
+                        <div
+                          class="text-[10px] text-apple-secondary lowercase"
+                          th:text="${'CTA: ' + det.tipoGasto.cuentaContable}"
+                        >
+                          CTA
+                        </div>
+                      </td>
+                      <td class="px-8 py-5">
+                        <div
+                          class="font-semibold text-apple-text"
+                          th:text="${det.razonSocialProveedor}"
+                        >
+                          Nombre
+                        </div>
+                        <div
+                          class="text-[10px] text-apple-secondary"
+                          th:text="${'RUC: ' + det.rucProveedor}"
+                        >
+                          RUC
+                        </div>
+                      </td>
+                      <td class="px-8 py-5">
+                        <div
+                          class="text-apple-text font-medium"
+                          th:text="${det.serieNumeroComprobante}"
+                        >
+                          F001-123
+                        </div>
+                        <div
+                          class="text-[10px] text-apple-secondary"
+                          th:text="${det.fechaEmision}"
+                        >
+                          01/01/2024
+                        </div>
+                      </td>
+                      <td
+                        class="px-8 py-5 text-right font-bold text-apple-text"
+                        th:text="${'S/ ' + #numbers.formatDecimal(det.montoTotal, 1, 2)}"
+                      >
+                        S/ 0.00
+                      </td>
+                      <td class="px-8 py-5 text-center">
+                        <a
+                          th:href="@{'/rendiciones/comprobante/eliminar/' + ${det.id} + '?solicitudId=' + ${sol.id}}"
+                          class="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all inline-block group-hover:opacity-100 opacity-0"
+                        >
+                          <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </a>
+                      </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(ren.detalles)}">
+                      <td
+                        colspan="5"
+                        class="px-8 py-20 text-center text-apple-secondary italic"
+                      >
+                        <i
+                          data-lucide="file-question"
+                          class="w-10 h-10 mx-auto mb-4 opacity-10"
+                        ></i>
+                        Aún no has registrado ningún comprobante.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Acciones Finales Rendición -->
+            <div
+              class="bg-white p-8 rounded-[32px] border border-apple-border flex justify-between items-center shadow-sm"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center"
+                >
+                  <i data-lucide="info" class="w-6 h-6 text-green-600"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-bold">Rendición en curso</p>
+                  <p class="text-xs text-apple-secondary">
+                    Tus cambios se guardan automáticamente como borrador.
+                  </p>
+                </div>
+              </div>
+              <form th:action="@{/rendiciones/finalizar}" method="post">
+                <input type="hidden" name="rendicionId" th:value="${ren.id}" />
+                <button
+                  type="submit"
+                  class="px-8 py-4 bg-apple-blue text-white font-bold rounded-2xl hover:opacity-90 transition-all shadow-lg flex items-center gap-2"
+                >
+                  Finalizar y Enviar a Validación
+                  <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script th:inline="javascript">
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
