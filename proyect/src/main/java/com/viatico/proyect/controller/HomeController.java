@@ -27,8 +27,17 @@ public class HomeController {
                 model.addAttribute("solicitudes", solicitudService.listarTodas());
                 model.addAttribute("viewTitle", "Todas las Solicitudes (Admin)");
             } else {
-                model.addAttribute("solicitudes", solicitudService.listarPorEmpleado(user.getIdEmpleado()));
+                var lista = solicitudService.listarPorEmpleado(user.getIdEmpleado());
+                model.addAttribute("solicitudes", lista);
                 model.addAttribute("viewTitle", "Mis Solicitudes Recientes");
+
+                // estadisticas
+                model.addAttribute("totalPendientes",
+                        lista.stream().filter(s -> s.getEstado().name().equals("PENDIENTE")).count());
+                model.addAttribute("totalAprobados",
+                        lista.stream().filter(s -> s.getEstado().name().equals("APROBADO")).count());
+                model.addAttribute("totalLiquidados",
+                        lista.stream().filter(s -> s.getEstado().name().equals("LIQUIDADO")).count());
             }
         }
         return "index";

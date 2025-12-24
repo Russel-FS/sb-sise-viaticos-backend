@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import com.viatico.proyect.service.PdfService;
+import java.io.ByteArrayInputStream;
 
 import java.util.List;
 
@@ -23,6 +29,7 @@ public class SolicitudController {
 
     private final SolicitudService solicitudService;
     private final LiquidacionService liquidacionService;
+    private final PdfService pdfService;
 
     @GetMapping
     public String listarSolicitudes(Model model, @AuthenticationPrincipal UsuarioPrincipal user) {
@@ -94,5 +101,19 @@ public class SolicitudController {
     public String cancelarSolicitud(@PathVariable Long id) {
         solicitudService.cancelar(id);
         return "redirect:/solicitudes";
+    }
+
+    @GetMapping("/{id}/reporte")
+    public ResponseEntity<InputStreamResource> descargarReporte(@PathVariable Long id) {
+        ByteArrayInputStream bis = pdfService.generarReporteLiquidacion(id);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=liquidacion_" + id + ".pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
     }
 }
