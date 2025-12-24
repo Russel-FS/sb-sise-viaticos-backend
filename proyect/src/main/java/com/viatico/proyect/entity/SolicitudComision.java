@@ -47,6 +47,9 @@ public class SolicitudComision {
     @Column(name = "USER_CREA")
     private String userCrea;
 
+    @Column(name = "FECHA_LIQUIDACION")
+    private LocalDateTime fechaLiquidacion;
+
     @Column(name = "FECHA_CREA")
     private LocalDateTime fechaCrea;
 

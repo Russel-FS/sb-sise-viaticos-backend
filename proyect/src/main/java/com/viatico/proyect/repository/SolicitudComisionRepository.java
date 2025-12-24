@@ -10,6 +10,8 @@ public interface SolicitudComisionRepository extends JpaRepository<SolicitudComi
 
     List<SolicitudComision> findByEstadoOrderByFechaCreaDesc(EstadoSolicitud estado);
 
+    List<SolicitudComision> findByEmpleadoIdAndEstadoOrderByFechaCreaDesc(Long empleadoId, EstadoSolicitud estado);
+
     List<SolicitudComision> findTop5ByEmpleadoIdOrderByFechaCreaDesc(Long empleadoId);
 
     List<SolicitudComision> findTop5ByOrderByFechaCreaDesc();

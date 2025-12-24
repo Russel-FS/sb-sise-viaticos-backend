@@ -32,4 +32,6 @@ public interface SolicitudService {
     List<SolicitudComision> listarRecientes(Long empleadoId);
 
     long contarPorEstado(String estado, Long empleadoId);
+
+    Double calcularPromedioDiasLiquidacion(Long empleadoId);
 }

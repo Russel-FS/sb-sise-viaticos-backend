@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -183,5 +184,33 @@ public class SolicitudServiceImpl implements SolicitudService {
                         return solicitudRepository.countByEstado(estadoEnum);
                 }
                 return solicitudRepository.countByEmpleadoIdAndEstado(empleadoId, estadoEnum);
+        }
+
+        @Override
+        public Double calcularPromedioDiasLiquidacion(Long empleadoId) {
+                List<SolicitudComision> liquidadas;
+                if (empleadoId == null) {
+                        liquidadas = solicitudRepository.findByEstadoOrderByFechaCreaDesc(EstadoSolicitud.LIQUIDADO);
+                } else {
+                        liquidadas = solicitudRepository.findByEmpleadoIdAndEstadoOrderByFechaCreaDesc(empleadoId,
+                                        EstadoSolicitud.LIQUIDADO);
+                }
+
+                if (liquidadas.isEmpty())
+                        return 0.0;
+
+                long totalDias = 0;
+                int count = 0;
+
+                for (SolicitudComision sol : liquidadas) {
+                        if (sol.getFechaLiquidacion() != null && sol.getFechaFin() != null) {
+                                long dias = ChronoUnit.DAYS.between(sol.getFechaFin(),
+                                                sol.getFechaLiquidacion().toLocalDate());
+                                totalDias += Math.max(0, dias);
+                                count++;
+                        }
+                }
+
+                return count == 0 ? 0.0 : (double) totalDias / count;
         }
 }

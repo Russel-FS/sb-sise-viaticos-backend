@@ -137,6 +137,7 @@ public class RendicionServiceImpl implements RendicionService {
 
                 SolicitudComision sol = ren.getSolicitud();
                 sol.setEstado(EstadoSolicitud.LIQUIDADO);
+                sol.setFechaLiquidacion(LocalDateTime.now());
                 solicitudRepository.save(sol);
 
                 liquidacionService.generarLiquidacion(solicitudId);

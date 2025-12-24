@@ -31,19 +31,22 @@ public class HomeController {
                 model.addAttribute("solicitudes", solicitudService.listarRecientes(null));
                 model.addAttribute("viewTitle", "Actividad Reciente (Admin)");
 
-                // Conteos directos de BD
+                // Conteos directos
                 long pendientes = solicitudService.contarPorEstado("PENDIENTE", null);
                 long aprobados = solicitudService.contarPorEstado("APROBADO", null);
                 long rechazados = solicitudService.contarPorEstado("RECHAZADO", null);
                 long liquidados = solicitudService.contarPorEstado("LIQUIDADO", null);
 
-                // Estadísticas para tarjetas ADMIN (si no existen en HTML admin, no rompe nada)
+                // Estadísticas para tarjetas ADMIN
                 model.addAttribute("totalPendientes", pendientes);
                 model.addAttribute("totalAprobados", aprobados);
                 model.addAttribute("totalLiquidados", liquidados);
 
                 model.addAttribute("chartLabels", List.of("Pendientes", "Aprobados", "Rechazados", "Liquidados"));
                 model.addAttribute("chartData", List.of(pendientes, aprobados, rechazados, liquidados));
+
+                Double promedioDias = solicitudService.calcularPromedioDiasLiquidacion(null);
+                model.addAttribute("promedioDiasLiquidacion", Math.round(promedioDias));
 
             } else {
                 Long empId = user.getIdEmpleado();
@@ -64,6 +67,9 @@ public class HomeController {
 
                 model.addAttribute("chartLabels", List.of("Pendientes", "Aprobados", "Rechazados", "Liquidados"));
                 model.addAttribute("chartData", List.of(pendientes, aprobados, rechazados, liquidados));
+
+                Double promedioDias = solicitudService.calcularPromedioDiasLiquidacion(empId);
+                model.addAttribute("promedioDiasLiquidacion", Math.round(promedioDias));
             }
         }
         return "index";
@@ -72,5 +78,10 @@ public class HomeController {
     @GetMapping("/login")
     public String login() {
         return "login";
+    }
+
+    @GetMapping("/politicas")
+    public String politicas() {
+        return "politicas";
     }
 }

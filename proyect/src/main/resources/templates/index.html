@@ -81,6 +81,21 @@
         background: #0071e3;
         box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
       }
+
+      .stat-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+      }
+      .dot-orange {
+        background-color: #ff9500;
+      }
+      .dot-green {
+        background-color: #34c759;
+      }
+      .dot-blue {
+        background-color: #007aff;
+      }
     </style>
   </head>
   <body class="flex flex-col min-h-screen">
@@ -109,6 +124,12 @@
               href="/admin/aprobaciones"
               class="hover:text-black transition-colors"
               >Aprobaciones</a
+            >
+            <a
+              th:if="${isAdmin}"
+              href="/admin/empleados"
+              class="hover:text-black transition-colors"
+              >Personal</a
             >
             <a
               th:if="${isAdmin}"
@@ -169,64 +190,60 @@
         <div class="grid grid-cols-12 gap-6">
           <!-- BLOQUE IZQUIERDO: KPIs + Lista (NotebookLM uses columns heavily) -->
           <div class="col-span-12 lg:col-span-8 flex flex-col gap-6">
-            <!-- KPIs Row -->
-            <div class="grid grid-cols-3 gap-4">
-              <div
-                class="ios-card p-5 flex flex-col justify-between h-32 hover:shadow-md transition-shadow"
-              >
-                <div class="flex justify-between items-start">
+            <!-- KPIs Row (Ultra Minimalist) -->
+            <div class="grid grid-cols-3 gap-6">
+              <!-- Pendientes -->
+              <div class="ios-card p-8 flex flex-col justify-between h-36">
+                <div class="flex items-center gap-2">
+                  <div
+                    class="stat-dot dot-orange shadow-[0_0_8px_rgba(255,149,0,0.4)]"
+                  ></div>
                   <span
-                    class="text-[11px] font-bold text-gray-400 uppercase tracking-wider"
+                    class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest"
                     >Pendientes</span
                   >
-                  <div class="w-2 h-2 rounded-full bg-orange-400"></div>
                 </div>
-                <div>
-                  <span
-                    class="text-3xl font-semibold tracking-tight text-gray-900"
-                    th:text="${totalPendientes}"
-                    >0</span
-                  >
-                  <span class="text-xs text-gray-400 ml-1">solicitudes</span>
-                </div>
+                <span
+                  class="text-5xl font-bold tracking-tighter text-gray-900"
+                  th:text="${totalPendientes}"
+                  >0</span
+                >
               </div>
-              <div
-                class="ios-card p-5 flex flex-col justify-between h-32 hover:shadow-md transition-shadow"
-              >
-                <div class="flex justify-between items-start">
+
+              <!-- Aprobadas -->
+              <div class="ios-card p-8 flex flex-col justify-between h-36">
+                <div class="flex items-center gap-2">
+                  <div
+                    class="stat-dot dot-green shadow-[0_0_8px_rgba(52,199,89,0.4)]"
+                  ></div>
                   <span
-                    class="text-[11px] font-bold text-gray-400 uppercase tracking-wider"
+                    class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest"
                     >Aprobadas</span
                   >
-                  <div class="w-2 h-2 rounded-full bg-green-500"></div>
                 </div>
-                <div>
-                  <span
-                    class="text-3xl font-semibold tracking-tight text-gray-900"
-                    th:text="${totalAprobados}"
-                    >0</span
-                  >
-                  <span class="text-xs text-gray-400 ml-1">comisiones</span>
-                </div>
+                <span
+                  class="text-5xl font-bold tracking-tighter text-gray-900"
+                  th:text="${totalAprobados}"
+                  >0</span
+                >
               </div>
-              <div
-                class="ios-card p-5 flex flex-col justify-between h-32 hover:shadow-md transition-shadow"
-              >
-                <div class="flex justify-between items-start">
+
+              <!-- Liquidadas -->
+              <div class="ios-card p-8 flex flex-col justify-between h-36">
+                <div class="flex items-center gap-2">
+                  <div
+                    class="stat-dot dot-blue shadow-[0_0_8px_rgba(0,122,255,0.4)]"
+                  ></div>
                   <span
-                    class="text-[11px] font-bold text-gray-400 uppercase tracking-wider"
+                    class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest"
                     >Liquidadas</span
                   >
-                  <div class="w-2 h-2 rounded-full bg-blue-500"></div>
                 </div>
-                <div>
-                  <span
-                    class="text-3xl font-semibold tracking-tight text-gray-900"
-                    th:text="${totalLiquidados}"
-                    >0</span
-                  >
-                  <span class="text-xs text-gray-400 ml-1">cerradas</span>
-                </div>
+                <span
+                  class="text-5xl font-bold tracking-tighter text-gray-900"
+                  th:text="${totalLiquidados}"
+                  >0</span
+                >
               </div>
             </div>
 
@@ -354,32 +371,6 @@
               <div class="h-48 relative">
                 <canvas id="statusChart"></canvas>
               </div>
-            </div>
-
-            <!-- insights -->
-            <div
-              class="ios-card p-6 bg-gray-900 text-white relative overflow-hidden"
-            >
-              <div class="relative z-10">
-                <h3 class="text-sm font-semibold text-gray-200 mb-1">
-                  Efectividad
-                </h3>
-                <div class="flex items-baseline gap-2 mb-4">
-                  <span class="text-4xl font-bold">94%</span>
-                  <span
-                    class="text-xs text-green-400 font-medium flex items-center"
-                    ><i data-lucide="arrow-up" class="w-3 h-3"></i> +2.5%</span
-                  >
-                </div>
-                <p class="text-xs text-gray-400 leading-relaxed max-w-[90%]">
-                  Tu tiempo promedio de liquidación es de
-                  <span class="text-white font-semibold">2 días</span>, lo cual
-                  es excelente comparado con el promedio de la empresa.
-                </p>
-              </div>
-              <div
-                class="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -mr-10 -mt-10 blur-2xl"
-              ></div>
             </div>
 
             <!-- menu rápido -->
