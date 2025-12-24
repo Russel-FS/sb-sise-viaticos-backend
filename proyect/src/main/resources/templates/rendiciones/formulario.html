@@ -53,12 +53,6 @@
           0 2px 4px -1px rgba(0, 0, 0, 0.02);
         border: 1px solid rgba(0, 0, 0, 0.05);
       }
-      .input-apple {
-        @apply w-full px-4 py-3.5 bg-gray-50 border-none rounded-[16px] focus:ring-2 focus:ring-apple-blue/20 focus:bg-white outline-none transition-all text-sm font-medium text-gray-900 placeholder:text-gray-400;
-      }
-      .label-apple {
-        @apply block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1;
-      }
     </style>
   </head>
   <body class="antialiased selection:bg-apple-blue selection:text-white pb-20">
@@ -85,6 +79,8 @@
 
     <main class="pt-28 px-6">
       <div class="max-w-6xl mx-auto">
+        <!-- Toast Notifications (Success/Error) -->
+        <div th:replace="~{fragments/common :: toaster}"></div>
         <!-- Header -->
         <div
           class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500"
@@ -207,6 +203,7 @@
               <form
                 th:action="@{/rendiciones/comprobante/guardar}"
                 method="post"
+                enctype="multipart/form-data"
                 class="space-y-6"
               >
                 <input type="hidden" name="rendicionId" th:value="${ren.id}" />
@@ -240,7 +237,7 @@
                   </div>
                 </div>
 
-                <!-- Detalles Proveedor (Grid más flexible) -->
+                <!-- Detalles Proveedor   -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div class="space-y-2">
                     <label
@@ -321,6 +318,39 @@
                   </div>
                 </div>
 
+                <!-- Foto del Comprobante -->
+                <div class="space-y-2">
+                  <label
+                    class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1"
+                    >Foto del Comprobante (Evidencia)</label
+                  >
+                  <label
+                    class="flex flex-col items-center justify-center w-full h-32 bg-gray-50 border-2 border-dashed border-gray-200 rounded-[22px] cursor-pointer hover:bg-gray-100/50 hover:border-apple-blue/30 transition-all group"
+                  >
+                    <div
+                      class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4"
+                    >
+                      <i
+                        data-lucide="camera"
+                        class="w-6 h-6 text-gray-400 mb-2 group-hover:scale-110 transition-transform"
+                      ></i>
+                      <p
+                        class="text-[10px] font-bold text-gray-400 uppercase tracking-widest line-clamp-2"
+                      >
+                        Subir Foto o PDF
+                      </p>
+                    </div>
+                    <input
+                      type="file"
+                      id="archivoInput"
+                      name="archivo"
+                      class="hidden"
+                      accept="image/*,.pdf"
+                      onchange="validarArchivo(this)"
+                    />
+                  </label>
+                </div>
+
                 <button
                   type="submit"
                   class="w-full py-4 bg-black text-white font-bold rounded-[18px] hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-gray-200 flex items-center justify-center gap-3 mt-4 group"
@@ -346,7 +376,7 @@
             </div>
           </div>
 
-          <!-- Columna Derecha: Listado (8 columnas en LG) -->
+          <!-- Columna Derecha  Listado   -->
           <div class="lg:col-span-8 space-y-6">
             <div class="card-pro overflow-hidden min-h-[600px] flex flex-col">
               <div
@@ -394,6 +424,11 @@
                         class="px-8 py-5 text-right font-bold text-gray-400 text-[10px] uppercase tracking-widest"
                       >
                         Monto
+                      </th>
+                      <th
+                        class="px-8 py-5 text-left font-bold text-gray-400 text-[10px] uppercase tracking-widest"
+                      >
+                        Evidencia
                       </th>
                       <th
                         class="px-8 py-5 text-left font-bold text-gray-400 text-[10px] uppercase tracking-widest"
@@ -461,6 +496,27 @@
                           th:text="${'S/ ' + #numbers.formatDecimal(det.montoTotal, 1, 2)}"
                         >
                           S/ 0.00
+                        </div>
+                      </td>
+                      <td class="px-8 py-5 align-top">
+                        <div
+                          th:if="${det.fotoEvidenciaUrl}"
+                          class="flex items-center"
+                        >
+                          <img
+                            th:src="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
+                            class="w-10 h-10 object-cover rounded-lg border border-gray-100 hover:scale-110 transition-all cursor-zoom-in"
+                            th:onclick="'abrirVisualizador(this.src)'"
+                          />
+                        </div>
+                        <div
+                          th:unless="${det.fotoEvidenciaUrl}"
+                          class="p-2 bg-gray-50 rounded-lg inline-block"
+                        >
+                          <i
+                            data-lucide="image-off"
+                            class="w-4 h-4 text-gray-300"
+                          ></i>
                         </div>
                       </td>
                       <td class="px-8 py-5 align-top">
@@ -578,7 +634,7 @@
       </div>
     </main>
 
-    <!-- Modal para Motivo de Rechazo (Refined) -->
+    <!-- Modal para Motivo de Rechazo   -->
     <div
       id="modalRechazo"
       class="fixed inset-0 z-[100] hidden items-center justify-center p-6 bg-gray-900/40 backdrop-blur-sm transition-all"
@@ -624,6 +680,24 @@
       </div>
     </div>
 
+    <!-- Visualizador de Imagen   -->
+    <div
+      id="visualizadorImg"
+      class="fixed inset-0 z-[110] hidden items-center justify-center p-6 bg-black/90 backdrop-blur-md transition-all"
+    >
+      <button
+        onclick="cerrarVisualizador()"
+        class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors"
+      >
+        <i data-lucide="x" class="w-8 h-8"></i>
+      </button>
+      <img
+        id="imgGrande"
+        src=""
+        class="max-w-full max-h-[85vh] rounded-2xl shadow-2xl animate-in zoom-in-95 duration-300"
+      />
+    </div>
+
     <script th:inline="javascript">
       lucide.createIcons();
 
@@ -643,12 +717,53 @@
         modal.classList.add("hidden");
       }
 
+      function abrirVisualizador(src) {
+        event.stopPropagation();
+        const modal = document.getElementById("visualizadorImg");
+        const img = document.getElementById("imgGrande");
+        img.src = src;
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+
+      function cerrarVisualizador() {
+        const modal = document.getElementById("visualizadorImg");
+        modal.classList.remove("flex");
+        modal.classList.add("hidden");
+      }
+
       window.onclick = function (event) {
         const modal = document.getElementById("modalRechazo");
-        if (event.target == modal) {
-          cerrarModal();
-        }
+        const modalImg = document.getElementById("visualizadorImg");
+        if (event.target == modal) cerrarModal();
+        if (event.target == modalImg) cerrarVisualizador();
       };
+
+      function validarArchivo(input) {
+        const file = input.files[0];
+        const label = input.parentElement;
+        const textElement = label.querySelector("p");
+
+        if (!file) return;
+
+        // Limite de 20MB
+        const limit = 20 * 1024 * 1024;
+
+        if (file.size > limit) {
+          alert(
+            "El archivo '" +
+              file.name +
+              "' es demasiado grande (supera los 20MB). Por favor elige un archivo más pequeño."
+          );
+          input.value = "";
+          textElement.innerText = "Subir Foto o PDF";
+          label.classList.remove("bg-blue-50/50", "border-apple-blue/20");
+          return;
+        }
+
+        textElement.innerText = file.name;
+        label.classList.add("bg-blue-50/50", "border-apple-blue/20");
+      }
     </script>
   </body>
 </html>

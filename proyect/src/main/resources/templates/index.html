@@ -149,7 +149,6 @@
       <div th:replace="~{fragments/common :: toaster}"></div>
 
       <div class="max-w-6xl mx-auto px-8">
-        <!-- Dashboard Header: Direct and Professional -->
         <div
           class="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700"
         >
@@ -167,7 +166,101 @@
           </p>
         </div>
 
-        <!-- Cards Minimalistas sin Fondos -->
+        <!-- Estadísticas -->
+        <div
+          th:if="${!isAdmin}"
+          class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16 animate-in fade-in slide-in-from-bottom-6 duration-1000"
+        >
+          <div
+            class="apple-card-refined p-6 border border-gray-50 flex items-center justify-between"
+          >
+            <div>
+              <p
+                class="text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-1"
+              >
+                Pendientes
+              </p>
+              <p
+                class="text-2xl font-bold text-gray-900"
+                th:text="${totalPendientes}"
+              >
+                0
+              </p>
+            </div>
+            <div
+              class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600"
+            >
+              <i data-lucide="clock" class="w-5 h-5"></i>
+            </div>
+          </div>
+
+          <div
+            class="apple-card-refined p-6 border border-gray-50 flex items-center justify-between"
+          >
+            <div>
+              <p
+                class="text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-1"
+              >
+                Aprobados
+              </p>
+              <p
+                class="text-2xl font-bold text-gray-900"
+                th:text="${totalAprobados}"
+              >
+                0
+              </p>
+            </div>
+            <div
+              class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600"
+            >
+              <i data-lucide="check-circle" class="w-5 h-5"></i>
+            </div>
+          </div>
+
+          <div
+            class="apple-card-refined p-6 border border-gray-50 flex items-center justify-between"
+          >
+            <div>
+              <p
+                class="text-[10px] font-bold text-apple-secondary uppercase tracking-widest mb-1"
+              >
+                Liquidados
+              </p>
+              <p
+                class="text-2xl font-bold text-gray-900"
+                th:text="${totalLiquidados}"
+              >
+                0
+              </p>
+            </div>
+            <div
+              class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-apple-blue"
+            >
+              <i data-lucide="shield-check" class="w-5 h-5"></i>
+            </div>
+          </div>
+
+          <div
+            class="apple-card-refined p-6 bg-black text-white flex items-center justify-between overflow-hidden relative"
+          >
+            <div class="relative z-10">
+              <p
+                class="text-gray-400 text-[10px] font-bold uppercase tracking-widest mb-1"
+              >
+                Total
+              </p>
+              <p class="text-2xl font-bold" th:text="${solicitudes.size()}">
+                0
+              </p>
+            </div>
+            <i
+              data-lucide="activity"
+              class="w-12 h-12 text-white/5 absolute -right-2 -bottom-2 relative z-10 opacity-20"
+            ></i>
+          </div>
+        </div>
+
+        <!-- Cards   -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
           <!-- Solicitud -->
           <a

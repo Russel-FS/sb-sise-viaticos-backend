@@ -394,6 +394,17 @@
                 <i data-lucide="file-text" class="w-5 h-5 text-gray-400"></i>
               </a>
 
+              <!-- Descargar Reporte PDF -->
+              <a
+                th:if="${sol.estado.name() == 'LIQUIDADO'}"
+                th:href="@{'/solicitudes/' + ${sol.id} + '/reporte'}"
+                target="_blank"
+                class="w-full py-5 bg-black text-white text-sm font-bold rounded-[22px] hover:bg-gray-800 transition-all active:scale-95 shadow-xl shadow-black/10 flex items-center justify-center gap-3"
+              >
+                Descargar Reporte PDF
+                <i data-lucide="download" class="w-5 h-5 text-apple-blue"></i>
+              </a>
+
               <!-- Cancelar -->
               <form
                 th:if="${sol.estado.name() == 'BORRADOR' || sol.estado.name() == 'PENDIENTE'}"
@@ -432,14 +443,24 @@
                   Resultado de Liquidación
                 </h2>
               </div>
-              <div
-                class="px-5 py-2.5 bg-gray-50 border border-gray-100 rounded-full"
-              >
-                <span
-                  class="text-[11px] font-bold text-gray-500 uppercase tracking-[0.2em]"
-                  th:text="${liq.estadoCierre}"
-                  >CERRADO</span
+              <div class="flex flex-col sm:flex-row items-center gap-4">
+                <a
+                  th:href="@{'/solicitudes/' + ${sol.id} + '/reporte'}"
+                  target="_blank"
+                  class="px-6 py-2.5 bg-black text-white text-[11px] font-bold uppercase tracking-widest rounded-full hover:bg-gray-800 transition-colors flex items-center gap-2"
                 >
+                  <i data-lucide="download" class="w-4 h-4"></i>
+                  PDF
+                </a>
+                <div
+                  class="px-5 py-2.5 bg-gray-50 border border-gray-100 rounded-full"
+                >
+                  <span
+                    class="text-[11px] font-bold text-gray-500 uppercase tracking-[0.2em]"
+                    th:text="${liq.estadoCierre}"
+                    >CERRADO</span
+                  >
+                </div>
               </div>
             </div>
 
