@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Políticas de Viáticos - ISS Viáticos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: [
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "SF Pro Display",
+                "SF Pro Text",
+                "Helvetica Neue",
+                "sans-serif",
+              ],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #ffffff;
+        color: #1d1d1f;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      .policy-section {
+        border-bottom: 1px solid #f5f5f7;
+        padding-bottom: 4rem;
+        margin-bottom: 4rem;
+      }
+      .policy-section:last-child {
+        border-bottom: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="fixed top-0 w-full z-50 glass-nav h-12">
+      <div
+        class="max-w-screen-lg mx-auto px-6 h-full flex items-center justify-between"
+      >
+        <a href="/" class="flex items-center gap-2 group">
+          <i
+            data-lucide="chevron-left"
+            class="w-4 h-4 text-blue-500 transition-transform group-hover:-translate-x-1"
+          ></i>
+          <span class="text-[13px] font-medium text-blue-500">Dashboard</span>
+        </a>
+        <span class="text-[13px] font-semibold tracking-tight text-gray-400"
+          >Políticas Internas</span
+        >
+        <div class="w-20"></div>
+        <!-- spacer -->
+      </div>
+    </nav>
+
+    <main class="pt-32 pb-24 px-6 max-w-screen-md mx-auto">
+      <!-- Title Header -->
+      <header class="mb-20">
+        <h1 class="text-5xl font-bold tracking-tight mb-4">
+          Políticas de Viáticos y Liquidación
+        </h1>
+        <p class="text-2xl text-gray-400 font-medium">
+          Lineamientos generales para la gestión de comisiones de servicio en
+          Ingeniería y Servicios del Sur S.A.C.
+        </p>
+      </header>
+
+      <!-- 1. Objetivo -->
+      <section class="policy-section">
+        <h2
+          class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-8"
+        >
+          01. Objetivo General
+        </h2>
+        <p class="text-xl font-medium leading-relaxed">
+          Establecer un proceso estandarizado y transparente para la asignación
+          y control de gastos de viaje, garantizando la eficiencia financiera y
+          el cumplimiento tributario de la empresa.
+        </p>
+      </section>
+
+      <!-- 2. Ciclo del Proceso -->
+      <section class="policy-section">
+        <h2
+          class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-8"
+        >
+          02. Ciclo de Gestión
+        </h2>
+        <div class="space-y-12">
+          <div class="flex gap-8">
+            <span class="text-4xl font-bold text-gray-100 tabular-nums"
+              >01</span
+            >
+            <div>
+              <h3 class="text-xl font-bold mb-2">Solicitud y Planificación</h3>
+              <p class="text-gray-500 leading-relaxed">
+                Todo viaje debe ser registrado en el sistema indicando fechas,
+                destinos e itinerario. El sistema aplicará automáticamente el
+                tarifario base según el nivel jerárquico y la zona geográfica.
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-8">
+            <span class="text-4xl font-bold text-gray-100 tabular-nums"
+              >02</span
+            >
+            <div>
+              <h3 class="text-xl font-bold mb-2">Aprobación y Desembolso</h3>
+              <p class="text-gray-500 leading-relaxed">
+                La solicitud requiere la validación digital del Jefe de Área.
+                Una vez aprobada, Tesorería procederá con la transferencia
+                bancaria vinculada a la comisión.
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-8">
+            <span class="text-4xl font-bold text-gray-100 tabular-nums"
+              >03</span
+            >
+            <div>
+              <h3 class="text-xl font-bold mb-2">Rendición Digital</h3>
+              <p class="text-gray-500 leading-relaxed">
+                Es responsabilidad del empleado registrar cada comprobante de
+                gasto (facturas, boletas) con su respectiva evidencia digital
+                inmediata para asegurar el crédito fiscal.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Normas de Validación -->
+      <section class="policy-section">
+        <h2
+          class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-8"
+        >
+          03. Reglas de Negocio
+        </h2>
+        <ul class="space-y-6">
+          <li class="flex items-start gap-4">
+            <div
+              class="w-5 h-5 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 mt-1"
+            >
+              <i data-lucide="check" class="w-3 h-3"></i>
+            </div>
+            <div>
+              <span class="block font-bold">Validez Tributaria</span>
+              <span class="text-gray-500"
+                >Solo se aceptarán comprobantes emitidos a nombre de la empresa
+                con RUC válido.</span
+              >
+            </div>
+          </li>
+          <li class="flex items-start gap-4">
+            <div
+              class="w-5 h-5 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 mt-1"
+            >
+              <i data-lucide="check" class="w-3 h-3"></i>
+            </div>
+            <div>
+              <span class="block font-bold">Topes Diarios</span>
+              <span class="text-gray-500"
+                >Los gastos que excedan el tarifario asignado no serán
+                reembolsados a menos que cuenten con una aprobación especial
+                previa.</span
+              >
+            </div>
+          </li>
+          <li class="flex items-start gap-4">
+            <div
+              class="w-5 h-5 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 mt-1"
+            >
+              <i data-lucide="check" class="w-3 h-3"></i>
+            </div>
+            <div>
+              <span class="block font-bold">Liquidación Final</span>
+              <span class="text-gray-500"
+                >Al cierre de la comisión, el sistema determinará el saldo a
+                devolver o reembolsar basándose únicamente en los comprobantes
+                validados por contabilidad.</span
+              >
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- 4. Roles y Responsabilidades -->
+      <section class="policy-section">
+        <h2
+          class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-12"
+        >
+          04. Perfiles Responsables
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+          <div>
+            <h4 class="text-sm font-bold mb-2 text-gray-900">Solicitante</h4>
+            <p class="text-[15px] text-gray-500 font-medium">
+              Responsable de la veracidad de la información y la carga oportuna
+              de gastos.
+            </p>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold mb-2 text-gray-900">Aprobador</h4>
+            <p class="text-[15px] text-gray-500 font-medium">
+              Responsable de validar la pertinencia del viaje y el presupuesto
+              asignado.
+            </p>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold mb-2 text-gray-900">
+              Analista Contable
+            </h4>
+            <p class="text-[15px] text-gray-500 font-medium">
+              Encargado de la validación legal y tributaria de cada comprobante.
+            </p>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold mb-2 text-gray-900">Tesorería</h4>
+            <p class="text-[15px] text-gray-500 font-medium">
+              Gestión de depósitos iniciales y conciliación de saldos finales.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="mt-20 pt-10 border-t border-gray-100">
+        <p class="text-sm text-gray-300 font-medium italic">
+          Versión 1.0 — Actualizado Diciembre 2024
+        </p>
+      </footer>
+    </main>
+
+    <script th:inline="javascript">
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Personal - ISS Viáticos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: [
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "SF Pro Text",
+                "Helvetica Neue",
+                "Arial",
+                "sans-serif",
+              ],
+            },
+            colors: {
+              apple: {
+                bg: "#f5f5f7",
+                card: "#ffffff",
+                text: "#1d1d1f",
+                secondary: "#86868b",
+                blue: "#0071e3",
+                border: "rgba(0, 0, 0, 0.05)",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+        letter-spacing: -0.015em;
+        -webkit-font-smoothing: antialiased;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      }
+      .apple-card-refined {
+        background: #ffffff;
+        border-radius: 28px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+      }
+      .avatar-initial {
+        background: linear-gradient(135deg, #0071e3 0%, #00d4ff 100%);
+        color: white;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+      }
+    </style>
+  </head>
+  <body class="pb-20">
+    <nav class="fixed top-0 w-full z-50 glass">
+      <div
+        class="max-w-7xl mx-auto px-8 h-12 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-10">
+          <a href="/" class="text-[14px] font-bold tracking-tight text-gray-900"
+            >ISS Viáticos / Admin</a
+          >
+          <ul class="hidden md:flex gap-8 list-none">
+            <li>
+              <a
+                href="/admin/aprobaciones"
+                class="text-[12px] font-medium text-apple-secondary hover:text-black transition-colors"
+                >Aprobaciones</a
+              >
+            </li>
+            <li>
+              <a
+                href="/admin/empleados"
+                class="text-[12px] font-bold text-apple-blue"
+                >Personal</a
+              >
+            </li>
+            <li>
+              <a
+                href="/admin/tarifarios"
+                class="text-[12px] font-medium text-apple-secondary hover:text-black transition-colors"
+                >Configuración</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="flex gap-6">
+          <a
+            href="/"
+            class="text-[12px] font-bold text-apple-blue hover:underline text-gray-400"
+            >Ir al Portal</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <main class="pt-32 px-8">
+      <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div
+          class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700"
+        >
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <div
+                class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600"
+              >
+                <i data-lucide="users" class="w-5 h-5"></i>
+              </div>
+              <span
+                class="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em]"
+                >Gestión de Recursos</span
+              >
+            </div>
+            <h1
+              class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-2"
+            >
+              Personal
+            </h1>
+            <p class="text-xl text-apple-secondary font-medium">
+              Administra los usuarios y niveles jerárquicos de la empresa.
+            </p>
+          </div>
+          <a
+            href="/admin/empleados/nuevo"
+            class="px-8 py-4 bg-black text-white text-[13px] font-bold rounded-full hover:bg-gray-800 transition-all active:scale-95 shadow-xl shadow-black/10 flex items-center gap-2"
+          >
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            Nuevo Empleado
+          </a>
+        </div>
+
+        <!-- Alertas -->
+        <div
+          th:if="${success}"
+          class="mb-6 p-4 bg-green-50 text-green-700 rounded-2xl text-sm font-semibold border border-green-100 flex items-center gap-3 animate-in fade-in duration-300"
+        >
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          <span th:text="${success}"></span>
+        </div>
+        <div
+          th:if="${error}"
+          class="mb-6 p-4 bg-red-50 text-red-700 rounded-2xl text-sm font-semibold border border-red-100 flex items-center gap-3 animate-in fade-in duration-300"
+        >
+          <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          <span th:text="${error}"></span>
+        </div>
+
+        <!-- Tabla -->
+        <div class="apple-card-refined overflow-hidden mb-20">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead>
+                <tr
+                  class="border-b border-gray-50 uppercase tracking-widest text-[10px] text-gray-400 font-bold"
+                >
+                  <th class="px-10 py-6">Empleado</th>
+                  <th class="px-10 py-6">DNI</th>
+                  <th class="px-10 py-6">Nivel</th>
+                  <th class="px-10 py-6">Cuenta Bancaria</th>
+                  <th class="px-10 py-6 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50">
+                <tr
+                  th:each="emp : ${empleados}"
+                  class="group hover:bg-gray-50/50 transition-colors"
+                >
+                  <td class="px-10 py-6">
+                    <div class="flex items-center gap-4">
+                      <div
+                        class="w-10 h-10 avatar-initial text-sm"
+                        th:text="${emp.nombres.substring(0,1) + emp.apellidos.substring(0,1)}"
+                      >
+                        JD
+                      </div>
+                      <div>
+                        <div
+                          class="font-bold text-gray-900 text-sm"
+                          th:text="${emp.nombres + ' ' + emp.apellidos}"
+                        >
+                          Nombre Completo
+                        </div>
+                        <div
+                          class="text-[11px] text-apple-secondary font-medium"
+                          th:text="${emp.email}"
+                        >
+                          email@empresa.com
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-10 py-6">
+                    <span
+                      class="text-sm font-medium text-gray-600 tabular-nums"
+                      th:text="${emp.dni}"
+                      >00000000</span
+                    >
+                  </td>
+                  <td class="px-10 py-6">
+                    <div
+                      class="text-[11px] font-bold text-apple-secondary uppercase tracking-widest bg-gray-100 px-3 py-1 rounded-full inline-block"
+                      th:text="${emp.nivel.nombre}"
+                    >
+                      NIVEL
+                    </div>
+                  </td>
+                  <td class="px-10 py-6">
+                    <div class="flex items-center gap-2">
+                      <i
+                        data-lucide="credit-card"
+                        class="w-3.5 h-3.5 text-gray-300"
+                      ></i>
+                      <span
+                        class="text-sm font-medium text-gray-600 tabular-nums"
+                        th:text="${emp.cuentaBancaria}"
+                        >---- ----</span
+                      >
+                    </div>
+                  </td>
+                  <td class="px-10 py-6 text-right">
+                    <div class="flex justify-end gap-2">
+                      <a
+                        th:href="@{'/admin/empleados/eliminar/' + ${emp.id}}"
+                        class="w-9 h-9 rounded-full bg-apple-bg text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center"
+                        onclick="return confirm('¿Eliminar empleado y su cuenta de usuario?')"
+                        title="Eliminar"
+                      >
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(empleados)}">
+                  <td
+                    colspan="5"
+                    class="px-10 py-32 text-center text-apple-secondary"
+                  >
+                    <i
+                      data-lucide="users"
+                      class="w-12 h-12 mx-auto mb-6 opacity-10"
+                    ></i>
+                    <p class="text-lg font-bold text-gray-900">
+                      No hay empleados registrados
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script th:inline="javascript">
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

@@ -6,8 +6,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ISS Viáticos</title>
-    <!-- Tailwind CSS -->
+    <title>Dashboard - ISS Viáticos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,30 +18,19 @@
               sans: [
                 "-apple-system",
                 "BlinkMacSystemFont",
+                "SF Pro Display",
                 "SF Pro Text",
-                "Segoe UI",
-                "Roboto",
                 "Helvetica Neue",
-                "arial",
                 "sans-serif",
               ],
             },
             colors: {
-              ios: {
-                bg: "#F2F2F7",
-                card: "#FFFFFF",
-                text: "#1C1C1E",
-                secondary: "#8E8E93",
-                blue: "#007AFF",
-                green: "#34C759",
-                red: "#FF3B30",
-                orange: "#FF9500",
-                divider: "rgba(60, 60, 67, 0.36)",
+              apple: {
+                blue: "#007aff",
+                gray: "#86868b",
+                bg: "#ffffff",
+                section: "#f5f5f7",
               },
-            },
-            boxShadow: {
-              "ios-sm": "0 1px 2px rgba(0,0,0,0.04)",
-              "ios-card": "0 4px 12px rgba(0,0,0,0.06)",
             },
           },
         },
@@ -50,38 +38,16 @@
     </script>
     <style>
       body {
-        background-color: #f2f2f7;
-        color: #1c1c1e;
+        background-color: #ffffff;
+        color: #1d1d1f;
         -webkit-font-smoothing: antialiased;
       }
       .glass-nav {
-        background: rgba(255, 255, 255, 0.85);
+        background: rgba(255, 255, 255, 0.8);
         backdrop-filter: saturate(180%) blur(20px);
         -webkit-backdrop-filter: saturate(180%) blur(20px);
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       }
-      .ios-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-        border: 1px solid rgba(0, 0, 0, 0.02);
-        transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-      }
-      .ios-card:active {
-        transform: scale(0.99);
-      }
-      .btn-ios {
-        background: #007aff;
-        color: white;
-        border-radius: 9999px;
-        font-weight: 600;
-        transition: all 0.2s ease;
-      }
-      .btn-ios:hover {
-        background: #0071e3;
-        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-      }
-
       .stat-dot {
         width: 7px;
         height: 7px;
@@ -96,328 +62,311 @@
       .dot-blue {
         background-color: #007aff;
       }
+      .dot-red {
+        background-color: #ff3b30;
+      }
+
+      .ios-list-item {
+        transition: background-color 0.2s ease;
+        border-bottom: 1px solid #f5f5f7;
+      }
+      .ios-list-item:hover {
+        background-color: #fafafa;
+      }
+      .ios-list-item:last-child {
+        border-bottom: none;
+      }
+
+      .action-pill {
+        background: #f5f5f7;
+        border-radius: 980px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .action-pill:hover {
+        background: #e8e8ed;
+        transform: scale(1.02);
+      }
     </style>
   </head>
-  <body class="flex flex-col min-h-screen">
-    <!-- Navbar   -->
-    <nav class="fixed top-0 w-full z-50 glass-nav h-14">
+  <body class="min-h-screen flex flex-col">
+    <!-- barra de navegación -->
+    <nav class="fixed top-0 w-full z-50 glass-nav h-12">
       <div
-        class="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between"
+        class="max-w-screen-xl mx-auto px-8 h-full flex items-center justify-between"
       >
-        <div class="flex items-center gap-1">
-          <i data-lucide="command" class="w-5 h-5 text-gray-900"></i>
-          <span class="text-sm font-semibold tracking-tight text-gray-900 ml-2"
-            >ISS Viáticos</span
-          >
-        </div>
-
-        <div class="flex items-center gap-6">
-          <!-- enlaces -->
+        <div class="flex items-center gap-8">
+          <span class="text-[15px] font-bold tracking-tight">ISS Viáticos</span>
           <div
-            class="hidden md:flex items-center gap-6 text-[13px] font-medium text-gray-500"
+            class="hidden md:flex items-center gap-6 text-[13px] font-medium text-apple-gray"
           >
-            <a href="/solicitudes" class="hover:text-black transition-colors"
+            <a
+              href="/solicitudes"
+              class="hover:text-apple-blue transition-colors"
               >Solicitudes</a
             >
             <a
               th:if="${isAdmin}"
               href="/admin/aprobaciones"
-              class="hover:text-black transition-colors"
+              class="hover:text-apple-blue transition-colors"
               >Aprobaciones</a
             >
             <a
               th:if="${isAdmin}"
               href="/admin/empleados"
-              class="hover:text-black transition-colors"
+              class="hover:text-apple-blue transition-colors"
               >Personal</a
             >
             <a
               th:if="${isAdmin}"
               href="/admin/tarifarios"
-              class="hover:text-black transition-colors"
+              class="hover:text-apple-blue transition-colors"
               >Configuración</a
             >
           </div>
+        </div>
 
-          <!-- perfil de usuario -->
-          <div
-            class="flex items-center gap-3 pl-4 border-l border-gray-200"
-            th:if="${currentUser != null}"
+        <div class="flex items-center gap-4" th:if="${currentUser != null}">
+          <span
+            class="text-[12px] font-medium text-gray-500"
+            th:text="${currentUser.nombreCompleto}"
+            >User</span
           >
-            <span
-              class="text-[12px] font-medium text-gray-900"
-              th:text="${currentUser.nombreCompleto}"
-              >User</span
+          <span class="w-[1px] h-3 bg-gray-200"></span>
+          <form th:action="@{/logout}" method="post" class="flex items-center">
+            <button
+              type="submit"
+              class="text-[12px] font-medium text-apple-blue hover:underline"
             >
-            <form th:action="@{/logout}" method="post">
-              <button
-                type="submit"
-                class="p-1.5 rounded-full bg-gray-200/50 hover:bg-gray-300/50 transition-colors"
-              >
-                <i data-lucide="log-out" class="w-3.5 h-3.5 text-gray-500"></i>
-              </button>
-            </form>
-          </div>
+              Salir
+            </button>
+          </form>
         </div>
       </div>
     </nav>
 
-    <main class="flex-grow pt-24 pb-12 px-6">
-      <div th:replace="~{fragments/common :: toaster}"></div>
+    <main class="pt-28 pb-20 max-w-screen-xl mx-auto w-full">
+      <!-- Header -->
+      <header class="mb-16">
+        <h1 class="text-4xl font-bold tracking-tight mb-2">Resumen</h1>
+        <p class="text-xl text-apple-gray font-medium">
+          Control general de operaciones y viáticos.
+        </p>
+      </header>
 
-      <div class="max-w-[1400px] mx-auto">
-        <!-- Welcome Header (Clean, NotebookLM style) -->
-        <div class="mb-10 flex items-center justify-between">
-          <div>
-            <h1 class="text-2xl font-semibold tracking-tight text-gray-900">
-              Dashboard
-            </h1>
-            <p class="text-sm text-gray-500 mt-1">
-              Resumen general de operaciones.
-            </p>
-          </div>
-          <div class="flex gap-3">
-            <a
-              href="/solicitudes/nueva"
-              class="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-full text-xs font-semibold hover:bg-gray-800 transition-colors shadow-lg"
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+        <!-- estadísticas -->
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center gap-2">
+            <div class="stat-dot dot-orange"></div>
+            <span
+              class="text-[11px] font-bold uppercase tracking-[0.15em] text-apple-gray"
+              >Pendientes</span
             >
-              <i data-lucide="plus" class="w-3 h-3"></i> Nueva Solicitud
-            </a>
+          </div>
+          <span
+            class="text-5xl font-bold tracking-tighter"
+            th:text="${totalPendientes}"
+            >0</span
+          >
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center gap-2">
+            <div class="stat-dot dot-green"></div>
+            <span
+              class="text-[11px] font-bold uppercase tracking-[0.15em] text-apple-gray"
+              >Aprobadas</span
+            >
+          </div>
+          <span
+            class="text-5xl font-bold tracking-tighter"
+            th:text="${totalAprobados}"
+            >0</span
+          >
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center gap-2">
+            <div class="stat-dot dot-blue"></div>
+            <span
+              class="text-[11px] font-bold uppercase tracking-[0.15em] text-apple-gray"
+              >Liquidadas</span
+            >
+          </div>
+          <span
+            class="text-5xl font-bold tracking-tighter"
+            th:text="${totalLiquidados}"
+            >0</span
+          >
+        </div>
+        <div class="flex items-center">
+          <a
+            href="/solicitudes/nueva"
+            class="flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-full text-[13px] font-bold hover:bg-gray-800 transition-all active:scale-95 shadow-lg"
+          >
+            <i data-lucide="plus" class="w-4 h-4"></i> Crear Solicitud
+          </a>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <div class="lg:col-span-8">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold tracking-tight">
+              Actividad Reciente
+            </h2>
+            <a
+              th:href="${isAdmin ? '/admin/aprobaciones' : '/solicitudes'}"
+              class="text-[13px] font-semibold text-apple-blue hover:underline"
+              >Ver todo</a
+            >
+          </div>
+
+          <div class="space-y-0">
+            <div
+              th:each="sol : ${solicitudes}"
+              class="ios-list-item py-6 flex items-center justify-between cursor-pointer group"
+              th:onclick="'window.location.href=\'/solicitudes/' + ${sol.id} + '\''"
+            >
+              <div class="flex items-center gap-5">
+                <div
+                  th:class="${'w-11 h-11 rounded-full flex items-center justify-center ' + 
+                                            (sol.estado.name() == 'PENDIENTE' ? 'bg-orange-50 text-orange-500' : 
+                                            (sol.estado.name() == 'APROBADO' ? 'bg-green-50 text-green-500' : 
+                                            (sol.estado.name() == 'LIQUIDADO' ? 'bg-blue-50 text-blue-500' : 'bg-gray-50 text-gray-500')))}"
+                >
+                  <i
+                    th:if="${sol.estado.name() == 'PENDIENTE'}"
+                    data-lucide="clock"
+                    class="w-5 h-5"
+                  ></i>
+                  <i
+                    th:if="${sol.estado.name() == 'APROBADO'}"
+                    data-lucide="check"
+                    class="w-5 h-5"
+                  ></i>
+                  <i
+                    th:if="${sol.estado.name() == 'LIQUIDADO'}"
+                    data-lucide="shield"
+                    class="w-5 h-5"
+                  ></i>
+                  <i
+                    th:if="${sol.estado.name() == 'RECHAZADO'}"
+                    data-lucide="x"
+                    class="w-5 h-5"
+                  ></i>
+                </div>
+                <div>
+                  <h4
+                    class="text-sm font-bold text-gray-900 group-hover:text-apple-blue transition-colors"
+                    th:text="${sol.motivoViaje}"
+                  >
+                    Viaje
+                  </h4>
+                  <p
+                    class="text-[13px] text-apple-gray font-medium"
+                    th:text="${sol.fechaInicio + ' • ' + sol.empleado.nombres}"
+                  >
+                    Fecha
+                  </p>
+                </div>
+              </div>
+              <div class="text-right flex flex-col items-end">
+                <span
+                  class="text-sm font-bold tabular-nums"
+                  th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 0)}"
+                  >0</span
+                >
+                <span
+                  class="text-[10px] font-bold uppercase tracking-widest mt-1"
+                  th:classappend="${sol.estado.name() == 'PENDIENTE' ? 'text-orange-500' : (sol.estado.name() == 'APROBADO' ? 'text-green-500' : 'text-apple-gray')}"
+                  th:text="${sol.estado}"
+                  >ESTADO</span
+                >
+              </div>
+            </div>
+
+            <div
+              th:if="${#lists.isEmpty(solicitudes)}"
+              class="py-20 text-center border-2 border-dashed border-gray-100 rounded-3xl"
+            >
+              <p class="text-apple-gray font-medium text-sm">
+                No hay actividad reciente.
+              </p>
+            </div>
           </div>
         </div>
 
-        <!-- Grid Layout -->
-        <div class="grid grid-cols-12 gap-6">
-          <!-- BLOQUE IZQUIERDO: KPIs + Lista (NotebookLM uses columns heavily) -->
-          <div class="col-span-12 lg:col-span-8 flex flex-col gap-6">
-            <!-- KPIs Row (Ultra Minimalist) -->
-            <div class="grid grid-cols-3 gap-6">
-              <!-- Pendientes -->
-              <div class="ios-card p-8 flex flex-col justify-between h-36">
-                <div class="flex items-center gap-2">
-                  <div
-                    class="stat-dot dot-orange shadow-[0_0_8px_rgba(255,149,0,0.4)]"
-                  ></div>
-                  <span
-                    class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest"
-                    >Pendientes</span
-                  >
-                </div>
-                <span
-                  class="text-5xl font-bold tracking-tighter text-gray-900"
-                  th:text="${totalPendientes}"
-                  >0</span
-                >
-              </div>
-
-              <!-- Aprobadas -->
-              <div class="ios-card p-8 flex flex-col justify-between h-36">
-                <div class="flex items-center gap-2">
-                  <div
-                    class="stat-dot dot-green shadow-[0_0_8px_rgba(52,199,89,0.4)]"
-                  ></div>
-                  <span
-                    class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest"
-                    >Aprobadas</span
-                  >
-                </div>
-                <span
-                  class="text-5xl font-bold tracking-tighter text-gray-900"
-                  th:text="${totalAprobados}"
-                  >0</span
-                >
-              </div>
-
-              <!-- Liquidadas -->
-              <div class="ios-card p-8 flex flex-col justify-between h-36">
-                <div class="flex items-center gap-2">
-                  <div
-                    class="stat-dot dot-blue shadow-[0_0_8px_rgba(0,122,255,0.4)]"
-                  ></div>
-                  <span
-                    class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest"
-                    >Liquidadas</span
-                  >
-                </div>
-                <span
-                  class="text-5xl font-bold tracking-tighter text-gray-900"
-                  th:text="${totalLiquidados}"
-                  >0</span
-                >
-              </div>
-            </div>
-
-            <!-- actividad reciente -->
-            <div
-              class="ios-card bg-white overflow-hidden flex-grow min-h-[400px]"
+        <!-- columna derecha -->
+        <div class="lg:col-span-4 space-y-12">
+          <!-- gráfico -->
+          <section>
+            <h3
+              class="text-xs font-bold uppercase tracking-[0.2em] text-apple-gray mb-8"
             >
-              <div
-                class="px-6 py-4 border-b border-gray-100 flex justify-between items-center"
+              Estado de Flujo
+            </h3>
+            <div class="h-44 w-full">
+              <canvas id="statusChart"></canvas>
+            </div>
+          </section>
+
+          <!-- enlaces -->
+          <section>
+            <h3
+              class="text-xs font-bold uppercase tracking-[0.2em] text-apple-gray mb-6"
+            >
+              Accesos
+            </h3>
+            <div class="space-y-3">
+              <a
+                href="/politicas"
+                class="action-pill p-4 px-6 flex items-center justify-between"
               >
-                <h3 class="text-sm font-semibold text-gray-900">
-                  Actividad Reciente
-                </h3>
-                <button
-                  class="text-xs font-medium text-gray-400 hover:text-blue-500 transition-colors"
-                >
-                  Filtrar
-                </button>
-              </div>
-              <div class="divide-y divide-gray-50">
-                <!-- actividad reciente Loop -->
-                <div
-                  th:each="sol : ${solicitudes}"
-                  class="px-6 py-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors group cursor-pointer"
-                  th:onclick="'window.location.href=\'/solicitudes/' + ${sol.id} + '\''"
-                >
-                  <div class="flex items-center gap-4">
-                    <!-- Icon estado -->
-                    <div
-                      th:class="${'w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ' + 
-                                (sol.estado.name() == 'PENDIENTE' ? 'bg-orange-50 text-orange-500' : 
-                                (sol.estado.name() == 'APROBADO' ? 'bg-green-50 text-green-500' : 
-                                (sol.estado.name() == 'LIQUIDADO' ? 'bg-blue-50 text-blue-500' : 'bg-gray-50 text-gray-500')))}"
-                    >
-                      <i
-                        th:if="${sol.estado.name() == 'PENDIENTE'}"
-                        data-lucide="clock"
-                        class="w-5 h-5"
-                      ></i>
-                      <i
-                        th:if="${sol.estado.name() == 'APROBADO'}"
-                        data-lucide="check"
-                        class="w-5 h-5"
-                      ></i>
-                      <i
-                        th:if="${sol.estado.name() == 'LIQUIDADO'}"
-                        data-lucide="shield"
-                        class="w-5 h-5"
-                      ></i>
-                      <i
-                        th:if="${sol.estado.name() == 'RECHAZADO'}"
-                        data-lucide="x"
-                        class="w-5 h-5"
-                      ></i>
-                      <i
-                        th:if="${sol.estado.name() == 'BORRADOR'}"
-                        data-lucide="file"
-                        class="w-5 h-5"
-                      ></i>
-                    </div>
-                    <div>
-                      <p
-                        class="text-sm font-semibold text-gray-900"
-                        th:text="${sol.motivoViaje}"
-                      >
-                        Viaje a Lima
-                      </p>
-                      <p
-                        class="text-[11px] text-gray-400"
-                        th:text="${sol.fechaInicio + ' • ' + sol.empleado.nombres}"
-                      >
-                        12 Oct • Juan Perez
-                      </p>
-                    </div>
-                  </div>
-                  <div class="text-right">
-                    <p
-                      class="text-sm font-semibold text-gray-900 tabular-nums"
-                      th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 0)}"
-                    >
-                      S/ 200
-                    </p>
-                    <p
-                      class="text-[10px] font-bold uppercase tracking-wider text-gray-400"
-                      th:text="${sol.estado}"
-                    >
-                      PENDIENTE
-                    </p>
-                  </div>
-                </div>
-                <!-- contenido vacio -->
-                <div
-                  th:if="${#lists.isEmpty(solicitudes)}"
-                  class="px-6 py-12 text-center"
-                >
-                  <p class="text-sm text-gray-400">
-                    No hay actividad reciente para mostrar.
-                  </p>
-                  <a
-                    href="/solicitudes/nueva"
-                    class="text-xs font-semibold text-blue-500 mt-2 inline-block"
-                    >Crear nueva solicitud</a
+                <div class="flex items-center gap-3">
+                  <i
+                    data-lucide="book-open"
+                    class="w-4 h-4 text-apple-gray"
+                  ></i>
+                  <span class="text-[13px] font-bold"
+                    >Políticas de Viáticos</span
                   >
                 </div>
-              </div>
-              <div
-                class="bg-gray-50/50 p-3 text-center border-t border-gray-100 mt-auto"
-              >
-                <a
-                  th:href="${isAdmin ? '/admin/aprobaciones' : '/solicitudes'}"
-                  class="text-xs font-medium text-gray-500 hover:text-gray-900"
-                  >Ver historial completo</a
-                >
-              </div>
-            </div>
-          </div>
-
-          <!-- BLOQUE DERECHO -->
-          <div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
-            <!-- grafico -->
-            <div class="ios-card p-6 bg-white">
-              <h3 class="text-sm font-semibold text-gray-900 mb-6">
-                Distribución de Estados
-              </h3>
-              <div class="h-48 relative">
-                <canvas id="statusChart"></canvas>
-              </div>
-            </div>
-
-            <!-- menu rápido -->
-            <div class="grid grid-cols-2 gap-4">
-              <button
-                onclick="window.location.href='/solicitudes'"
-                class="ios-card p-4 hover:bg-gray-50 text-left group"
-              >
                 <i
-                  data-lucide="files"
-                  class="w-5 h-5 text-gray-400 mb-2 group-hover:text-blue-500 transition-colors"
+                  data-lucide="chevron-right"
+                  class="w-4 h-4 text-gray-300"
                 ></i>
-                <span class="block text-xs font-semibold text-gray-900"
-                  >Mis Solicitudes</span
-                >
-              </button>
-              <button
-                onclick="window.location.href='/politicas'"
-                class="ios-card p-4 hover:bg-gray-50 text-left group"
+              </a>
+              <a
+                href="/solicitudes"
+                class="action-pill flex items-center justify-between p-4 px-6"
               >
+                <div class="flex items-center gap-3">
+                  <i data-lucide="archive" class="w-4 h-4 text-apple-gray"></i>
+                  <span class="text-[13px] font-bold">Historial de Viajes</span>
+                </div>
                 <i
-                  data-lucide="book"
-                  class="w-5 h-5 text-gray-400 mb-2 group-hover:text-purple-500 transition-colors"
+                  data-lucide="chevron-right"
+                  class="w-4 h-4 text-gray-300"
                 ></i>
-                <span class="block text-xs font-semibold text-gray-900"
-                  >Políticas</span
-                >
-              </button>
+              </a>
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </main>
 
-    <!-- Footer Simple -->
-    <footer class="py-8 bg-white border-t border-gray-100 mt-auto">
-      <div
-        class="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4"
-      >
-        <p class="text-[11px] text-gray-400 font-medium">
-          © 2024 Ingeniería y Servicios del Sur.
+    <footer class="mt-auto py-12 px-8 border-t border-gray-100">
+      <div class="max-w-screen-xl mx-auto flex items-center justify-between">
+        <p class="text-[11px] text-apple-gray font-medium leading-relaxed">
+          © 2024 Ingeniería y Servicios del Sur S.A.C.<br />
+          Seguridad y Auditoría Financiera Aplicada.
         </p>
-        <div class="flex gap-4">
-          <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+        <div class="flex items-center gap-2">
           <span
-            class="text-[10px] uppercase font-bold tracking-widest text-gray-300"
-            >Sistema Operativo</span
+            class="stat-dot bg-green-500 shadow-[0_0_8px_rgba(52,199,89,0.5)]"
+          ></span>
+          <span
+            class="text-[10px] font-bold uppercase tracking-widest text-apple-gray"
+            >Sistema Activo</span
           >
         </div>
       </div>
@@ -438,9 +387,9 @@
             datasets: [
               {
                 data: data,
-                backgroundColor: ["#FB923C", "#34C759", "#FF3B30", "#007AFF"],
+                backgroundColor: ["#FF9500", "#34C759", "#FF3B30", "#007AFF"],
                 borderWidth: 0,
-                hoverOffset: 4,
+                hoverOffset: 0,
               },
             ],
           },
@@ -452,12 +401,16 @@
                 position: "right",
                 labels: {
                   usePointStyle: true,
+                  pointStyle: "circle",
+                  padding: 20,
                   boxWidth: 6,
-                  font: { size: 10, family: "-apple-system" },
+                  font: { size: 11, weight: "500", family: "-apple-system" },
+                  color: "#86868b",
                 },
               },
+              tooltip: { enabled: true },
             },
-            cutout: "84%",
+            cutout: "82%",
           },
         });
       });
