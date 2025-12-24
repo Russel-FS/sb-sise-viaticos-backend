@@ -167,4 +167,21 @@ public class SolicitudServiceImpl implements SolicitudService {
                 solicitud.setEstado(EstadoSolicitud.CANCELADO);
                 solicitudRepository.save(solicitud);
         }
+
+        @Override
+        public List<SolicitudComision> listarRecientes(Long empleadoId) {
+                if (empleadoId == null) {
+                        return solicitudRepository.findTop5ByOrderByFechaCreaDesc();
+                }
+                return solicitudRepository.findTop5ByEmpleadoIdOrderByFechaCreaDesc(empleadoId);
+        }
+
+        @Override
+        public long contarPorEstado(String estado, Long empleadoId) {
+                EstadoSolicitud estadoEnum = EstadoSolicitud.valueOf(estado.toUpperCase());
+                if (empleadoId == null) {
+                        return solicitudRepository.countByEstado(estadoEnum);
+                }
+                return solicitudRepository.countByEmpleadoIdAndEstado(empleadoId, estadoEnum);
+        }
 }

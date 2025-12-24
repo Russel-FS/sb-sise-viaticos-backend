@@ -28,4 +28,8 @@ public interface SolicitudService {
     SolicitudComision obtenerPorId(Long id);
 
     void cancelar(Long id);
+
+    List<SolicitudComision> listarRecientes(Long empleadoId);
+
+    long contarPorEstado(String estado, Long empleadoId);
 }

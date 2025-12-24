@@ -431,9 +431,16 @@
               Actividad Reciente
             </h2>
             <a
+              th:if="${isAdmin}"
+              href="/admin/aprobaciones"
+              class="text-[13px] font-bold text-apple-blue hover:underline"
+              >Ver todas las aprobaciones</a
+            >
+            <a
+              th:if="${!isAdmin}"
               href="/solicitudes"
               class="text-[13px] font-bold text-apple-blue hover:underline"
-              >Ver todas</a
+              >Ver mi historial completo</a
             >
           </div>
 

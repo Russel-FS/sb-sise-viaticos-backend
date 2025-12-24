@@ -27,40 +27,43 @@ public class HomeController {
             model.addAttribute("isAdmin", isAdmin);
 
             if (isAdmin) {
-                var todas = solicitudService.listarTodas();
-                model.addAttribute("solicitudes", todas);
-                model.addAttribute("viewTitle", "Todas las Solicitudes (Admin)");
+                // Lista solo las últimas 5
+                model.addAttribute("solicitudes", solicitudService.listarRecientes(null));
+                model.addAttribute("viewTitle", "Actividad Reciente (Admin)");
 
-                // Datos para Gráfico Admin
-                long pendientes = todas.stream().filter(s -> s.getEstado().name().equals("PENDIENTE")).count();
-                long aprobados = todas.stream().filter(s -> s.getEstado().name().equals("APROBADO")).count();
-                long rechazados = todas.stream().filter(s -> s.getEstado().name().equals("RECHAZADO")).count();
-                long liquidados = todas.stream().filter(s -> s.getEstado().name().equals("LIQUIDADO")).count();
+                // Conteos directos de BD
+                long pendientes = solicitudService.contarPorEstado("PENDIENTE", null);
+                long aprobados = solicitudService.contarPorEstado("APROBADO", null);
+                long rechazados = solicitudService.contarPorEstado("RECHAZADO", null);
+                long liquidados = solicitudService.contarPorEstado("LIQUIDADO", null);
+
+                // Estadísticas para tarjetas ADMIN (si no existen en HTML admin, no rompe nada)
+                model.addAttribute("totalPendientes", pendientes);
+                model.addAttribute("totalAprobados", aprobados);
+                model.addAttribute("totalLiquidados", liquidados);
 
                 model.addAttribute("chartLabels", List.of("Pendientes", "Aprobados", "Rechazados", "Liquidados"));
                 model.addAttribute("chartData", List.of(pendientes, aprobados, rechazados, liquidados));
 
             } else {
-                var lista = solicitudService.listarPorEmpleado(user.getIdEmpleado());
-                model.addAttribute("solicitudes", lista);
-                model.addAttribute("viewTitle", "Mis Solicitudes Recientes");
+                Long empId = user.getIdEmpleado();
+                // Lista solo las últimas 5
+                model.addAttribute("solicitudes", solicitudService.listarRecientes(empId));
+                model.addAttribute("viewTitle", "Recientes");
 
-                // estadisticas tarjetas
-                model.addAttribute("totalPendientes",
-                        lista.stream().filter(s -> s.getEstado().name().equals("PENDIENTE")).count());
-                model.addAttribute("totalAprobados",
-                        lista.stream().filter(s -> s.getEstado().name().equals("APROBADO")).count());
-                model.addAttribute("totalLiquidados",
-                        lista.stream().filter(s -> s.getEstado().name().equals("LIQUIDADO")).count());
+                // Conteos directos de BD
+                long pendientes = solicitudService.contarPorEstado("PENDIENTE", empId);
+                long aprobados = solicitudService.contarPorEstado("APROBADO", empId);
+                long rechazados = solicitudService.contarPorEstado("RECHAZADO", empId);
+                long liquidados = solicitudService.contarPorEstado("LIQUIDADO", empId);
 
-                // Datos para Gráfico Empleado
-                long gPendientes = lista.stream().filter(s -> s.getEstado().name().equals("PENDIENTE")).count();
-                long gAprobados = lista.stream().filter(s -> s.getEstado().name().equals("APROBADO")).count();
-                long gRechazados = lista.stream().filter(s -> s.getEstado().name().equals("RECHAZADO")).count();
-                long gLiquidados = lista.stream().filter(s -> s.getEstado().name().equals("LIQUIDADO")).count();
+                // Estadísticas para tarjetas
+                model.addAttribute("totalPendientes", pendientes);
+                model.addAttribute("totalAprobados", aprobados);
+                model.addAttribute("totalLiquidados", liquidados);
 
                 model.addAttribute("chartLabels", List.of("Pendientes", "Aprobados", "Rechazados", "Liquidados"));
-                model.addAttribute("chartData", List.of(gPendientes, gAprobados, gRechazados, gLiquidados));
+                model.addAttribute("chartData", List.of(pendientes, aprobados, rechazados, liquidados));
             }
         }
         return "index";
