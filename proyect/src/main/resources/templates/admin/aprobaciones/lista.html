@@ -170,32 +170,45 @@
             </p>
           </div>
 
-          <!-- Tab Switcher Style iOS -->
-          <div class="segmented-control p-1 w-full md:w-[350px]">
-            <button
-              onclick="cambiarTab('pendientes')"
-              id="tab-pendientes"
-              class="segmented-item active"
+          <div class="flex flex-col items-end gap-4">
+            <a
+              href="/admin/aprobaciones/exportar"
+              class="flex items-center gap-2 px-5 py-2.5 bg-[#1D6F42] hover:bg-[#185E37] text-white rounded-full text-[11px] font-bold transition-all shadow-lg hover:shadow-xl active:scale-95 group"
             >
-              Pendientes
-              <span
-                class="ml-1 text-[10px] opacity-50"
-                th:text="${#lists.size(pendientes)}"
-                >0</span
+              <i
+                data-lucide="file-spreadsheet"
+                class="w-4 h-4 group-hover:scale-110 transition-transform"
+              ></i>
+              Exportar Reporte
+            </a>
+
+            <!-- tab -->
+            <div class="segmented-control p-1 w-full md:w-[350px]">
+              <button
+                onclick="cambiarTab('pendientes')"
+                id="tab-pendientes"
+                class="segmented-item active"
               >
-            </button>
-            <button
-              onclick="cambiarTab('rechazadas')"
-              id="tab-rechazadas"
-              class="segmented-item"
-            >
-              Rechazos
-              <span
-                class="ml-1 text-[10px] opacity-50"
-                th:text="${#lists.size(rechazadas)}"
-                >0</span
+                Pendientes
+                <span
+                  class="ml-1 text-[10px] opacity-50"
+                  th:text="${#lists.size(pendientes)}"
+                  >0</span
+                >
+              </button>
+              <button
+                onclick="cambiarTab('rechazadas')"
+                id="tab-rechazadas"
+                class="segmented-item"
               >
-            </button>
+                Rechazos
+                <span
+                  class="ml-1 text-[10px] opacity-50"
+                  th:text="${#lists.size(rechazadas)}"
+                  >0</span
+                >
+              </button>
+            </div>
           </div>
         </div>
 
