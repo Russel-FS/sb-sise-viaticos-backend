@@ -134,7 +134,8 @@ public class PdfServiceImpl implements PdfService {
             sign1.setBorder(Rectangle.NO_BORDER);
             sign1.setHorizontalAlignment(Element.ALIGN_CENTER);
 
-            PdfPCell sign2 = new PdfPCell(new Phrase("__________________________\nVoBo Administración", normalFont));
+            PdfPCell sign2 = new PdfPCell(
+                    new Phrase("__________________________\nFirma de Administración", normalFont));
             sign2.setBorder(Rectangle.NO_BORDER);
             sign2.setHorizontalAlignment(Element.ALIGN_CENTER);
 
