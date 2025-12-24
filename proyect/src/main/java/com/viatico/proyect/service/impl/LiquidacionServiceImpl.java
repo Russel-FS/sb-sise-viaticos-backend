@@ -31,7 +31,6 @@ public class LiquidacionServiceImpl implements LiquidacionService {
         RendicionCuentas ren = rendicionRepository.findBySolicitudId(solicitudId)
                 .orElseThrow(() -> new RuntimeException("Rendición no encontrada"));
 
-        // Buscamos si ya existe una liquidación o creamos una nueva
         LiquidacionFinal liq = liquidacionRepository.findBySolicitudId(solicitudId)
                 .orElse(new LiquidacionFinal());
 

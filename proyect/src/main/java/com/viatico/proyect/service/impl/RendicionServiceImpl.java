@@ -21,6 +21,7 @@ public class RendicionServiceImpl implements RendicionService {
         private final SolicitudComisionRepository solicitudRepository;
         private final TipoGastoRepository tipoGastoRepository;
         private final LiquidacionService liquidacionService;
+        private final com.viatico.proyect.service.StorageService storageService;
 
         @Override
         @Transactional
@@ -43,7 +44,7 @@ public class RendicionServiceImpl implements RendicionService {
         @Override
         @Transactional
         public void agregarComprobante(Long rendicionId, Long tipoGastoId, String ruc, String razonSocial,
-                        String serie, String fecha, BigDecimal monto, String username) {
+                        String serie, String fecha, BigDecimal monto, String fotoUrl, String username) {
 
                 RendicionCuentas ren = rendicionRepository.findById(rendicionId)
                                 .orElseThrow(() -> new RuntimeException("Rendicion no encontrada"));
@@ -59,6 +60,7 @@ public class RendicionServiceImpl implements RendicionService {
                 det.setSerieNumeroComprobante(serie);
                 det.setFechaEmision(LocalDate.parse(fecha));
                 det.setMontoTotal(monto);
+                det.setFotoEvidenciaUrl(fotoUrl);
                 det.setEstadoValidacion(EstadoComprobante.PENDIENTE);
                 det.setFechaCrea(LocalDateTime.now());
                 det.setUserCrea(username);
@@ -79,6 +81,10 @@ public class RendicionServiceImpl implements RendicionService {
 
                 RendicionCuentas ren = det.getRendicion();
                 ren.setTotalGastadoBruto(ren.getTotalGastadoBruto().subtract(det.getMontoTotal()));
+
+                if (det.getFotoEvidenciaUrl() != null) {
+                        storageService.deleteFile(det.getFotoEvidenciaUrl());
+                }
 
                 detalleRepository.delete(det);
                 rendicionRepository.save(ren);
@@ -121,7 +127,6 @@ public class RendicionServiceImpl implements RendicionService {
                 RendicionCuentas ren = rendicionRepository.findBySolicitudId(solicitudId)
                                 .orElseThrow(() -> new RuntimeException("Rendición no encontrada"));
 
-                // comprobantes con estado ACEPTADO
                 BigDecimal totalAceptado = ren.getDetalles().stream()
                                 .filter(d -> d.getEstadoValidacion() == EstadoComprobante.ACEPTADO)
                                 .map(DetalleComprobante::getMontoTotal)
@@ -134,7 +139,6 @@ public class RendicionServiceImpl implements RendicionService {
                 sol.setEstado(EstadoSolicitud.LIQUIDADO);
                 solicitudRepository.save(sol);
 
-                // Generamos la liquidación final automáticamente
                 liquidacionService.generarLiquidacion(solicitudId);
         }
 }
