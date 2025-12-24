@@ -10,6 +10,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       tailwind.config = {
         theme: {
@@ -260,6 +261,103 @@
             ></i>
           </div>
         </div>
+
+        <!-- Graficos Dashboard -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 animate-in fade-in slide-in-from-bottom-8 duration-1000"
+        >
+          <div class="apple-card-refined p-8">
+            <h3
+              class="text-sm font-bold text-gray-900 mb-6 uppercase tracking-wider"
+            >
+              Estado de Solicitudes
+            </h3>
+            <div class="h-64 relative">
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Info Card adicional -->
+          <div
+            class="apple-card-refined p-8 bg-[#F5F5F7] flex flex-col justify-center"
+          >
+            <div class="mb-4">
+              <div
+                class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm mb-4"
+              >
+                <i data-lucide="trending-up" class="w-6 h-6 text-green-600"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">
+                Desempeño Mensual
+              </h3>
+              <p class="text-sm text-gray-500 leading-relaxed">
+                El sistema actualiza en tiempo real el estado de tus comisiones.
+                Mantén tus rendiciones al día para evitar retrasos en las
+                liquidaciones.
+              </p>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4">
+              <div class="bg-white p-4 rounded-xl shadow-sm">
+                <p class="text-xs text-gray-400 font-bold uppercase mb-1">
+                  Efectividad
+                </p>
+                <p class="text-xl font-bold text-gray-900">98%</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl shadow-sm">
+                <p class="text-xs text-gray-400 font-bold uppercase mb-1">
+                  Promedio
+                </p>
+                <p class="text-xl font-bold text-gray-900">2d</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script th:inline="javascript">
+          document.addEventListener("DOMContentLoaded", function () {
+            const ctx = document.getElementById("statusChart").getContext("2d");
+
+            const labels = /*[[${chartLabels}]]*/ [];
+            const data = /*[[${chartData}]]*/ [];
+
+            new Chart(ctx, {
+              type: "doughnut",
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    data: data,
+                    backgroundColor: [
+                      "#F59E0B", // Pendiente
+                      "#10B981", // Aprobado
+                      "#EF4444", // Rechazado
+                      "#3B82F6", // Liquidado
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    position: "right",
+                    labels: {
+                      usePointStyle: true,
+                      font: {
+                        family: "-apple-system, sans-serif",
+                        size: 11,
+                      },
+                    },
+                  },
+                },
+                cutout: "75%",
+              },
+            });
+          });
+        </script>
 
         <!-- Cards   -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
