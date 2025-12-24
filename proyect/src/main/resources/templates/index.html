@@ -92,10 +92,12 @@
     <!-- barra de navegación -->
     <nav class="fixed top-0 w-full z-50 glass-nav h-12">
       <div
-        class="max-w-screen-xl mx-auto px-8 h-full flex items-center justify-between"
+        class="max-w-6xl mx-auto px-8 h-full flex items-center justify-between"
       >
         <div class="flex items-center gap-8">
-          <span class="text-[15px] font-bold tracking-tight">ISS Viáticos</span>
+          <a href="/" class="text-[15px] font-bold tracking-tight text-black"
+            >ISS Viáticos</a
+          >
           <div
             class="hidden md:flex items-center gap-6 text-[13px] font-medium text-apple-gray"
           >
@@ -109,6 +111,12 @@
               href="/admin/aprobaciones"
               class="hover:text-apple-blue transition-colors"
               >Aprobaciones</a
+            >
+            <a
+              th:if="${isAdmin}"
+              href="/admin/validaciones"
+              class="hover:text-apple-blue transition-colors"
+              >Validaciones</a
             >
             <a
               th:if="${isAdmin}"
@@ -144,7 +152,8 @@
       </div>
     </nav>
 
-    <main class="pt-28 pb-20 max-w-screen-xl mx-auto w-full">
+    <main class="pt-24 px-8 pb-32">
+      <div class="max-w-6xl mx-auto">
       <!-- Header -->
       <header class="mb-16">
         <h1 class="text-4xl font-bold tracking-tight mb-2">Resumen</h1>

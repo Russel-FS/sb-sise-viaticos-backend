@@ -56,53 +56,47 @@
   </head>
   <body class="antialiased selection:bg-apple-blue selection:text-white pb-20">
     <!-- Nav -->
-    <nav class="fixed top-0 w-full z-50 glass">
+    <nav class="fixed top-0 w-full z-50 glass h-12">
       <div
-        class="max-w-6xl mx-auto px-8 h-12 flex items-center justify-between"
+        class="max-w-6xl mx-auto px-8 h-full flex items-center justify-between"
       >
         <div class="flex items-center gap-10">
-          <a href="/" class="text-[14px] font-bold tracking-tight text-gray-900"
+          <a href="/" class="text-[15px] font-bold tracking-tight text-black"
             >ISS Viáticos</a
           >
-          <ul class="hidden md:flex gap-8 list-none">
-            <li>
-              <a
-                href="/solicitudes"
-                class="text-[12px] font-bold text-apple-blue"
-                >Solicitudes</a
-              >
-            </li>
-            <li th:if="${isAdmin}">
-              <a
-                href="/admin/aprobaciones"
-                class="text-[12px] font-medium text-gray-500 hover:text-black transition-colors"
-                >Aprobaciones</a
-              >
-            </li>
-            <li th:if="${isAdmin}">
-              <a
-                href="/admin/tarifarios"
-                class="text-[12px] font-medium text-gray-500 hover:text-black transition-colors"
-                >Administrar</a
-              >
-            </li>
-            <li th:if="${isAdmin}">
-              <a
-                href="/admin/validaciones"
-                class="text-[12px] font-medium text-green-600 hover:text-green-800 transition-colors"
-                >Validar</a
-              >
-            </li>
-          </ul>
-        </div>
-        <div class="flex items-center gap-6" th:if="${currentUser != null}">
-          <div class="text-right">
-            <p
-              class="text-[9px] font-bold text-apple-secondary uppercase tracking-[0.1em] block mb-0.5"
-              th:text="${isAdmin ? 'ADMIN' : 'PERSONAL'}"
+          <div
+            class="hidden md:flex items-center gap-8 text-[13px] font-medium text-apple-secondary"
+          >
+            <a href="/solicitudes" class="text-black font-bold">Solicitudes</a>
+            <a
+              th:if="${isAdmin}"
+              href="/admin/aprobaciones"
+              class="hover:text-apple-blue transition-colors"
+              >Aprobaciones</a
             >
-              ROL
-            </p>
+            <a
+              th:if="${isAdmin}"
+              href="/admin/validaciones"
+              class="hover:text-apple-blue transition-colors"
+              >Validaciones</a
+            >
+            <a
+              th:if="${isAdmin}"
+              href="/admin/empleados"
+              class="hover:text-apple-blue transition-colors"
+              >Personal</a
+            >
+            <a
+              th:if="${isAdmin}"
+              href="/admin/tarifarios"
+              class="hover:text-apple-blue transition-colors"
+              >Configuración</a
+            >
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4" th:if="${currentUser != null}">
+          <div class="text-right">
             <p
               class="text-[12px] font-bold text-gray-900 leading-none"
               th:text="${currentUser.nombreCompleto}"
@@ -110,11 +104,14 @@
               Nombre
             </p>
           </div>
-          <div
-            class="w-8 h-8 rounded-full bg-apple-bg flex items-center justify-center border border-gray-100"
-          >
-            <i data-lucide="user" class="w-4 h-4 text-gray-400"></i>
-          </div>
+          <form th:action="@{/logout}" method="post" class="flex items-center">
+            <button
+              type="submit"
+              class="text-[12px] font-medium text-apple-blue hover:underline"
+            >
+              Salir
+            </button>
+          </form>
         </div>
       </div>
     </nav>

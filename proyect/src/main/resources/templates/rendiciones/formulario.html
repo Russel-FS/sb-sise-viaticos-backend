@@ -57,28 +57,60 @@
   </head>
   <body class="antialiased selection:bg-apple-blue selection:text-white pb-20">
     <!-- Nav -->
-    <nav class="fixed top-0 w-full z-50 glass transition-all duration-300">
+    <nav class="fixed top-0 w-full z-50 glass h-12">
       <div
-        class="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between"
+        class="max-w-6xl mx-auto px-8 h-full flex items-center justify-between"
       >
-        <a
-          href="/"
-          class="text-[13px] font-medium tracking-tight text-gray-900/80 hover:text-black transition-colors"
-          >ISS Viáticos
-          <span class="text-gray-400 font-normal">/ Expense</span></a
-        >
-        <div class="flex gap-6">
-          <a
-            th:href="@{'/solicitudes/' + ${sol.id}}"
-            class="text-[12px] font-medium text-apple-link hover:underline"
-            >Regresar al Detalle</a
+        <div class="flex items-center gap-10">
+          <a href="/" class="text-[15px] font-bold tracking-tight text-black"
+            >ISS Viáticos</a
           >
+          <div
+            class="hidden md:flex items-center gap-8 text-[13px] font-medium text-apple-secondary"
+          >
+            <a
+              href="/solicitudes"
+              class="hover:text-apple-blue transition-colors"
+              >Solicitudes</a
+            >
+            <a
+              href="/admin/aprobaciones"
+              class="hover:text-apple-blue transition-colors"
+              >Aprobaciones</a
+            >
+            <a
+              href="/admin/validaciones"
+              class="hover:text-apple-blue transition-colors"
+              >Validaciones</a
+            >
+            <a
+              href="/admin/empleados"
+              class="hover:text-apple-blue transition-colors"
+              >Personal</a
+            >
+            <a
+              href="/admin/tarifarios"
+              class="hover:text-apple-blue transition-colors"
+              >Configuración</a
+            >
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <form th:action="@{/logout}" method="post" class="flex items-center">
+            <button
+              type="submit"
+              class="text-[12px] font-medium text-apple-blue hover:underline"
+            >
+              Salir
+            </button>
+          </form>
         </div>
       </div>
     </nav>
 
-    <main class="pt-28 px-6">
-      <div class="max-w-7xl mx-auto">
+    <main class="pt-28 px-8">
+      <div class="max-w-6xl mx-auto">
         <!-- Toast Notifications (Success/Error) -->
         <div th:replace="~{fragments/common :: toaster}"></div>
         <!-- Header -->

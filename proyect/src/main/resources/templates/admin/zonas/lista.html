@@ -60,58 +60,52 @@
   </head>
   <body class="antialiased selection:bg-apple-blue selection:text-white pb-20">
     <!-- Nav -->
-    <nav class="fixed top-0 w-full z-50 glass">
+    <nav class="fixed top-0 w-full z-50 glass h-12">
       <div
-        class="max-w-6xl mx-auto px-8 h-12 flex items-center justify-between"
+        class="max-w-6xl mx-auto px-8 h-full flex items-center justify-between"
       >
         <div class="flex items-center gap-10">
-          <a href="/" class="text-[14px] font-bold tracking-tight text-gray-900"
-            >ISS Viáticos / Admin</a
+          <a href="/" class="text-[15px] font-bold tracking-tight text-black"
+            >ISS Viáticos</a
           >
-          <ul class="hidden md:flex gap-8 list-none">
-            <li>
-              <a
-                href="/admin/aprobaciones"
-                class="text-[12px] font-medium text-apple-secondary hover:text-black transition-colors"
-                >Aprobaciones</a
-              >
-            </li>
-            <li>
-              <a
-                href="/admin/tarifarios"
-                class="text-[12px] font-medium text-apple-secondary hover:text-black transition-colors"
-                >Tarifarios</a
-              >
-            </li>
-            <li>
-              <a
-                href="/admin/conceptos"
-                class="text-[12px] font-medium text-apple-secondary hover:text-black transition-colors"
-                >Conceptos</a
-              >
-            </li>
-            <li>
-              <a
-                href="/admin/zonas"
-                class="text-[12px] font-bold text-apple-blue"
-                >Zonas</a
-              >
-            </li>
-            <li>
-              <a
-                href="/admin/niveles"
-                class="text-[12px] font-medium text-apple-secondary hover:text-black transition-colors"
-                >Niveles</a
-              >
-            </li>
-          </ul>
+          <div
+            class="hidden md:flex items-center gap-8 text-[13px] font-medium text-apple-secondary"
+          >
+            <a
+              href="/solicitudes"
+              class="hover:text-apple-blue transition-colors"
+              >Solicitudes</a
+            >
+            <a
+              href="/admin/aprobaciones"
+              class="hover:text-apple-blue transition-colors"
+              >Aprobaciones</a
+            >
+            <a
+              href="/admin/validaciones"
+              class="hover:text-apple-blue transition-colors"
+              >Validaciones</a
+            >
+            <a
+              href="/admin/empleados"
+              class="hover:text-apple-blue transition-colors"
+              >Personal</a
+            >
+            <a href="/admin/tarifarios" class="text-black font-bold"
+              >Configuración</a
+            >
+          </div>
         </div>
-        <div class="flex gap-6">
-          <a
-            href="/"
-            class="text-[12px] font-bold text-apple-blue hover:underline"
-            >Ir al Portal</a
-          >
+
+        <div class="flex items-center gap-4">
+          <form th:action="@{/logout}" method="post" class="flex items-center">
+            <button
+              type="submit"
+              class="text-[12px] font-medium text-apple-blue hover:underline"
+            >
+              Salir
+            </button>
+          </form>
         </div>
       </div>
     </nav>
