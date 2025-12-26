@@ -3,8 +3,9 @@ package com.viatico.proyect.controller;
 import com.viatico.proyect.entity.Empleado;
 import com.viatico.proyect.repository.RolRepository;
 import com.viatico.proyect.security.UsuarioPrincipal;
-import com.viatico.proyect.service.EmpleadoService;
-import com.viatico.proyect.service.NivelJerarquicoService;
+import com.viatico.proyect.service.interfaces.EmpleadoService;
+import com.viatico.proyect.service.interfaces.NivelJerarquicoService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;

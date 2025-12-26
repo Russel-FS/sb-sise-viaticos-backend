@@ -2,7 +2,8 @@ package com.viatico.proyect.service.impl;
 
 import com.viatico.proyect.entity.NivelJerarquico;
 import com.viatico.proyect.repository.NivelJerarquicoRepository;
-import com.viatico.proyect.service.NivelJerarquicoService;
+import com.viatico.proyect.service.interfaces.NivelJerarquicoService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

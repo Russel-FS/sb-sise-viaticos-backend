@@ -2,8 +2,9 @@ package com.viatico.proyect.service.impl;
 
 import com.viatico.proyect.entity.*;
 import com.viatico.proyect.repository.*;
-import com.viatico.proyect.service.LiquidacionService;
-import com.viatico.proyect.service.RendicionService;
+import com.viatico.proyect.service.interfaces.LiquidacionService;
+import com.viatico.proyect.service.interfaces.RendicionService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ public class RendicionServiceImpl implements RendicionService {
         private final SolicitudComisionRepository solicitudRepository;
         private final TipoGastoRepository tipoGastoRepository;
         private final LiquidacionService liquidacionService;
-        private final com.viatico.proyect.service.StorageService storageService;
+        private final com.viatico.proyect.service.interfaces.StorageService storageService;
 
         @Override
         @Transactional

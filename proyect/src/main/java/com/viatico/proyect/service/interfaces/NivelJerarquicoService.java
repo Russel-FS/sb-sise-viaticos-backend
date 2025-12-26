@@ -1,4 +1,4 @@
-package com.viatico.proyect.service;
+package com.viatico.proyect.service.interfaces;
 
 import com.viatico.proyect.entity.NivelJerarquico;
 import java.util.List;

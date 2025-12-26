@@ -3,7 +3,8 @@ package com.viatico.proyect.service.impl;
 import com.viatico.proyect.entity.*;
 import com.viatico.proyect.repository.*;
 import com.viatico.proyect.security.UsuarioPrincipal;
-import com.viatico.proyect.service.SolicitudService;
+import com.viatico.proyect.service.interfaces.SolicitudService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

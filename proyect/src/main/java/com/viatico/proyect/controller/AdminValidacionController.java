@@ -3,8 +3,9 @@ package com.viatico.proyect.controller;
 import com.viatico.proyect.entity.EstadoSolicitud;
 import com.viatico.proyect.entity.RendicionCuentas;
 import com.viatico.proyect.entity.SolicitudComision;
-import com.viatico.proyect.service.RendicionService;
-import com.viatico.proyect.service.SolicitudService;
+import com.viatico.proyect.service.interfaces.RendicionService;
+import com.viatico.proyect.service.interfaces.SolicitudService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

@@ -6,7 +6,8 @@ import com.viatico.proyect.entity.Usuario;
 import com.viatico.proyect.repository.EmpleadoRepository;
 import com.viatico.proyect.repository.RolRepository;
 import com.viatico.proyect.repository.UsuarioRepository;
-import com.viatico.proyect.service.EmpleadoService;
+import com.viatico.proyect.service.interfaces.EmpleadoService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

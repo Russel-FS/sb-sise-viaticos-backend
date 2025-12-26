@@ -1,7 +1,8 @@
 package com.viatico.proyect.controller;
 
 import com.viatico.proyect.security.UsuarioPrincipal;
-import com.viatico.proyect.service.SolicitudService;
+import com.viatico.proyect.service.interfaces.SolicitudService;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

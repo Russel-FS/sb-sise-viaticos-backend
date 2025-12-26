@@ -1,4 +1,4 @@
-package com.viatico.proyect.service;
+package com.viatico.proyect.service.interfaces;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;

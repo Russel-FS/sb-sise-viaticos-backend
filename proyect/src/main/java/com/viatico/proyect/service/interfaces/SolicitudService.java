@@ -1,4 +1,4 @@
-package com.viatico.proyect.service;
+package com.viatico.proyect.service.interfaces;
 
 import com.viatico.proyect.entity.SolicitudComision;
 import com.viatico.proyect.entity.ZonaGeografica;

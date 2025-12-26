@@ -1,8 +1,9 @@
 package com.viatico.proyect.service.impl;
 
 import com.viatico.proyect.entity.SolicitudComision;
-import com.viatico.proyect.service.ExcelService;
-import com.viatico.proyect.service.SolicitudService;
+import com.viatico.proyect.service.interfaces.ExcelService;
+import com.viatico.proyect.service.interfaces.SolicitudService;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;

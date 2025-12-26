@@ -3,9 +3,10 @@ package com.viatico.proyect.controller;
 import com.viatico.proyect.entity.RendicionCuentas;
 import com.viatico.proyect.entity.SolicitudComision;
 import com.viatico.proyect.security.UsuarioPrincipal;
-import com.viatico.proyect.service.RendicionService;
-import com.viatico.proyect.service.SolicitudService;
-import com.viatico.proyect.service.TipoGastoService;
+import com.viatico.proyect.service.interfaces.RendicionService;
+import com.viatico.proyect.service.interfaces.SolicitudService;
+import com.viatico.proyect.service.interfaces.TipoGastoService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,7 @@ public class RendicionController {
     private final RendicionService rendicionService;
     private final SolicitudService solicitudService;
     private final TipoGastoService tipoGastoService;
-    private final com.viatico.proyect.service.StorageService storageService;
+    private final com.viatico.proyect.service.interfaces.StorageService storageService;
 
     @GetMapping("/solicitud/{id}")
     public String verRendicion(@PathVariable Long id, Model model, @AuthenticationPrincipal UsuarioPrincipal user) {

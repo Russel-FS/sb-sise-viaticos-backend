@@ -1,8 +1,9 @@
 package com.viatico.proyect.controller;
 
 import com.viatico.proyect.entity.TipoGasto;
-import com.viatico.proyect.service.TipoGastoService;
 import com.viatico.proyect.security.UsuarioPrincipal;
+import com.viatico.proyect.service.interfaces.TipoGastoService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

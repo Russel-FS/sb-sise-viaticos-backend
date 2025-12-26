@@ -6,7 +6,11 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.viatico.proyect.entity.*;
-import com.viatico.proyect.service.*;
+import com.viatico.proyect.service.interfaces.LiquidacionService;
+import com.viatico.proyect.service.interfaces.PdfService;
+import com.viatico.proyect.service.interfaces.RendicionService;
+import com.viatico.proyect.service.interfaces.SolicitudService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

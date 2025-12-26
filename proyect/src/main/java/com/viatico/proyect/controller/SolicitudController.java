@@ -2,8 +2,10 @@ package com.viatico.proyect.controller;
 
 import com.viatico.proyect.entity.SolicitudComision;
 import com.viatico.proyect.security.UsuarioPrincipal;
-import com.viatico.proyect.service.LiquidacionService;
-import com.viatico.proyect.service.SolicitudService;
+import com.viatico.proyect.service.interfaces.LiquidacionService;
+import com.viatico.proyect.service.interfaces.PdfService;
+import com.viatico.proyect.service.interfaces.SolicitudService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -17,7 +19,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import com.viatico.proyect.service.PdfService;
+
 import java.io.ByteArrayInputStream;
 
 import java.util.List;

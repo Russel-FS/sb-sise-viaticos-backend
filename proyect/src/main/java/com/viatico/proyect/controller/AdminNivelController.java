@@ -1,8 +1,9 @@
 package com.viatico.proyect.controller;
 
 import com.viatico.proyect.entity.NivelJerarquico;
-import com.viatico.proyect.service.NivelJerarquicoService;
 import com.viatico.proyect.security.UsuarioPrincipal;
+import com.viatico.proyect.service.interfaces.NivelJerarquicoService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

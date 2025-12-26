@@ -7,7 +7,8 @@ import com.viatico.proyect.entity.SolicitudComision;
 import com.viatico.proyect.repository.LiquidacionFinalRepository;
 import com.viatico.proyect.repository.RendicionCuentasRepository;
 import com.viatico.proyect.repository.SolicitudComisionRepository;
-import com.viatico.proyect.service.LiquidacionService;
+import com.viatico.proyect.service.interfaces.LiquidacionService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
