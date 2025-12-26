@@ -659,7 +659,20 @@
                           th:if="${det.fotoEvidenciaUrl}"
                           class="flex justify-center"
                         >
+                          <!-- pdf  -->
+                          <a
+                            th:if="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
+                            th:href="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
+                            target="_blank"
+                            onclick="event.stopPropagation()"
+                            class="w-10 h-10 flex items-center justify-center bg-red-50 dark:bg-red-500/10 text-red-600 rounded-xl border border-red-100 dark:border-red-500/20 hover:scale-110 transition-all"
+                            title="Ver PDF"
+                          >
+                            <i data-lucide="file-text" class="w-5 h-5"></i>
+                          </a>
+                          <!-- Imagen -->
                           <img
+                            th:unless="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
                             th:src="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
                             class="w-10 h-10 object-cover rounded-xl border border-gray-100 dark:border-white/10 hover:scale-125 transition-all cursor-zoom-in"
                             th:onclick="'abrirVisualizador(this.src)'"
