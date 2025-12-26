@@ -6,6 +6,20 @@
     <title>Validar Rendiciones - ISS Viáticos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- script del tema -->
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <!-- estilos del tema -->
+    <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
     <script>
       tailwind.config = {
         theme: {
@@ -41,10 +55,18 @@
         color: #1d1d1f;
         letter-spacing: -0.015em;
       }
+      .dark body {
+        background-color: #000000;
+        color: #f5f5f7;
+      }
       .glass {
         background: rgba(255, 255, 255, 0.72);
         backdrop-filter: saturate(180%) blur(20px);
         border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      }
+      .dark .glass {
+        background: rgba(28, 28, 30, 0.85);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       }
       .apple-card-refined {
         background: #ffffff;
@@ -52,9 +74,16 @@
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
       }
+      .dark .apple-card-refined {
+        background: #1c1c1e;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
       .apple-card-refined:hover {
         transform: translateY(-2px);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+      }
+      .dark .apple-card-refined:hover {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       }
     </style>
   </head>
@@ -98,6 +127,22 @@
         </div>
 
         <div class="flex items-center gap-4">
+          <!-- boton de toggle -->
+          <button
+            onclick="toggleTheme()"
+            class="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-gray-100 dark:hover:bg-white/10"
+            title="Cambiar tema"
+          >
+            <i
+              data-lucide="sun"
+              class="w-4 h-4 text-gray-500 hidden dark:block dark:text-yellow-400"
+            ></i>
+            <i
+              data-lucide="moon"
+              class="w-4 h-4 text-gray-500 block dark:hidden"
+            ></i>
+          </button>
+          <span class="w-[1px] h-3 bg-gray-200 dark:bg-gray-700"></span>
           <form th:action="@{/logout}" method="post" class="flex items-center">
             <button
               type="submit"
@@ -308,5 +353,8 @@
     <script th:inline="javascript">
       lucide.createIcons();
     </script>
+
+    <!-- script del toggle -->
+    <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
   </body>
 </html>

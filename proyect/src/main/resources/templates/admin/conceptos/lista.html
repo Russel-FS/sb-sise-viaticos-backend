@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Conceptos de Gasto - ISS Viáticos</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- script del tema -->
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <!-- estilos del tema -->
+    <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
       tailwind.config = {
@@ -98,6 +112,19 @@
       input:checked + .slider:before {
         transform: translateX(20px);
       }
+      /* dark mode overrides */
+      .dark body {
+        background-color: #000000;
+        color: #f5f5f7;
+      }
+      .dark .glass {
+        background: rgba(28, 28, 30, 0.85);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .dark .apple-card-refined {
+        background: #1c1c1e;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
     </style>
   </head>
   <body class="antialiased selection:bg-apple-blue selection:text-white pb-20">
@@ -140,6 +167,22 @@
         </div>
 
         <div class="flex items-center gap-4">
+          <!-- boton de toggle -->
+          <button
+            onclick="toggleTheme()"
+            class="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-gray-100 dark:hover:bg-white/10"
+            title="Cambiar tema"
+          >
+            <i
+              data-lucide="sun"
+              class="w-4 h-4 text-gray-500 hidden dark:block dark:text-yellow-400"
+            ></i>
+            <i
+              data-lucide="moon"
+              class="w-4 h-4 text-gray-500 block dark:hidden"
+            ></i>
+          </button>
+          <span class="w-[1px] h-3 bg-gray-200 dark:bg-gray-700"></span>
           <form th:action="@{/logout}" method="post" class="flex items-center">
             <button
               type="submit"
@@ -468,5 +511,8 @@
     <script th:inline="javascript">
       lucide.createIcons();
     </script>
+
+    <!-- script del toggle -->
+    <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
   </body>
 </html>
