@@ -53,34 +53,49 @@
     </script>
     <style>
       body {
-        background-color: #f5f5f7;
-        color: #1d1d1f;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        letter-spacing: -0.015em;
       }
       .glass {
         background: rgba(255, 255, 255, 0.72);
         backdrop-filter: saturate(180%) blur(20px);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      }
-      .card-pro {
-        background: #ffffff;
-        border-radius: 24px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02),
-          0 2px 4px -1px rgba(0, 0, 0, 0.02);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-      }
-      /* dark mode */
-      .dark body {
-        background-color: #000000;
-        color: #f5f5f7;
+        border-bottom: 1px solid var(--border-color);
       }
       .dark .glass {
-        background: rgba(28, 28, 30, 0.85);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(0, 0, 0, 0.72);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
-      .dark .card-pro {
-        background: #1c1c1e;
-        border-color: rgba(255, 255, 255, 0.08);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      .apple-card-refined {
+        background: var(--bg-secondary);
+        border-radius: 32px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .apple-card-refined:hover {
+        box-shadow: var(--card-hover-shadow);
+        transform: translateY(-2px);
+      }
+      .input-apple {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        background-color: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 9999px;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.2s;
+        outline: none;
+      }
+      .input-apple:focus {
+        background-color: var(--bg-secondary);
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+      }
+      .dark .input-apple:focus {
+        background-color: #1c1c1e;
+        border-color: var(--accent-blue);
       }
     </style>
   </head>
@@ -91,7 +106,9 @@
         class="max-w-6xl mx-auto px-8 h-full flex items-center justify-between"
       >
         <div class="flex items-center gap-10">
-          <a href="/" class="text-[15px] font-bold tracking-tight text-black"
+          <a
+            href="/"
+            class="text-[15px] font-bold tracking-tight text-gray-900 dark:text-white"
             >ISS Viáticos</a
           >
           <div
@@ -154,118 +171,176 @@
       </div>
     </nav>
 
-    <main class="pt-28 px-8">
-      <div class="max-w-6xl mx-auto">
-        <!-- Toast Notifications (Success/Error) -->
+    <main class="pt-16 px-8">
+      <div class="max-w-6xl mx-auto px-4 md:px-8">
+        <!-- Toast Notifications -->
         <div th:replace="~{fragments/common :: toaster}"></div>
-        <!-- Header -->
+
+        <!-- Header Refined -->
         <div
-          class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500"
+          class="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700"
         >
-          <div>
-            <div class="flex items-center gap-3 mb-3">
-              <span class="text-sm font-semibold text-gray-400">Rendición</span>
-              <span class="text-sm font-semibold text-gray-300">/</span>
-              <span
-                class="font-mono text-sm text-gray-400"
-                th:text="${'Ref-' + sol.id}"
-                >Ref-000</span
+          <div class="flex items-center gap-2 mb-4">
+            <a
+              href="/solicitudes"
+              class="text-[13px] font-bold text-apple-secondary hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-1"
+            >
+              <i data-lucide="chevron-left" class="w-4 h-4"></i>
+              Regresar
+            </a>
+            <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+            <span
+              class="text-[13px] font-bold text-apple-secondary uppercase tracking-widest"
+              th:text="${'Ref-' + sol.id}"
+              >Ref-000</span
+            >
+          </div>
+
+          <div
+            class="flex flex-col md:flex-row md:items-end justify-between gap-6"
+          >
+            <div>
+              <h1
+                class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-2"
               >
+                Gastos y Rendición
+              </h1>
+              <p
+                class="text-lg text-apple-secondary font-medium"
+                th:text="${sol.motivoViaje}"
+              >
+                Motivo del viaje
+              </p>
             </div>
-            <h1
-              class="text-4xl md:text-5xl font-semibold tracking-tighter text-gray-900 mb-2"
-            >
-              Gestión de Gastos
-            </h1>
-            <p
-              class="text-lg text-gray-500 font-medium"
-              th:text="${sol.motivoViaje}"
-            >
-              Motivo del viaje
-            </p>
+
+            <div class="flex items-center gap-3">
+              <div
+                th:if="${sol.estado.name() == 'APROBADO'}"
+                class="px-5 py-2.5 bg-white text-green-600 rounded-full text-[13px] font-bold flex items-center gap-2"
+              >
+                <span
+                  class="w-2 h-2 rounded-full bg-green-500 animate-pulse"
+                ></span>
+                Rendición Abierta
+              </div>
+              <div
+                th:unless="${sol.estado.name() == 'APROBADO'}"
+                class="px-5 py-2.5 bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400 rounded-full text-[13px] font-bold flex items-center gap-2"
+              >
+                <i data-lucide="lock" class="w-4 h-4"></i>
+                Cerrada
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <!-- Columna Izquierda: Formulario   -->
-          <div class="lg:col-span-4 space-y-8">
-            <!-- Resumen Financiero Mini -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100"
+        >
+          <!-- Asignado -->
+          <div class="apple-card-refined p-8 group relative overflow-hidden">
             <div
-              class="card-pro p-6 bg-black text-white relative overflow-hidden group"
+              class="absolute -right-6 -top-6 w-24 h-24 bg-gray-50 dark:bg-white/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"
+            ></div>
+            <p
+              class="text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3"
             >
-              <!-- Decorative blurred gradient -->
-              <div
-                class="absolute top-0 right-0 w-32 h-32 bg-gray-800 rounded-full blur-3xl opacity-50 -mr-10 -mt-10 group-hover:bg-gray-700 transition-colors duration-700"
-              ></div>
-
-              <div class="relative z-10 space-y-6">
-                <div>
-                  <p
-                    class="text-gray-400 text-[10px] uppercase tracking-widest font-bold mb-1"
-                  >
-                    Presupuesto Asignado
-                  </p>
-                  <p
-                    class="text-3xl font-bold tracking-tight"
-                    th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}"
-                  >
-                    S/ 0.00
-                  </p>
-                </div>
-
-                <div
-                  class="grid grid-cols-2 gap-4 pt-4 border-t border-white/10"
-                >
-                  <div>
-                    <p
-                      class="text-gray-400 text-[10px] uppercase tracking-widest font-bold mb-1"
-                    >
-                      Gastado
-                    </p>
-                    <p
-                      class="text-xl font-semibold text-blue-400"
-                      th:text="${'S/ ' + #numbers.formatDecimal(ren.totalGastadoBruto, 1, 2)}"
-                    >
-                      S/ 0.00
-                    </p>
-                  </div>
-                  <div>
-                    <p
-                      class="text-gray-400 text-[10px] uppercase tracking-widest font-bold mb-1"
-                    >
-                      Disponible
-                    </p>
-                    <p
-                      class="text-xl font-semibold text-white"
-                      th:classappend="${sol.montoTotal.subtract(ren.totalGastadoBruto).signum() < 0 ? 'text-red-400' : 'text-green-400'}"
-                      th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal.subtract(ren.totalGastadoBruto), 1, 2)}"
-                    >
-                      S/ 0.00
-                    </p>
-                  </div>
-                </div>
-              </div>
+              Presupuesto Inicial
+            </p>
+            <h3
+              class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white tabular-nums"
+              th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}"
+            >
+              S/ 0.00
+            </h3>
+            <div
+              class="mt-4 flex items-center gap-2 text-xs font-medium text-apple-secondary"
+            >
+              <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+              Monto autorizado
             </div>
+          </div>
 
-            <!-- Formulario de Ingreso  -->
+          <!-- Gastado -->
+          <div
+            class="apple-card-refined p-8 group relative overflow-hidden border-blue-500/20"
+          >
+            <div
+              class="absolute -right-6 -top-6 w-24 h-24 bg-apple-blue/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"
+            ></div>
+            <p
+              class="text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3"
+            >
+              Total Reportado
+            </p>
+            <h3
+              class="text-3xl font-bold tracking-tight text-apple-blue tabular-nums"
+              th:text="${'S/ ' + #numbers.formatDecimal(ren.totalGastadoBruto, 1, 2)}"
+            >
+              S/ 0.00
+            </h3>
+            <div
+              class="mt-4 flex items-center gap-2 text-xs font-medium text-apple-blue"
+            >
+              <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+              En comprobantes
+            </div>
+          </div>
+
+          <!-- Saldo -->
+          <div
+            class="apple-card-refined p-8 group relative overflow-hidden"
+            th:classappend="${sol.montoTotal.subtract(ren.totalGastadoBruto).signum() < 0 ? 'bg-red-50/50 dark:bg-red-500/5 border-red-200/50' : 'bg-white dark:bg-white/5 border-white/50'}"
+          >
+            <p
+              class="text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3"
+            >
+              Saldo Restante
+            </p>
+            <h3
+              class="text-3xl font-bold tracking-tight tabular-nums"
+              th:classappend="${sol.montoTotal.subtract(ren.totalGastadoBruto).signum() < 0 ? 'text-red-600' : 'text-green-600'}"
+              th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal.subtract(ren.totalGastadoBruto), 1, 2)}"
+            >
+              S/ 0.00
+            </h3>
+            <div
+              class="mt-4 flex items-center gap-2 text-xs font-medium"
+              th:classappend="${sol.montoTotal.subtract(ren.totalGastadoBruto).signum() < 0 ? 'text-red-500' : 'text-green-500'}"
+            >
+              <i
+                th:data-lucide="${sol.montoTotal.subtract(ren.totalGastadoBruto).signum() < 0 ? 'alert-circle' : 'check-circle'}"
+                class="w-3.5 h-3.5"
+              ></i>
+              <span
+                th:text="${sol.montoTotal.subtract(ren.totalGastadoBruto).signum() < 0 ? 'Excedido' : 'Disponible'}"
+                >Estado</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <!-- Sidebar: Formulario -->
+          <div class="lg:col-span-4 space-y-6">
             <div
               th:if="${sol.estado.name() == 'APROBADO'}"
-              class="card-pro p-8 sticky top-24 bg-white/95 backdrop-blur-xl"
+              class="apple-card-refined p-8 sticky top-24 scroll-mt-24"
             >
-              <div class="flex items-center gap-4 mb-8">
+              <div class="flex items-center gap-3 mb-8">
                 <div
-                  class="w-12 h-12 bg-black text-white rounded-[18px] flex items-center justify-center shadow-lg shadow-gray-900/10"
+                  class="w-10 h-10 rounded-2xl bg-gray-900 dark:bg-white/10 flex items-center justify-center text-white"
                 >
-                  <i data-lucide="receipt" class="w-6 h-6"></i>
+                  <i data-lucide="plus-circle" class="w-5 h-5"></i>
                 </div>
                 <div>
                   <h3
-                    class="text-lg font-bold text-gray-900 tracking-tight leading-tight"
+                    class="font-bold text-gray-900 dark:text-white leading-none"
                   >
                     Registrar Gasto
                   </h3>
-                  <p class="text-xs text-gray-500 font-medium">
-                    Ingresa los datos del comprobante
+                  <p class="text-[11px] text-apple-secondary mt-1 font-medium">
+                    NUEVO COMPROBANTE
                   </p>
                 </div>
               </div>
@@ -279,17 +354,17 @@
                 <input type="hidden" name="rendicionId" th:value="${ren.id}" />
                 <input type="hidden" name="solicitudId" th:value="${sol.id}" />
 
-                <!-- Categoría -->
-                <div class="space-y-2">
-                  <label
-                    class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1"
-                    >Categoría del Gasto</label
-                  >
-                  <div class="relative group">
+                <div class="space-y-4">
+                  <!-- Categoria -->
+                  <div>
+                    <label
+                      class="block text-[11px] font-bold text-apple-secondary uppercase tracking-[0.15em] mb-2 pl-1"
+                      >Categoría</label
+                    >
                     <select
                       name="tipoGastoId"
                       required
-                      class="w-full pl-5 pr-10 py-4 bg-gray-50 border-transparent rounded-[18px] focus:ring-2 focus:ring-black/5 focus:bg-white outline-none transition-all text-sm font-medium text-gray-900 appearance-none cursor-pointer hover:bg-gray-100"
+                      class="input-apple appearance-none bg-no-repeat select-apple cursor-pointer text-gray-900 dark:text-white"
                     >
                       <option value="" disabled selected>Seleccionar...</option>
                       <option
@@ -300,350 +375,356 @@
                         Opción
                       </option>
                     </select>
-                    <i
-                      data-lucide="chevron-down"
-                      class="absolute right-4 top-4 w-4 h-4 text-gray-400 pointer-events-none group-hover:text-gray-600 transition-colors"
-                    ></i>
                   </div>
-                </div>
 
-                <!-- Detalles Proveedor   -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="space-y-2">
-                    <label
-                      class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1"
-                      >RUC Emisor</label
-                    >
-                    <input
-                      type="text"
-                      name="ruc"
-                      maxlength="11"
-                      required
-                      placeholder="00000000000"
-                      class="w-full px-5 py-4 bg-gray-50 border-transparent rounded-[18px] focus:ring-2 focus:ring-black/5 focus:bg-white outline-none transition-all text-sm font-mono tracking-tight text-gray-900 placeholder:text-gray-400 hover:bg-gray-100"
-                    />
-                  </div>
-                  <div class="space-y-2">
-                    <label
-                      class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1"
-                      >N° Comprobante</label
-                    >
-                    <input
-                      type="text"
-                      name="serie"
-                      required
-                      placeholder="F001-00001"
-                      class="w-full px-5 py-4 bg-gray-50 border-transparent rounded-[18px] focus:ring-2 focus:ring-black/5 focus:bg-white outline-none transition-all text-sm font-mono tracking-tight text-gray-900 placeholder:text-gray-400 hover:bg-gray-100"
-                    />
-                  </div>
-                </div>
-
-                <div class="space-y-2">
-                  <label
-                    class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1"
-                    >Razón Social</label
-                  >
-                  <input
-                    type="text"
-                    name="razonSocial"
-                    required
-                    placeholder="Nombre del establecimiento"
-                    class="w-full px-5 py-4 bg-gray-50 border-transparent rounded-[18px] focus:ring-2 focus:ring-black/5 focus:bg-white outline-none transition-all text-sm font-medium text-gray-900 placeholder:text-gray-400 hover:bg-gray-100"
-                  />
-                </div>
-
-                <!-- Fecha y Monto -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="space-y-2">
-                    <label
-                      class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1"
-                      >Fecha Emisión</label
-                    >
-                    <input
-                      type="date"
-                      name="fecha"
-                      required
-                      class="w-full px-5 py-4 bg-gray-50 border-transparent rounded-[18px] focus:ring-2 focus:ring-black/5 focus:bg-white outline-none transition-all text-sm font-medium text-gray-900 hover:bg-gray-100 cursor-pointer"
-                    />
-                  </div>
-                  <div class="space-y-2">
-                    <label
-                      class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1"
-                      >Importe Total</label
-                    >
-                    <div class="relative group">
-                      <span
-                        class="absolute left-5 top-[18px] text-gray-400 text-sm font-bold group-hover:text-gray-600 transition-colors"
-                        >S/</span
+                  <!-- Datos Comprobante -->
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        class="block text-[11px] font-bold text-apple-secondary uppercase tracking-[0.15em] mb-2 pl-1"
+                        >RUC Emisor</label
                       >
                       <input
-                        type="number"
-                        step="0.01"
-                        name="monto"
+                        type="text"
+                        name="ruc"
+                        maxlength="11"
                         required
-                        placeholder="0.00"
-                        class="w-full pl-11 pr-5 py-4 bg-gray-50 border-transparent rounded-[18px] focus:ring-2 focus:ring-black/5 focus:bg-white outline-none transition-all text-sm font-bold text-gray-900 placeholder:text-gray-300 hover:bg-gray-100"
+                        placeholder="2010..."
+                        class="input-apple font-mono text-gray-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-[11px] font-bold text-apple-secondary uppercase tracking-[0.15em] mb-2 pl-1"
+                        >N° Documento</label
+                      >
+                      <input
+                        type="text"
+                        name="serie"
+                        required
+                        placeholder="F001-..."
+                        class="input-apple font-mono text-gray-900 dark:text-white"
                       />
                     </div>
                   </div>
-                </div>
 
-                <!-- Foto del Comprobante -->
-                <div class="space-y-2">
-                  <label
-                    class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-1"
-                    >Foto del Comprobante (Evidencia)</label
-                  >
-                  <label
-                    class="flex flex-col items-center justify-center w-full h-32 bg-gray-50 border-2 border-dashed border-gray-200 rounded-[22px] cursor-pointer hover:bg-gray-100/50 hover:border-apple-blue/30 transition-all group"
-                  >
-                    <div
-                      class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4"
+                  <div>
+                    <label
+                      class="block text-[11px] font-bold text-apple-secondary uppercase tracking-[0.15em] mb-2 pl-1"
+                      >Establecimiento</label
                     >
-                      <i
-                        data-lucide="camera"
-                        class="w-6 h-6 text-gray-400 mb-2 group-hover:scale-110 transition-transform"
-                      ></i>
-                      <p
-                        class="text-[10px] font-bold text-gray-400 uppercase tracking-widest line-clamp-2"
-                      >
-                        Subir Foto o PDF
-                      </p>
-                    </div>
                     <input
-                      type="file"
-                      id="archivoInput"
-                      name="archivo"
-                      class="hidden"
-                      accept="image/*,.pdf"
-                      onchange="validarArchivo(this)"
+                      type="text"
+                      name="razonSocial"
+                      required
+                      placeholder="Nombre comercial"
+                      class="input-apple text-gray-900 dark:text-white"
                     />
-                  </label>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        class="block text-[11px] font-bold text-apple-secondary uppercase tracking-[0.15em] mb-2 pl-1"
+                        >Fecha</label
+                      >
+                      <input
+                        type="date"
+                        name="fecha"
+                        required
+                        class="input-apple text-gray-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-[11px] font-bold text-apple-secondary uppercase tracking-[0.15em] mb-2 pl-1"
+                        >Monto Total</label
+                      >
+                      <div class="relative">
+                        <span
+                          class="absolute left-5 top-4 text-apple-secondary font-bold text-sm"
+                          >S/</span
+                        >
+                        <input
+                          type="number"
+                          step="0.01"
+                          name="monto"
+                          required
+                          placeholder="0.00"
+                          class="input-apple pl-11 font-bold text-gray-900 dark:text-white"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Archivo -->
+                  <div>
+                    <label
+                      class="block text-[11px] font-bold text-apple-secondary uppercase tracking-[0.15em] mb-2 pl-1"
+                      >Evidencia</label
+                    >
+                    <label
+                      class="flex flex-col items-center justify-center h-32 bg-gray-50/50 dark:bg-white/[0.03] border-2 border-dashed border-gray-200 dark:border-white/10 rounded-[24px] cursor-pointer hover:bg-gray-100 dark:hover:bg-white/[0.05] hover:border-apple-blue/50 transition-all group overflow-hidden"
+                    >
+                      <div
+                        class="flex flex-col items-center justify-center p-4"
+                      >
+                        <i
+                          data-lucide="cloud-upload"
+                          class="w-6 h-6 text-apple-secondary mb-2 group-hover:scale-110 transition-transform"
+                        ></i>
+                        <p
+                          class="text-[10px] font-bold text-apple-secondary uppercase tracking-widest text-center"
+                          id="uploadFilename"
+                        >
+                          Subir Foto o PDF
+                        </p>
+                      </div>
+                      <input
+                        type="file"
+                        name="archivo"
+                        class="hidden"
+                        accept="image/*,.pdf"
+                        onchange="validarArchivo(this)"
+                      />
+                    </label>
+                  </div>
                 </div>
 
                 <button
                   type="submit"
-                  class="w-full py-4 bg-black text-white font-bold rounded-[18px] hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-gray-200 flex items-center justify-center gap-3 mt-4 group"
+                  class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-black font-bold rounded-full hover:bg-black dark:hover:bg-gray-100 transition-all shadow-xl flex items-center justify-center gap-2 group"
                 >
-                  <span class="tracking-wide text-sm">Guardar Gasto</span>
-                  <div class="bg-white/20 p-1 rounded-full">
-                    <i
-                      data-lucide="arrow-up-right"
-                      class="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
-                    ></i>
-                  </div>
+                  Guardar Gasto
+                  <i
+                    data-lucide="arrow-right"
+                    class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                  ></i>
                 </button>
               </form>
             </div>
 
             <div
               th:if="${sol.estado.name() != 'APROBADO'}"
-              class="p-6 bg-gray-50 rounded-[24px] border border-dashed border-gray-200 text-center"
+              class="apple-card-refined p-8 bg-gray-50/50 dark:bg-white/5 border-dashed text-center"
             >
-              <p class="text-sm text-gray-500">
-                La rendición está cerrada para ediciones.
+              <div
+                class="w-12 h-12 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4"
+              >
+                <i data-lucide="lock" class="w-6 h-6 text-gray-400"></i>
+              </div>
+              <p class="text-sm font-bold text-gray-900 dark:text-white">
+                Rendición Cerrada
+              </p>
+              <p class="text-xs text-apple-secondary mt-1">
+                No se permiten más ediciones.
               </p>
             </div>
           </div>
 
-          <!-- Columna Derecha  Listado   -->
+          <!-- Main: Listado de Comprobantes -->
           <div class="lg:col-span-8 space-y-6">
-            <div class="card-pro overflow-hidden min-h-[600px] flex flex-col">
+            <div
+              class="apple-card-refined overflow-hidden flex flex-col min-h-[500px]"
+            >
               <div
-                class="p-8 border-b border-gray-50 flex justify-between items-center bg-white sticky top-0 z-20"
+                class="p-8 border-b border-gray-100 dark:border-white/5 flex justify-between items-center"
               >
                 <div>
-                  <h3 class="text-xl font-bold tracking-tight text-gray-900">
-                    Comprobantes
+                  <h3
+                    class="text-xl font-bold tracking-tight text-gray-900 dark:text-white"
+                  >
+                    Comprobantes Registrados
                   </h3>
-                  <p class="text-sm text-gray-500 mt-1">
-                    Historial de gastos registrados.
+                  <p
+                    class="text-[13px] text-apple-secondary font-medium mt-0.5"
+                  >
+                    Detalle cronológico de gastos reportados.
                   </p>
                 </div>
-                <div class="bg-gray-100 px-4 py-2 rounded-full">
-                  <span
-                    class="text-xs font-bold text-gray-600 uppercase tracking-wide"
-                    th:text="${(ren.detalles != null ? #lists.size(ren.detalles) : 0) + ' Items'}"
-                    >0 Items</span
+                <div class="flex items-center gap-4">
+                  <div
+                    class="bg-gray-100 dark:bg-white/5 px-4 py-2 rounded-2xl flex items-center gap-2"
                   >
+                    <span
+                      class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-widest"
+                      th:text="${(ren.detalles != null ? #lists.size(ren.detalles) : 0) + ' Items'}"
+                      >0 Items</span
+                    >
+                  </div>
                 </div>
               </div>
 
-              <div class="overflow-x-auto flex-1">
-                <table class="w-full text-sm">
-                  <thead
-                    class="bg-gray-50/80 backdrop-blur border-b border-gray-100"
-                  >
-                    <tr>
+              <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                  <thead>
+                    <tr class="bg-gray-50/50 dark:bg-white/[0.02]">
                       <th
-                        class="px-8 py-5 text-left font-bold text-gray-400 text-[10px] uppercase tracking-widest"
+                        class="px-8 py-5 text-left text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em] border-b border-gray-100 dark:border-white/5"
                       >
-                        Gasto / Cuenta
+                        Gasto / Categoría
                       </th>
                       <th
-                        class="px-8 py-5 text-left font-bold text-gray-400 text-[10px] uppercase tracking-widest"
+                        class="px-8 py-5 text-left text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em] border-b border-gray-100 dark:border-white/5"
                       >
-                        Proveedor
+                        Establecimiento
                       </th>
                       <th
-                        class="px-8 py-5 text-left font-bold text-gray-400 text-[10px] uppercase tracking-widest"
+                        class="px-8 py-5 text-left text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em] border-b border-gray-100 dark:border-white/5"
                       >
                         Emisión
                       </th>
                       <th
-                        class="px-8 py-5 text-right font-bold text-gray-400 text-[10px] uppercase tracking-widest"
+                        class="px-8 py-5 text-right text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em] border-b border-gray-100 dark:border-white/5"
                       >
                         Monto
                       </th>
                       <th
-                        class="px-8 py-5 text-left font-bold text-gray-400 text-[10px] uppercase tracking-widest"
+                        class="px-8 py-5 text-center text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em] border-b border-gray-100 dark:border-white/5"
                       >
                         Evidencia
                       </th>
                       <th
-                        class="px-8 py-5 text-left font-bold text-gray-400 text-[10px] uppercase tracking-widest"
+                        class="px-8 py-5 text-left text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em] border-b border-gray-100 dark:border-white/5"
                       >
                         Estado
                       </th>
                       <th
                         th:if="${sol.estado.name() == 'APROBADO'}"
-                        class="px-8 py-5 text-center font-bold text-gray-400 text-[10px] uppercase tracking-widest"
+                        class="px-8 py-5 border-b border-gray-100 dark:border-white/5"
                       ></th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y divide-gray-50">
+                  <tbody class="divide-y divide-gray-100 dark:divide-white/5">
                     <tr
                       th:each="det : ${ren.detalles}"
-                      th:class="${det.estadoValidacion.name() == 'RECHAZADO' ? 'bg-red-50/30 hover:bg-red-50/50 cursor-pointer transition-colors' : 'hover:bg-gray-50/50 transition-colors'}"
-                      th:data-motivo="${det.estadoValidacion.name() == 'RECHAZADO' ? det.motivoRechazo : ''}"
-                      onclick="if(this.getAttribute('data-motivo')) abrirMotivoRechazo(this.getAttribute('data-motivo'))"
+                      class="group hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors"
+                      th:classappend="${det.estadoValidacion.name() == 'RECHAZADO' ? 'bg-red-500/[0.03]' : ''}"
+                      th:onclick="${det.estadoValidacion.name() == 'RECHAZADO'} ? |abrirMotivoRechazo('${det.motivoRechazo}')| : ''"
                     >
-                      <td class="px-8 py-5 align-top">
+                      <td class="px-8 py-6">
                         <div
-                          class="font-semibold text-gray-900 text-sm"
+                          class="font-bold text-gray-900 dark:text-white"
                           th:text="${det.tipoGasto.nombre}"
                         >
-                          Alimentación
+                          Nombre
                         </div>
                         <div
-                          class="text-[11px] text-gray-400 font-mono mt-0.5"
+                          class="text-[11px] text-apple-secondary font-mono mt-1"
                           th:text="${det.tipoGasto.cuentaContable}"
                         >
-                          CTA
+                          CTA-000
                         </div>
                       </td>
-                      <td class="px-8 py-5 align-top">
+
+                      <td class="px-8 py-6">
                         <div
-                          class="font-medium text-gray-900"
+                          class="font-semibold text-gray-900 dark:text-white truncate max-w-[150px]"
                           th:text="${det.razonSocialProveedor}"
                         >
                           Nombre
                         </div>
                         <div
-                          class="text-[11px] text-gray-400"
-                          th:text="${'RUC: ' + det.rucProveedor}"
+                          class="text-[11px] text-apple-secondary mt-1"
+                          th:text="'RUC: ' + ${det.rucProveedor}"
                         >
                           RUC
                         </div>
                       </td>
-                      <td class="px-8 py-5 align-top">
+
+                      <td class="px-8 py-6">
                         <div
-                          class="text-gray-600 font-medium"
+                          class="text-[13px] font-medium text-gray-900 dark:text-white"
                           th:text="${det.fechaEmision}"
                         >
                           01/01/2024
                         </div>
                         <div
-                          class="text-[11px] text-gray-400"
+                          class="text-[11px] text-apple-secondary font-mono mt-1"
                           th:text="${det.serieNumeroComprobante}"
                         >
-                          F001-123
+                          000-000
                         </div>
                       </td>
-                      <td class="px-8 py-5 align-top text-right">
-                        <div
-                          class="font-bold text-gray-900 tabular-nums"
-                          th:text="${'S/ ' + #numbers.formatDecimal(det.montoTotal, 1, 2)}"
-                        >
-                          S/ 0.00
-                        </div>
+
+                      <td
+                        class="px-8 py-6 text-right font-bold text-gray-900 dark:text-white tabular-nums"
+                        th:text="${'S/ ' + #numbers.formatDecimal(det.montoTotal, 1, 2)}"
+                      >
+                        S/ 0.00
                       </td>
-                      <td class="px-8 py-5 align-top">
+
+                      <td class="px-8 py-6 text-center">
                         <div
                           th:if="${det.fotoEvidenciaUrl}"
-                          class="flex items-center"
+                          class="flex justify-center"
                         >
                           <img
                             th:src="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
-                            class="w-10 h-10 object-cover rounded-lg border border-gray-100 hover:scale-110 transition-all cursor-zoom-in"
+                            class="w-10 h-10 object-cover rounded-xl border border-gray-100 dark:border-white/10 hover:scale-125 transition-all cursor-zoom-in"
                             th:onclick="'abrirVisualizador(this.src)'"
                           />
                         </div>
                         <div
                           th:unless="${det.fotoEvidenciaUrl}"
-                          class="p-2 bg-gray-50 rounded-lg inline-block"
+                          class="text-gray-300"
                         >
                           <i
                             data-lucide="image-off"
-                            class="w-4 h-4 text-gray-300"
+                            class="w-4 h-4 mx-auto"
                           ></i>
                         </div>
                       </td>
-                      <td class="px-8 py-5 align-top">
-                        <span
+
+                      <td class="px-8 py-6">
+                        <div
                           th:if="${det.estadoValidacion.name() == 'PENDIENTE'}"
-                          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-600 text-[10px] font-bold uppercase tracking-wide"
+                          class="flex items-center gap-1.5 text-[10px] font-bold text-amber-500 uppercase tracking-widest"
                         >
                           <span
-                            class="w-1.5 h-1.5 rounded-full bg-amber-500"
+                            class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"
                           ></span>
                           Pendiente
-                        </span>
-                        <span
+                        </div>
+                        <div
                           th:if="${det.estadoValidacion.name() == 'ACEPTADO'}"
-                          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-bold uppercase tracking-wide"
+                          class="flex items-center gap-1.5 text-[10px] font-bold text-green-500 uppercase tracking-widest"
                         >
-                          <i data-lucide="check" class="w-3 h-3"></i> Aceptado
-                        </span>
-                        <span
+                          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                          Aceptado
+                        </div>
+                        <div
                           th:if="${det.estadoValidacion.name() == 'RECHAZADO'}"
-                          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-600 text-[10px] font-bold uppercase tracking-wide shadow-sm"
+                          class="flex items-center gap-1.5 text-[10px] font-bold text-red-500 uppercase tracking-widest cursor-help"
                         >
-                          <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                          <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
                           Observado
-                        </span>
+                        </div>
                       </td>
+
                       <td
                         th:if="${sol.estado.name() == 'APROBADO'}"
-                        class="px-8 py-5 align-top text-right"
+                        class="px-8 py-6 text-right"
                       >
                         <a
                           th:href="@{'/rendiciones/comprobante/eliminar/' + ${det.id} + '?solicitudId=' + ${sol.id}}"
-                          class="inline-flex p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
-                          title="Eliminar Comprobante"
+                          class="w-8 h-8 rounded-full flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-500/10 transition-all"
                         >
                           <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </a>
                       </td>
                     </tr>
+
                     <tr th:if="${#lists.isEmpty(ren.detalles)}">
-                      <td colspan="6" class="px-8 py-24 text-center">
+                      <td colspan="7" class="px-8 py-20 text-center">
                         <div
-                          class="flex flex-col items-center justify-center text-gray-400"
+                          class="flex flex-col items-center gap-4 text-apple-secondary opacity-50"
                         >
-                          <div
-                            class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4"
+                          <i data-lucide="receipt" class="w-12 h-12"></i>
+                          <p
+                            class="font-bold text-sm uppercase tracking-widest"
                           >
-                            <i
-                              data-lucide="receipt"
-                              class="w-8 h-8 opacity-20 text-gray-900"
-                            ></i>
-                          </div>
-                          <p class="font-medium">
-                            No hay comprobantes registrados
-                          </p>
-                          <p class="text-sm mt-1 opacity-70">
-                            Utiliza el formulario para agregar tu primer gasto.
+                            Sin comprobantes registrados
                           </p>
                         </div>
                       </td>
@@ -653,89 +734,90 @@
               </div>
             </div>
 
-            <!-- Footer Action Bar -->
+            <!-- Refined Action Bar -->
             <div
               th:if="${sol.estado.name() == 'APROBADO'}"
-              class="card-pro p-6 flex flex-col sm:flex-row justify-between items-center gap-6 sticky bottom-6 shadow-2xl shadow-gray-200/50 bg-white/90 backdrop-blur"
+              class="apple-card-refined p-8 bg-black dark:bg-white text-white dark:text-black mt-8 flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl relative overflow-hidden group"
             >
-              <div class="flex items-center gap-4">
+              <!-- Sutil Deco -->
+              <div
+                class="absolute -right-20 -bottom-20 w-64 h-64 bg-white/10 dark:bg-black/5 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"
+              ></div>
+
+              <div class="relative z-10 flex items-center gap-5">
                 <div
-                  class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center"
+                  class="w-14 h-14 rounded-2xl bg-white/20 dark:bg-black/5 flex items-center justify-center"
                 >
-                  <i data-lucide="info" class="w-5 h-5"></i>
+                  <i data-lucide="send" class="w-7 h-7"></i>
                 </div>
                 <div>
-                  <p class="text-sm font-bold text-gray-900">
+                  <h3 class="text-xl font-bold tracking-tight">
                     Finalizar Rendición
-                  </p>
-                  <p class="text-xs text-gray-500">
-                    Al enviar, los gastos pasarán a revisión administrativa.
+                  </h3>
+                  <p class="text-sm opacity-60 font-medium">
+                    Se enviará a revisión administrativa para confirmación.
                   </p>
                 </div>
               </div>
 
-              <form th:action="@{/rendiciones/finalizar}" method="post">
+              <form
+                th:action="@{/rendiciones/finalizar}"
+                method="post"
+                class="relative z-10 flex-shrink-0"
+              >
                 <input type="hidden" name="rendicionId" th:value="${ren.id}" />
                 <button
                   type="submit"
-                  class="px-8 py-3.5 bg-apple-blue text-white font-bold rounded-full hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2 text-sm"
+                  class="px-10 py-4 bg-white dark:bg-black text-black dark:text-white font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3 whitespace-nowrap"
                 >
                   Enviar Reporte
-                  <i data-lucide="send" class="w-4 h-4"></i>
+                  <i data-lucide="check-check" class="w-5 h-5"></i>
                 </button>
               </form>
-            </div>
-
-            <!-- Boton Regresar (Si no editable) -->
-            <div
-              th:if="${sol.estado.name() != 'APROBADO'}"
-              class="text-center pt-8"
-            >
-              <a
-                th:href="@{'/solicitudes/' + ${sol.id}}"
-                class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 font-medium transition-colors"
-              >
-                <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                Volver al detalle
-              </a>
             </div>
           </div>
         </div>
       </div>
     </main>
 
-    <!-- Modal para Motivo de Rechazo   -->
+    <!-- Modal Motivo Rechazo  -->
     <div
       id="modalRechazo"
-      class="fixed inset-0 z-[100] hidden items-center justify-center p-6 bg-gray-900/40 backdrop-blur-sm transition-all"
+      class="fixed inset-0 z-[100] hidden items-center justify-center p-6 bg-black/40 backdrop-blur-md transition-all"
     >
       <div
-        class="bg-white w-full max-w-md rounded-[32px] p-8 shadow-2xl animate-in zoom-in-95 duration-200 border border-gray-100 relative"
+        class="apple-card-refined w-full max-w-md p-10 shadow-2xl animate-in zoom-in-95 duration-200 relative overflow-hidden text-gray-900 dark:text-white"
       >
+        <!-- Deco subtle -->
+        <div
+          class="absolute -right-20 -top-20 w-40 h-40 bg-red-500/5 rounded-full blur-3xl"
+        ></div>
+
         <button
           onclick="cerrarModal()"
-          class="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-900 transition-colors"
+          class="absolute top-8 right-8 text-apple-secondary hover:text-gray-900 dark:hover:text-white transition-colors"
         >
-          <i data-lucide="x" class="w-5 h-5"></i>
+          <i data-lucide="x" class="w-6 h-6"></i>
         </button>
 
-        <div class="flex flex-col items-center text-center mb-6">
+        <div class="flex flex-col items-center text-center mb-8">
           <div
-            class="w-14 h-14 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4"
+            class="w-16 h-16 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center mb-5"
           >
-            <i data-lucide="alert-triangle" class="w-7 h-7"></i>
+            <i data-lucide="shield-alert" class="w-8 h-8"></i>
           </div>
-          <h3 class="text-xl font-bold text-gray-900">Gasto Observado</h3>
-          <p class="text-sm text-gray-500 mt-1">
-            Detalle del motivo de rechazo
+          <h3 class="text-2xl font-bold tracking-tight">Gasto Observado</h3>
+          <p class="text-sm text-apple-secondary font-medium mt-1">
+            Revisa las correcciones necesarias
           </p>
         </div>
 
-        <div class="bg-gray-50 p-6 rounded-[24px] mb-8 border border-gray-100">
-          <i data-lucide="quote" class="w-4 h-4 text-gray-300 mb-2"></i>
+        <div
+          class="bg-gray-50 dark:bg-white/5 p-6 rounded-[24px] mb-8 border border-gray-100 dark:border-white/5"
+        >
           <p
             id="textoMotivo"
-            class="text-gray-700 text-sm font-medium leading-relaxed"
+            class="text-gray-700 dark:text-gray-300 text-[15px] font-medium leading-relaxed italic"
           >
             Motivo...
           </p>
@@ -743,7 +825,7 @@
 
         <button
           onclick="cerrarModal()"
-          class="w-full py-3.5 bg-black text-white font-bold rounded-[20px] hover:bg-gray-800 transition-all"
+          class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-black font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-xl"
         >
           Entendido
         </button>
@@ -772,7 +854,6 @@
       lucide.createIcons();
 
       function abrirMotivoRechazo(motivo) {
-        event.stopPropagation();
         const modal = document.getElementById("modalRechazo");
         const texto = document.getElementById("textoMotivo");
         texto.innerText =
@@ -811,28 +892,23 @@
 
       function validarArchivo(input) {
         const file = input.files[0];
-        const label = input.parentElement;
-        const textElement = label.querySelector("p");
+        const textElement = document.getElementById("uploadFilename");
+        const container = textElement.closest("label");
 
         if (!file) return;
 
-        // Limite de 20MB
         const limit = 20 * 1024 * 1024;
-
         if (file.size > limit) {
-          alert(
-            "El archivo '" +
-              file.name +
-              "' es demasiado grande (supera los 20MB). Por favor elige un archivo más pequeño."
-          );
+          alert("El archivo es demasiado grande (máx 20MB)");
           input.value = "";
           textElement.innerText = "Subir Foto o PDF";
-          label.classList.remove("bg-blue-50/50", "border-apple-blue/20");
+          container.classList.remove("bg-apple-blue/5", "border-apple-blue/50");
           return;
         }
 
         textElement.innerText = file.name;
-        label.classList.add("bg-blue-50/50", "border-apple-blue/20");
+        textElement.classList.add("text-apple-blue");
+        container.classList.add("bg-apple-blue/5", "border-apple-blue/50");
       }
     </script>
     <script th:inline="javascript">
