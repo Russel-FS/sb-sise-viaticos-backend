@@ -750,7 +750,7 @@
             <!-- Refined Action Bar -->
             <div
               th:if="${sol.estado.name() == 'APROBADO'}"
-              class="apple-card-refined p-8 bg-gray-900 dark:bg-[#1c1c1e] text-white mt-8 flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl relative overflow-hidden group border border-white/5"
+              class="apple-card-refined p-8 bg-black dark:bg-[#1c1c1e] text-white mt-8 flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl relative overflow-hidden group border border-white/5"
             >
               <!-- Sutil Deco -->
               <div
@@ -781,7 +781,7 @@
                 <input type="hidden" name="rendicionId" th:value="${ren.id}" />
                 <button
                   type="submit"
-                  class="px-10 py-4 bg-white text-black font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3 whitespace-nowrap"
+                  class="px-10 py-4 bg-white dark:bg-black text-black dark:text-white font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3 whitespace-nowrap"
                 >
                   Enviar Reporte
                   <i data-lucide="check-check" class="w-5 h-5"></i>
