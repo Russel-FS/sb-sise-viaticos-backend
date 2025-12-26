@@ -17,17 +17,46 @@
         }
       })();
     </script>
-    <th:block th:include="~{fragments/theme :: themeStyles}"></th:block>
+    <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
     <script>
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
+            fontFamily: {
+              sans: [
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "San Francisco",
+                "Segoe UI",
+                "Roboto",
+                "Helvetica Neue",
+                "sans-serif",
+              ],
+            },
             colors: {
               apple: {
                 blue: "#0071e3",
                 bg: "#f5f5f7",
                 secondary: "#86868b",
+                gray: "#fbfbfd",
+              },
+            },
+            boxShadow: {
+              glass: "0 8px 32px 0 rgba(31, 38, 135, 0.07)",
+            },
+            animation: {
+              "fade-in-up": "fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+              "fade-in": "fadeIn 1s ease-out",
+            },
+            keyframes: {
+              fadeInUp: {
+                "0%": { opacity: "0", transform: "translateY(20px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
               },
             },
           },
@@ -37,103 +66,191 @@
     <style>
       body {
         background-color: #f5f5f7;
-        color: #1d1d1f;
-        transition: background-color 0.3s ease;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        /* Apple-esque subtle abstract background gradient for light mode */
+        background-image: radial-gradient(
+            at 0% 0%,
+            rgba(255, 255, 255, 0.8) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 0%,
+            rgba(245, 245, 247, 1) 0px,
+            transparent 50%
+          );
       }
-      .glass-card {
-        background: rgba(255, 255, 255, 0.82);
-        backdrop-filter: saturate(180%) blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-      }
-      /* dark mode */
+
       .dark body {
         background-color: #000000;
-        color: #f5f5f7;
+        /* Apple-esque subtle glow for dark mode */
+        background-image: radial-gradient(
+          circle at 50% 0%,
+          #1a1a1a 0%,
+          #000000 70%
+        );
       }
+
+      /* Premium Glass Effect */
+      .glass-card {
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(25px) saturate(180%);
+        -webkit-backdrop-filter: blur(25px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      }
+
       .dark .glass-card {
-        background: rgba(28, 28, 30, 0.82);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(28, 28, 30, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
       }
-      .dark input {
-        background-color: #1c1c1e !important;
-        border-color: #3a3a3c !important;
-        color: white !important;
+
+      .input-apple {
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+      .input-icon-wrapper:focus-within .input-icon {
+        color: #0071e3;
       }
     </style>
   </head>
-  <body class="antialiased flex items-center justify-center min-h-screen">
-    <!-- boton toggle en login -->
-    <div class="fixed top-8 right-8">
+  <body
+    class="antialiased w-full h-screen flex flex-col items-center justify-center overflow-hidden relative selection:bg-apple-blue/20 selection:text-apple-blue"
+  >
+    <div
+      class="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-blue-400/10 rounded-full blur-[120px] pointer-events-none mix-blend-multiply dark:mix-blend-screen dark:bg-blue-900/10"
+    ></div>
+    <div
+      class="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-purple-400/10 rounded-full blur-[100px] pointer-events-none mix-blend-multiply dark:mix-blend-screen dark:bg-purple-900/10"
+    ></div>
+
+    <div class="absolute top-8 right-8 z-50 animate-fade-in">
       <button
         onclick="toggleTheme()"
-        class="w-10 h-10 rounded-full flex items-center justify-center transition-all bg-white dark:bg-white/10 shadow-sm border border-gray-200 dark:border-white/10"
+        class="group flex items-center justify-center w-10 h-10 rounded-full bg-white/50 dark:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/5 shadow-sm hover:scale-110 transition-all duration-300"
       >
         <i
           data-lucide="sun"
-          class="w-5 h-5 text-yellow-400 hidden dark:block"
+          class="w-5 h-5 text-gray-800 dark:text-yellow-300 transition-transform duration-500 rotate-0 dark:-rotate-90 hidden dark:block"
         ></i>
         <i
           data-lucide="moon"
-          class="w-5 h-5 text-gray-600 block dark:hidden"
+          class="w-5 h-5 text-gray-600 dark:text-gray-300 transition-transform duration-500 rotate-0 dark:rotate-90 block dark:hidden"
         ></i>
       </button>
     </div>
 
-    <div
-      class="w-full max-w-[400px] p-8 animate-in fade-in zoom-in duration-500"
-    >
-      <div class="text-center mb-10">
-        <h1
-          class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white"
+    <!-- Main Container -->
+    <main class="w-full max-w-md px-6 z-10">
+      <!-- Logo / Header Area -->
+      <div class="text-center mb-8 animate-fade-in-up">
+        <div
+          class="inline-flex items-center justify-center w-16 h-16 rounded-[22px] bg-white dark:bg-[#1c1c1e] shadow-xl mb-6"
         >
-          Iniciar sesión.
+          <!-- Placeholder Logo Icon -->
+          <i
+            class="w-8 h-8 text-black dark:text-white"
+            data-lucide="command"
+          ></i>
+        </div>
+        <h1
+          class="text-3xl font-semibold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7]"
+        >
+          Iniciar sesión
         </h1>
-        <p class="text-apple-secondary mt-2 font-medium">
-          Ingeniería y Servicios del Sur S.A.C.
+        <p class="text-[15px] text-[#86868b] mt-3 font-normal leading-relaxed">
+          Bienvenido a Ingeniería y Servicios del Sur S.A.C.
         </p>
       </div>
 
-      <div class="glass-card p-8 rounded-[28px] shadow-2xl shadow-black/5">
-        <form th:action="@{/login}" method="post" class="space-y-4">
-          <div>
-            <input
-              type="text"
-              name="username"
-              required
-              placeholder="Correo o DNI"
-              class="w-full px-5 py-4 bg-white dark:bg-[#1c1c1e] border border-gray-200 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-4 focus:ring-apple-blue/10 focus:border-apple-blue transition-all text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600"
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              name="password"
-              required
-              placeholder="Contraseña"
-              class="w-full px-5 py-4 bg-white dark:bg-[#1c1c1e] border border-gray-200 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-4 focus:ring-apple-blue/10 focus:border-apple-blue transition-all text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600"
-            />
+      <!-- Login Card -->
+      <div
+        class="glass-card rounded-[32px] p-10 animate-fade-in-up [animation-delay:150ms]"
+      >
+        <form th:action="@{/login}" method="post" class="space-y-6">
+          <!-- nombre de usuario Input -->
+          <div class="space-y-1.5">
+            <label
+              class="block text-xs font-medium text-[#86868b] uppercase tracking-wider ml-1"
+              >Usuario</label
+            >
+            <div class="relative group input-icon-wrapper">
+              <div
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10"
+              >
+                <i
+                  data-lucide="user"
+                  class="input-icon w-5 h-5 text-[#86868b] dark:text-[#98989d] group-hover:text-[#1d1d1f] dark:group-hover:text-[#f5f5f7] transition-colors duration-300"
+                ></i>
+              </div>
+              <input
+                type="text"
+                name="username"
+                required
+                class="input-apple w-full pl-12 pr-4 py-4 bg-white/60 dark:bg-black/20 backdrop-blur-sm border border-transparent focus:border-apple-blue/50 dark:focus:border-apple-blue/50 rounded-2xl text-[17px] text-[#1d1d1f] dark:text-[#f5f5f7] placeholder-[#86868b]/70 focus:outline-none focus:ring-4 focus:ring-apple-blue/10 focus:bg-white dark:focus:bg-[#1c1c1e]"
+                placeholder="ing.servicios@example.com"
+              />
+            </div>
           </div>
 
+          <!-- contraseña Input -->
+          <div class="space-y-1.5">
+            <label
+              class="block text-xs font-medium text-[#86868b] uppercase tracking-wider ml-1"
+              >Contraseña</label
+            >
+            <div class="relative group input-icon-wrapper">
+              <div
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-20"
+              >
+                <i
+                  data-lucide="lock"
+                  class="input-icon w-5 h-5 text-[#86868b] dark:text-[#98989d] group-hover:text-[#1d1d1f] dark:group-hover:text-[#f5f5f7] transition-colors duration-300"
+                ></i>
+              </div>
+              <input
+                type="password"
+                name="password"
+                required
+                class="input-apple w-full pl-12 pr-4 py-4 bg-white/60 dark:bg-black/20 backdrop-blur-sm border border-transparent focus:border-apple-blue/50 dark:focus:border-apple-blue/50 rounded-2xl text-[17px] text-[#1d1d1f] dark:text-[#f5f5f7] placeholder-[#86868b]/70 focus:outline-none focus:ring-4 focus:ring-apple-blue/10 focus:bg-white dark:focus:bg-[#1c1c1e]"
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+
+          <!-- Error Alert -->
           <div
             th:if="${param.error}"
-            class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-2xl mb-4"
+            class="flex items-center gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm font-medium animate-fade-in"
           >
-            <p
-              class="text-red-500 dark:text-red-400 text-xs text-center font-bold"
-            >
-              Usuario o contraseña incorrectos
-            </p>
+            <i data-lucide="alert-circle" class="w-5 h-5 px-0.5"></i>
+            <span>Credenciales incorrectas. Inténtalo de nuevo.</span>
           </div>
 
+          <!-- Boton de Ingreso -->
           <button
             type="submit"
-            class="w-full py-4 bg-apple-blue text-white font-bold rounded-2xl hover:bg-[#0077ed] transition-all active:scale-[0.98] mt-6 shadow-lg shadow-apple-blue/20"
+            class="w-full py-4 bg-[#0071e3] hover:bg-[#0077ed] text-white font-medium text-[17px] rounded-2xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 transform hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2"
           >
-            Continuar
+            <span>Ingresar</span>
+            <i data-lucide="arrow-right" class="w-5 h-5"></i>
           </button>
         </form>
       </div>
-    </div>
+
+      <!-- Footer Link -->
+      <div class="mt-8 text-center animate-fade-in-up [animation-delay:300ms]">
+        <a
+          href="#"
+          class="text-sm text-[#86868b] hover:text-[#0071e3] transition-colors duration-200"
+        >
+          ¿Olvidaste tu contraseña?
+        </a>
+        <p class="mt-8 text-xs text-[#86868b]/60">
+          © 2025 Ingeniería y Servicios del Sur S.A.C.
+        </p>
+      </div>
+    </main>
 
     <script th:inline="javascript">
       lucide.createIcons();
