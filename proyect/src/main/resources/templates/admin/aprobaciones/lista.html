@@ -538,17 +538,17 @@
     <!-- Modales  -->
     <div
       id="modalAprobar"
-      class="hidden fixed inset-0 z-[100] items-center justify-center px-6"
+      class="hidden fixed inset-0 z-[100] flex items-center justify-center px-6"
     >
       <div
         class="absolute inset-0 bg-black/40 backdrop-blur-[4px]"
         onclick="cerrarModal('modalAprobar')"
       ></div>
       <div
-        class="relative w-full max-w-[400px] bg-white rounded-[36px] p-12 shadow-2xl animate-in zoom-in-90 duration-200 text-center"
+        class="relative w-full max-w-[400px] bg-white dark:bg-[#1c1c1e] rounded-[36px] p-12 shadow-2xl animate-in zoom-in-90 duration-200 text-center border border-transparent dark:border-white/5"
       >
         <div
-          class="w-20 h-20 bg-green-50 text-green-500 rounded-3xl flex items-center justify-center mx-auto mb-8"
+          class="w-20 h-20 bg-green-500/10 text-green-500 rounded-3xl flex items-center justify-center mx-auto mb-8"
         >
           <i data-lucide="check" class="w-10 h-10"></i>
         </div>
@@ -571,14 +571,14 @@
         <form id="formAprobar" method="post" class="flex flex-col gap-3">
           <button
             type="submit"
-            class="w-full py-5 bg-black text-white text-sm font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-xl active:scale-95"
+            class="w-full py-5 bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-bold rounded-2xl hover:bg-black dark:hover:bg-gray-200 transition-all shadow-xl active:scale-95"
           >
             Sí, Aprobar Solicitud
           </button>
           <button
             type="button"
             onclick="cerrarModal('modalAprobar')"
-            class="w-full py-5 bg-apple-bg text-apple-secondary text-sm font-bold rounded-2xl hover:bg-gray-200 transition-all"
+            class="w-full py-5 bg-gray-100 dark:bg-white/5 text-apple-secondary text-sm font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-white/10 transition-all"
           >
             Cancelar
           </button>
@@ -588,17 +588,17 @@
 
     <div
       id="modalRechazar"
-      class="hidden fixed inset-0 z-[100] items-center justify-center px-6"
+      class="hidden fixed inset-0 z-[100] flex items-center justify-center px-6"
     >
       <div
         class="absolute inset-0 bg-black/40 backdrop-blur-[4px]"
         onclick="cerrarModal('modalRechazar')"
       ></div>
       <div
-        class="relative w-full max-w-[440px] bg-white rounded-[36px] p-12 shadow-2xl animate-in zoom-in-90 duration-200"
+        class="relative w-full max-w-[440px] bg-white dark:bg-[#1c1c1e] rounded-[36px] p-12 shadow-2xl animate-in zoom-in-90 duration-200 border border-transparent dark:border-white/5"
       >
         <div
-          class="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mb-8"
+          class="w-16 h-16 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center mb-8"
         >
           <i data-lucide="alert-triangle" class="w-8 h-8"></i>
         </div>
@@ -627,21 +627,21 @@
               required
               placeholder="Ej: Revisar presupuesto mensual o cronograma..."
               rows="4"
-              class="w-full px-6 py-6 bg-apple-bg border-transparent rounded-[24px] focus:bg-white focus:ring-4 focus:ring-red-100 outline-none resize-none transition-all text-sm font-medium"
+              class="w-full px-6 py-6 bg-gray-100 dark:bg-white/5 border-transparent rounded-[24px] focus:bg-white dark:focus:bg-white/10 focus:ring-4 focus:ring-red-100/20 outline-none resize-none transition-all text-sm font-medium text-gray-900 dark:text-white"
             ></textarea>
           </div>
 
           <div class="flex flex-col gap-3 pt-2">
             <button
               type="submit"
-              class="w-full py-5 bg-red-500 text-white text-sm font-bold rounded-2xl hover:bg-red-600 transition-all shadow-xl active:scale-95"
+              class="w-full py-5 bg-red-500 text-white text-sm font-bold rounded-2xl hover:bg-red-600 transition-all shadow-xl shadow-red-500/10 active:scale-95"
             >
               Confirmar Rechazo
             </button>
             <button
               type="button"
               onclick="cerrarModal('modalRechazar')"
-              class="w-full py-5 text-apple-secondary text-sm font-bold rounded-2xl hover:bg-apple-bg transition-all"
+              class="w-full py-5 bg-gray-100 dark:bg-white/5 text-apple-secondary text-sm font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-white/10 transition-all"
             >
               Cancelar
             </button>
