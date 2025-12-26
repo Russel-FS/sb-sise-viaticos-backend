@@ -22,6 +22,7 @@
     <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
     <script>
       tailwind.config = {
+        darkMode: "class",
         theme: {
           extend: {
             fontFamily: {
@@ -130,7 +131,9 @@
         class="max-w-6xl mx-auto px-8 h-full flex items-center justify-between"
       >
         <div class="flex items-center gap-10">
-          <a href="/" class="text-[15px] font-bold tracking-tight text-black"
+          <a
+            href="/"
+            class="text-[15px] font-bold tracking-tight text-gray-900 dark:text-white"
             >ISS Viáticos</a
           >
           <div
@@ -141,7 +144,9 @@
               class="hover:text-apple-blue transition-colors"
               >Solicitudes</a
             >
-            <a href="/admin/aprobaciones" class="text-black font-bold"
+            <a
+              href="/admin/aprobaciones"
+              class="text-gray-900 dark:text-white font-bold"
               >Aprobaciones</a
             >
             <a
@@ -210,7 +215,7 @@
               >
             </div>
             <h1
-              class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-2"
+              class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-2"
             >
               Aprobaciones
             </h1>
@@ -268,7 +273,7 @@
         >
           <div class="apple-card-refined p-8 flex items-center gap-6 group">
             <div
-              class="text-gray-900 group-hover:scale-110 transition-transform"
+              class="text-gray-900 dark:text-white group-hover:scale-110 transition-transform"
             >
               <i data-lucide="clock" class="w-8 h-8"></i>
             </div>
@@ -288,7 +293,7 @@
           </div>
           <div class="apple-card-refined p-8 flex items-center gap-6 group">
             <div
-              class="text-gray-900 group-hover:scale-110 transition-transform"
+              class="text-gray-900 dark:text-white group-hover:scale-110 transition-transform"
             >
               <i data-lucide="x-circle" class="w-8 h-8"></i>
             </div>
@@ -341,7 +346,7 @@
                       </div>
                       <div>
                         <div
-                          class="font-bold text-gray-900 text-sm"
+                          class="font-bold text-gray-900 dark:text-white text-sm"
                           th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos}"
                         >
                           Nombre
@@ -357,7 +362,7 @@
                   </td>
                   <td class="px-10 py-8">
                     <div
-                      class="font-bold text-gray-900 text-sm"
+                      class="font-bold text-gray-900 dark:text-white text-sm"
                       th:text="${sol.motivoViaje}"
                     >
                       MOTIVO
@@ -373,7 +378,7 @@
                   </td>
                   <td class="px-10 py-8">
                     <div
-                      class="text-gray-900 font-bold text-[13px]"
+                      class="text-gray-900 dark:text-white font-bold text-[13px]"
                       th:text="${sol.fechaInicio + ' — ' + sol.fechaFin}"
                     >
                       FECHAS
@@ -387,7 +392,7 @@
                   </td>
                   <td class="px-10 py-8 text-right">
                     <div
-                      class="text-2xl font-bold tracking-tighter text-gray-900 tabular-nums"
+                      class="text-2xl font-bold tracking-tighter text-gray-900 dark:text-white tabular-nums"
                       th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 2, 'POINT')}"
                     >
                       0.00
@@ -429,7 +434,7 @@
                         <i data-lucide="inbox" class="w-8 h-8 opacity-20"></i>
                       </div>
                       <p
-                        class="text-xl font-bold text-gray-900 not-italic mb-2"
+                        class="text-xl font-bold text-gray-900 dark:text-white not-italic mb-2"
                       >
                         Todo al día
                       </p>
@@ -468,7 +473,7 @@
                 >
                   <td class="px-10 py-8">
                     <div
-                      class="font-bold text-gray-900 text-sm"
+                      class="font-bold text-gray-900 dark:text-white text-sm"
                       th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos}"
                     >
                       Nombre
@@ -496,7 +501,7 @@
                   </td>
                   <td class="px-10 py-8">
                     <div
-                      class="text-xl font-bold tracking-tighter text-gray-900 tabular-nums"
+                      class="text-xl font-bold tracking-tighter text-gray-900 dark:text-white tabular-nums"
                       th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 2, 'POINT')}"
                     >
                       0.00
@@ -518,7 +523,7 @@
                       data-lucide="archive"
                       class="w-12 h-12 mx-auto mb-6 opacity-10"
                     ></i>
-                    <p class="text-lg font-bold text-gray-900">
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">
                       Historial vacío
                     </p>
                   </td>
@@ -547,15 +552,20 @@
         >
           <i data-lucide="check" class="w-10 h-10"></i>
         </div>
-        <h2 class="text-3xl font-bold mb-3 tracking-tight text-gray-900">
+        <h2
+          class="text-3xl font-bold mb-3 tracking-tight text-gray-900 dark:text-white"
+        >
           ¿Autorizar Viaje?
         </h2>
         <p
           class="text-[15px] text-apple-secondary font-medium leading-[1.5] mb-10 px-4"
         >
           Vas a aprobar el presupuesto para la comisión de
-          <span id="nombreAprobar" class="font-bold text-gray-900"></span>. Se
-          generará la orden de pago.
+          <span
+            id="nombreAprobar"
+            class="font-bold text-gray-900 dark:text-white"
+          ></span
+          >. Se generará la orden de pago.
         </p>
 
         <form id="formAprobar" method="post" class="flex flex-col gap-3">
@@ -592,12 +602,18 @@
         >
           <i data-lucide="alert-triangle" class="w-8 h-8"></i>
         </div>
-        <h2 class="text-3xl font-bold mb-3 tracking-tight text-gray-900">
+        <h2
+          class="text-3xl font-bold mb-3 tracking-tight text-gray-900 dark:text-white"
+        >
           Motivo del Rechazo
         </h2>
         <p class="text-[15px] text-apple-secondary font-medium mb-10">
           Indica detalladamente por qué no se puede autorizar el viaje de
-          <span id="nombreRechazar" class="font-bold text-gray-900"></span>.
+          <span
+            id="nombreRechazar"
+            class="font-bold text-gray-900 dark:text-white"
+          ></span
+          >.
         </p>
 
         <form id="formRechazar" method="post" class="space-y-8">

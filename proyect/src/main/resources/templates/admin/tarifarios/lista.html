@@ -22,6 +22,7 @@
     <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
     <script>
       tailwind.config = {
+        darkMode: "class",
         theme: {
           extend: {
             fontFamily: {
@@ -100,7 +101,9 @@
         class="max-w-6xl mx-auto px-8 h-full flex items-center justify-between"
       >
         <div class="flex items-center gap-10">
-          <a href="/" class="text-[15px] font-bold tracking-tight text-black"
+          <a
+            href="/"
+            class="text-[15px] font-bold tracking-tight text-gray-900 dark:text-white"
             >ISS Viáticos</a
           >
           <div
@@ -126,7 +129,9 @@
               class="hover:text-apple-blue transition-colors"
               >Personal</a
             >
-            <a href="/admin/tarifarios" class="text-black font-bold"
+            <a
+              href="/admin/tarifarios"
+              class="text-gray-900 dark:text-white font-bold"
               >Configuración</a
             >
           </div>
@@ -175,31 +180,31 @@
         </a>
         <a
           href="/admin/conceptos"
-          class="flex items-center gap-2.5 px-5 py-2 rounded-full text-[13px] font-medium text-apple-secondary hover:text-black hover:bg-gray-100/80 transition-all group"
+          class="flex items-center gap-2.5 px-5 py-2 rounded-full text-[13px] font-medium text-apple-secondary hover:text-gray-900 dark:text-white hover:bg-gray-100/80 transition-all group"
         >
           <i
             data-lucide="tag"
-            class="w-4 h-4 text-gray-400 group-hover:text-black transition-colors"
+            class="w-4 h-4 text-gray-400 group-hover:text-gray-900 dark:text-white transition-colors"
           ></i>
           <span>Conceptos</span>
         </a>
         <a
           href="/admin/zonas"
-          class="flex items-center gap-2.5 px-5 py-2 rounded-full text-[13px] font-medium text-apple-secondary hover:text-black hover:bg-gray-100/80 transition-all group"
+          class="flex items-center gap-2.5 px-5 py-2 rounded-full text-[13px] font-medium text-apple-secondary hover:text-gray-900 dark:text-white hover:bg-gray-100/80 transition-all group"
         >
           <i
             data-lucide="map"
-            class="w-4 h-4 text-gray-400 group-hover:text-black transition-colors"
+            class="w-4 h-4 text-gray-400 group-hover:text-gray-900 dark:text-white transition-colors"
           ></i>
           <span>Zonas</span>
         </a>
         <a
           href="/admin/niveles"
-          class="flex items-center gap-2.5 px-5 py-2 rounded-full text-[13px] font-medium text-apple-secondary hover:text-black hover:bg-gray-100/80 transition-all group"
+          class="flex items-center gap-2.5 px-5 py-2 rounded-full text-[13px] font-medium text-apple-secondary hover:text-gray-900 dark:text-white hover:bg-gray-100/80 transition-all group"
         >
           <i
             data-lucide="layers"
-            class="w-4 h-4 text-gray-400 group-hover:text-black transition-colors"
+            class="w-4 h-4 text-gray-400 group-hover:text-gray-900 dark:text-white transition-colors"
           ></i>
           <span>Niveles</span>
         </a>
@@ -225,7 +230,7 @@
               >
             </div>
             <h1
-              class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-2"
+              class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-2"
             >
               Tarifarios
             </h1>
@@ -270,7 +275,7 @@
                         <i data-lucide="map" class="w-4 h-4"></i>
                       </div>
                       <div
-                        class="font-bold text-gray-900 text-sm"
+                        class="font-bold text-gray-900 dark:text-white text-sm"
                         th:text="${tar.zonaGeografica.nombre}"
                       >
                         ZONA
@@ -293,7 +298,7 @@
                         class="w-1.5 h-1.5 rounded-full bg-apple-blue"
                       ></span>
                       <span
-                        class="text-sm font-bold text-gray-900"
+                        class="text-sm font-bold text-gray-900 dark:text-white"
                         th:text="${tar.tipoGasto.nombre}"
                         >CONCEPTO</span
                       >
@@ -301,7 +306,7 @@
                   </td>
                   <td class="px-10 py-8 text-right">
                     <div
-                      class="text-xl font-bold tracking-tighter text-gray-900 tabular-nums"
+                      class="text-xl font-bold tracking-tighter text-gray-900 dark:text-white tabular-nums"
                     >
                       <span class="text-[10px] text-apple-secondary mr-1"
                         >S/</span
@@ -332,7 +337,7 @@
                       data-lucide="database"
                       class="w-12 h-12 mx-auto mb-6 opacity-10"
                     ></i>
-                    <p class="text-lg font-bold text-gray-900">
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">
                       Sin tarifas configuradas
                     </p>
                   </td>
@@ -356,7 +361,9 @@
       <div
         class="relative w-full max-w-[500px] bg-white rounded-[40px] p-12 shadow-2xl animate-in zoom-in-95 duration-200"
       >
-        <h2 class="text-3xl font-bold mb-1 tracking-tight text-gray-900">
+        <h2
+          class="text-3xl font-bold mb-1 tracking-tight text-gray-900 dark:text-white"
+        >
           Nueva Tarifa
         </h2>
         <p class="text-apple-secondary font-medium mb-10">

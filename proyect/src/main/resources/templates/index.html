@@ -24,6 +24,7 @@
     <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
     <script>
       tailwind.config = {
+        darkMode: 'class',
         theme: {
           extend: {
             fontFamily: {
@@ -127,7 +128,7 @@
         class="max-w-6xl mx-auto px-8 h-full flex items-center justify-between"
       >
         <div class="flex items-center gap-8">
-          <a href="/" class="text-[15px] font-bold tracking-tight text-black"
+          <a href="/" class="text-[15px] font-bold tracking-tight text-gray-900 dark:text-white"
             >ISS Viáticos</a
           >
           <div
@@ -178,7 +179,7 @@
           </button>
           <span class="w-[1px] h-3 bg-gray-200 dark:bg-gray-700"></span>
           <span
-            class="text-[12px] font-medium text-gray-500"
+            class="text-[12px] font-medium text-gray-500 dark:text-gray-400"
             th:text="${currentUser.nombreCompleto}"
             >User</span
           >
@@ -199,7 +200,7 @@
       <div class="max-w-6xl mx-auto">
       <!-- Header -->
       <header class="mb-16">
-        <h1 class="text-4xl font-bold tracking-tight mb-2">Resumen</h1>
+        <h1 class="text-4xl font-bold tracking-tight mb-2 text-gray-900 dark:text-white">Resumen</h1>
         <p class="text-xl text-apple-gray font-medium">
           Control general de operaciones y viáticos.
         </p>
@@ -216,7 +217,7 @@
             >
           </div>
           <span
-            class="text-5xl font-bold tracking-tighter"
+            class="text-5xl font-bold tracking-tighter text-gray-900 dark:text-white"
             th:text="${totalPendientes}"
             >0</span
           >
@@ -230,7 +231,7 @@
             >
           </div>
           <span
-            class="text-5xl font-bold tracking-tighter"
+            class="text-5xl font-bold tracking-tighter text-gray-900 dark:text-white"
             th:text="${totalAprobados}"
             >0</span
           >
@@ -244,7 +245,7 @@
             >
           </div>
           <span
-            class="text-5xl font-bold tracking-tighter"
+            class="text-5xl font-bold tracking-tighter text-gray-900 dark:text-white"
             th:text="${totalLiquidados}"
             >0</span
           >
@@ -262,7 +263,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
         <div class="lg:col-span-8">
           <div class="flex items-center justify-between mb-8">
-            <h2 class="text-2xl font-bold tracking-tight">
+            <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
               Actividad Reciente
             </h2>
             <a
@@ -308,7 +309,7 @@
                 </div>
                 <div>
                   <h4
-                    class="text-sm font-bold text-gray-900 group-hover:text-apple-blue transition-colors"
+                    class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-apple-blue transition-colors"
                     th:text="${sol.motivoViaje}"
                   >
                     Viaje
@@ -323,7 +324,7 @@
               </div>
               <div class="text-right flex flex-col items-end">
                 <span
-                  class="text-sm font-bold tabular-nums"
+                  class="text-sm font-bold tabular-nums text-gray-900 dark:text-white"
                   th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 0)}"
                   >0</span
                 >
@@ -378,7 +379,7 @@
                     data-lucide="book-open"
                     class="w-4 h-4 text-apple-gray"
                   ></i>
-                  <span class="text-[13px] font-bold"
+                  <span class="text-[13px] font-bold text-gray-900 dark:text-white"
                     >Políticas de Viáticos</span
                   >
                 </div>
@@ -393,7 +394,7 @@
               >
                 <div class="flex items-center gap-3">
                   <i data-lucide="archive" class="w-4 h-4 text-apple-gray"></i>
-                  <span class="text-[13px] font-bold">Historial de Viajes</span>
+                  <span class="text-[13px] font-bold text-gray-900 dark:text-white">Historial de Viajes</span>
                 </div>
                 <i
                   data-lucide="chevron-right"
