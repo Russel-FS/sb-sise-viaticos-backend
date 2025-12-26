@@ -175,7 +175,7 @@
             >
           </div>
           <h1
-            class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 leading-[1.1]"
+            class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white leading-[1.1]"
             th:text="${sol.motivoViaje}"
           >
             Motivo
@@ -190,7 +190,7 @@
               <div class="apple-card-refined p-8 group">
                 <div class="flex items-center gap-6">
                   <div
-                    class="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-900 group-hover:scale-105 transition-transform"
+                    class="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-900 dark:text-white group-hover:scale-105 transition-transform"
                   >
                     <i data-lucide="user" class="w-6 h-6"></i>
                   </div>
@@ -219,7 +219,7 @@
               <div class="apple-card-refined p-8 group">
                 <div class="flex items-center gap-6">
                   <div
-                    class="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-900 group-hover:scale-105 transition-transform"
+                    class="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-900 dark:text-white group-hover:scale-105 transition-transform"
                   >
                     <i data-lucide="calendar" class="w-6 h-6"></i>
                   </div>
@@ -250,7 +250,7 @@
             <section>
               <div class="flex items-center gap-3 mb-8">
                 <div
-                  class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-900"
+                  class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-900 dark:text-white"
                 >
                   <i data-lucide="map-pin" class="w-5 h-5"></i>
                 </div>
@@ -296,11 +296,11 @@
                       </h4>
                     </div>
                     <div
-                      class="flex items-center gap-2.5 px-5 py-2.5 bg-gray-50 rounded-full border border-gray-100"
+                      class="flex items-center gap-2.5 px-5 py-2.5 bg-gray-100 dark:bg-white/5 rounded-full border border-gray-200 dark:border-white/5"
                     >
                       <i data-lucide="moon" class="w-4 h-4 text-gray-400"></i>
                       <span
-                        class="text-sm font-bold text-gray-900"
+                        class="text-sm font-bold text-gray-900 dark:text-white"
                         th:text="${iti.noches + ' Noches'}"
                         >0 Noches</span
                       >
@@ -482,7 +482,7 @@
                   >Cierre Financiero</span
                 >
                 <h2
-                  class="text-4xl font-bold tracking-tight text-gray-900 leading-tight"
+                  class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white leading-tight"
                 >
                   Resultado de Liquidación
                 </h2>
@@ -491,16 +491,16 @@
                 <a
                   th:href="@{'/solicitudes/' + ${sol.id} + '/reporte'}"
                   target="_blank"
-                  class="px-6 py-2.5 bg-black text-white text-[11px] font-bold uppercase tracking-widest rounded-full hover:bg-gray-800 transition-colors flex items-center gap-2"
+                  class="px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-black text-[11px] font-bold uppercase tracking-widest rounded-full hover:bg-black dark:hover:bg-gray-200 transition-colors flex items-center gap-2"
                 >
                   <i data-lucide="download" class="w-4 h-4"></i>
                   PDF
                 </a>
                 <div
-                  class="px-5 py-2.5 bg-gray-50 border border-gray-100 rounded-full"
+                  class="px-5 py-2.5 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full"
                 >
                   <span
-                    class="text-[11px] font-bold text-gray-500 uppercase tracking-[0.2em]"
+                    class="text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em]"
                     th:text="${liq.estadoCierre}"
                     >CERRADO</span
                   >
@@ -512,7 +512,7 @@
               class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 relative z-10"
             >
               <div
-                class="bg-gray-50/50 p-10 rounded-[28px] border border-gray-50"
+                class="bg-gray-400 dark:bg-white/5 p-10 rounded-[28px] border border-gray-200 dark:border-white/5"
               >
                 <p
                   class="text-[10px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-2"
@@ -520,14 +520,14 @@
                   Asignado
                 </p>
                 <p
-                  class="text-4xl font-bold text-gray-900 tracking-tighter"
+                  class="text-4xl font-bold text-gray-900 dark:text-white tracking-tighter"
                   th:text="${'S/ ' + #numbers.formatDecimal(liq.montoAsignado, 1, 2)}"
                 >
                   S/ 0.00
                 </p>
               </div>
               <div
-                class="bg-gray-50/50 p-10 rounded-[28px] border border-gray-50"
+                class="bg-gray-400 dark:bg-white/5 p-10 rounded-[28px] border border-gray-200 dark:border-white/5"
               >
                 <p
                   class="text-[10px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-2"
@@ -535,7 +535,7 @@
                   Gasto Validado
                 </p>
                 <p
-                  class="text-4xl font-bold text-gray-900 tracking-tighter"
+                  class="text-4xl font-bold text-gray-900 dark:text-white tracking-tighter"
                   th:text="${'S/ ' + #numbers.formatDecimal(liq.montoRendidoValidado, 1, 2)}"
                 >
                   S/ 0.00
@@ -608,7 +608,7 @@
               <!-- CERO -->
               <div
                 th:if="${liq.saldoAfavorEmpresa == 0 && liq.saldoAfavorEmpleado == 0}"
-                class="p-10 bg-gray-50 rounded-[32px] text-center"
+                class="p-10 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-[32px] text-center"
               >
                 <div
                   class="flex items-center justify-center gap-3 text-apple-secondary"
