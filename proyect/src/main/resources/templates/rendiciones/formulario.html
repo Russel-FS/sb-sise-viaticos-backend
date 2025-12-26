@@ -290,7 +290,7 @@
           <!-- Saldo -->
           <div
             class="apple-card-refined p-8 group relative overflow-hidden"
-            th:classappend="${sol.montoTotal.subtract(ren.totalGastadoBruto).signum() < 0 ? 'bg-red-50/50 dark:bg-red-500/5 border-red-200/50' : 'bg-white dark:bg-white/5 border-white/50'}"
+            th:classappend="${sol.montoTotal.subtract(ren.totalGastadoBruto).signum() < 0 ? 'bg-red-50/50 dark:bg-red-500/5 border-red-200/50' : 'bg-white dark:bg-white/5 '}"
           >
             <p
               class="text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3"
