@@ -51,47 +51,46 @@
     </script>
     <style>
       body {
-        background-color: #f5f5f7;
-        color: #1d1d1f;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
         letter-spacing: -0.015em;
       }
       .glass {
         background: rgba(255, 255, 255, 0.72);
         backdrop-filter: saturate(180%) blur(20px);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-      }
-      .apple-card-refined {
-        background: #ffffff;
-        border-radius: 28px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
-      }
-      /* modo oscuro */
-      .dark body {
-        background-color: #000000;
-        color: #f5f5f7;
+        border-bottom: 1px solid var(--border-color);
       }
       .dark .glass {
-        background: rgba(28, 28, 30, 0.85);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(0, 0, 0, 0.72);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
-      .dark .apple-card-refined {
-        background: #1c1c1e;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      .apple-card-refined {
+        background: var(--bg-secondary);
+        border-radius: 32px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .apple-card-refined:hover {
+        box-shadow: var(--card-hover-shadow);
+        transform: translateY(-2px);
       }
       .input-rechazo {
         width: 100%;
-        padding: 1rem;
-        background-color: rgba(254, 242, 242, 0.3);
-        border: 1px solid transparent;
-        border-radius: 18px;
-        font-size: 13px;
+        padding: 1.25rem;
+        background-color: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        font-size: 14px;
         font-weight: 500;
         transition: all 0.2s;
         outline: none;
+        color: var(--text-primary);
       }
       .input-rechazo:focus {
-        background-color: #ffffff;
-        box-shadow: 0 0 0 4px #fee2e2;
+        background-color: var(--bg-secondary);
+        border-color: #ef4444; /* red-500 */
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
       }
     </style>
   </head>
@@ -102,17 +101,20 @@
         class="max-w-6xl mx-auto px-8 h-12 flex items-center justify-between"
       >
         <div class="flex items-center gap-10">
-          <a href="/" class="text-[14px] font-bold tracking-tight text-gray-900"
+          <a
+            href="/"
+            class="text-[14px] font-bold tracking-tight text-gray-900 dark:text-white"
             >ISS Viáticos / Admin</a
           >
-          <span class="text-gray-300">/</span>
-          <span
-            class="text-[12px] font-bold text-apple-secondary tracking-widest uppercase"
-            >Validación de Gastos</span
-          >
+          <div class="hidden md:flex items-center gap-4">
+            <span class="text-gray-300 dark:text-gray-600">/</span>
+            <span
+              class="text-[12px] font-bold text-apple-secondary tracking-widest uppercase"
+              >Validación</span
+            >
+          </div>
         </div>
-        <div class="flex gap-6 items-center">
-          <!-- boton de toggle -->
+        <div class="flex gap-4 items-center">
           <button
             onclick="toggleTheme()"
             class="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-gray-100 dark:hover:bg-white/10"
@@ -137,32 +139,32 @@
       </div>
     </nav>
 
-    <main class="pt-32 px-8">
+    <main class="pt-24 px-8">
       <div class="max-w-6xl mx-auto">
         <!-- Dashboard Header -->
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 mb-12">
           <div class="lg:col-span-2">
             <div class="flex items-center gap-3 mb-4">
               <div
-                class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-green-600"
+                class="w-10 h-10 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-600"
               >
                 <i data-lucide="shield-check" class="w-5 h-5"></i>
               </div>
               <span
-                class="text-[10px] font-bold text-green-600 uppercase tracking-[0.2em]"
-                th:text="${'ID SOLICITUD #' + sol.id}"
-                >ID SOLICITUD #000</span
+                class="text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em]"
+                th:text="${'Auditando Solicitud #' + sol.id}"
+                >Solicitud #000</span
               >
             </div>
             <h1
-              class="text-4xl font-bold tracking-tight text-gray-900 mb-2"
+              class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-2"
               th:text="${sol.motivoViaje}"
             >
               Motivo del Viaje
             </h1>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 mt-4">
               <div
-                class="w-8 h-8 rounded-full bg-apple-bg flex items-center justify-center text-[11px] font-bold text-gray-400 border border-gray-100 uppercase"
+                class="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-[11px] font-bold text-apple-secondary uppercase border border-gray-200 dark:border-white/5"
                 th:text="${#strings.substring(sol.empleado.nombres,0,1) + #strings.substring(sol.empleado.apellidos,0,1)}"
               >
                 EM
@@ -177,25 +179,21 @@
           </div>
 
           <!-- Summary Stats -->
-          <div class="lg:col-span-2 grid grid-cols-3 gap-6">
-            <div
-              class="apple-card-refined p-6 text-center border border-gray-50"
-            >
+          <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="apple-card-refined p-6 text-center">
               <p
                 class="text-[9px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 pl-0.5"
               >
                 Asignado
               </p>
               <p
-                class="text-xl font-bold tracking-tighter text-gray-900"
+                class="text-xl font-bold tracking-tighter text-gray-900 dark:text-white"
                 th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 0, 'POINT')}"
               >
                 1,000
               </p>
             </div>
-            <div
-              class="apple-card-refined p-6 text-center border border-gray-50"
-            >
+            <div class="apple-card-refined p-6 text-center border-blue-500/10">
               <p
                 class="text-[9px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 pl-0.5"
               >
@@ -208,9 +206,7 @@
                 1,200
               </p>
             </div>
-            <div
-              class="apple-card-refined p-6 text-center border border-gray-50"
-            >
+            <div class="apple-card-refined p-6 text-center border-green-500/10">
               <p
                 class="text-[9px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 pl-0.5"
               >
@@ -242,11 +238,11 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div
               th:each="det : ${ren.detalles}"
-              class="apple-card-refined group overflow-hidden border border-transparent hover:border-gray-50 transition-all duration-300"
+              class="apple-card-refined group overflow-hidden border-transparent hover:border-gray-100 dark:hover:border-white/5 transition-all duration-300"
             >
               <!-- Header  -->
               <div
-                class="px-8 py-5 border-b border-gray-50 flex justify-between items-center bg-gray-50/30"
+                class="px-8 py-5 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-gray-50/30 dark:bg-white/[0.02]"
               >
                 <span
                   class="text-[10px] font-bold uppercase tracking-[0.2em] text-apple-secondary"
@@ -282,15 +278,15 @@
 
               <div class="p-8">
                 <div class="flex justify-between items-start mb-8">
-                  <div class="max-w-[60%]">
+                  <div class="max-w-[65%]">
                     <h3
-                      class="text-xl font-bold text-gray-900 leading-[1.2] mb-2"
+                      class="text-xl font-bold text-gray-900 dark:text-white leading-[1.2] mb-2"
                       th:text="${det.razonSocialProveedor}"
                     >
                       Nombre Proveedor
                     </h3>
                     <p
-                      class="text-[10px] font-bold text-apple-secondary uppercase tracking-widest"
+                      class="text-[10px] font-extrabold text-apple-secondary uppercase tracking-widest"
                       th:text="${'RUC ' + det.rucProveedor}"
                     >
                       RUC 000
@@ -298,13 +294,13 @@
                   </div>
                   <div class="text-right">
                     <p
-                      class="text-3xl font-bold tracking-tighter text-gray-900 mb-1"
+                      class="text-3xl font-bold tracking-tighter text-gray-900 dark:text-white mb-1 tabular-nums"
                       th:text="${'S/ ' + #numbers.formatDecimal(det.montoTotal, 1, 'COMMA', 2, 'POINT')}"
                     >
                       0.00
                     </p>
                     <p
-                      class="text-[11px] font-bold text-apple-secondary tracking-widest"
+                      class="text-[11px] font-bold text-apple-secondary tracking-widest font-mono"
                       th:text="${det.serieNumeroComprobante}"
                     >
                       SERIE
@@ -313,8 +309,11 @@
                 </div>
 
                 <div class="flex items-center justify-between mb-10">
-                  <div class="flex items-center gap-2 group/info">
-                    <i data-lucide="calendar" class="w-4 h-4 text-gray-300"></i>
+                  <div class="flex items-center gap-2">
+                    <i
+                      data-lucide="calendar"
+                      class="w-4 h-4 text-apple-secondary opacity-50"
+                    ></i>
                     <span
                       class="text-[13px] font-medium text-apple-secondary"
                       th:text="${'Emitido el ' + det.fechaEmision}"
@@ -322,20 +321,36 @@
                     >
                   </div>
 
-                  <!-- Evidence Thumbnail -->
+                  <!-- Evidence Display -->
                   <div
                     th:if="${det.fotoEvidenciaUrl}"
-                    class="relative group/evid"
+                    class="flex items-center"
                   >
-                    <img
-                      th:src="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
-                      class="w-16 h-16 object-cover rounded-2xl border border-gray-100 shadow-sm cursor-zoom-in hover:scale-105 transition-all"
-                      th:onclick="'abrirVisualizador(this.src)'"
-                    />
-                    <div
-                      class="absolute -top-2 -right-2 bg-black text-white p-1 rounded-full opacity-0 group-hover/evid:opacity-100 transition-opacity"
+                    <!-- PDF -->
+                    <a
+                      th:if="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
+                      th:href="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
+                      target="_blank"
+                      class="w-14 h-14 flex items-center justify-center bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 hover:scale-110 transition-all shadow-sm"
+                      title="Abrir PDF"
                     >
-                      <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                      <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </a>
+                    <!-- Imagen -->
+                    <div
+                      th:unless="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
+                      class="relative group/evid"
+                    >
+                      <img
+                        th:src="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
+                        class="w-16 h-16 object-cover rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm cursor-zoom-in hover:scale-105 transition-all"
+                        th:onclick="'abrirVisualizador(this.src)'"
+                      />
+                      <div
+                        class="absolute -top-1 -right-1 bg-black text-white p-1 rounded-full opacity-0 group-hover/evid:opacity-100 transition-opacity"
+                      >
+                        <i data-lucide="maximize-2" class="w-2.5 h-2.5"></i>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -362,7 +377,7 @@
                     <input type="hidden" name="estado" value="ACEPTADO" />
                     <button
                       type="submit"
-                      class="w-full py-4 bg-gray-900 text-white text-[12px] font-bold uppercase tracking-wider rounded-2xl hover:bg-black hover:scale-[1.02] transition-all active:scale-95 shadow-lg shadow-black/10 flex items-center justify-center gap-2"
+                      class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-black text-[12px] font-bold uppercase tracking-wider rounded-2xl hover:scale-[1.02] transition-all active:scale-95 shadow-lg shadow-black/10 flex items-center justify-center gap-2"
                     >
                       <i data-lucide="check" class="w-4 h-4"></i>
                       Aceptar
@@ -371,7 +386,7 @@
                   <button
                     type="button"
                     onclick="this.closest('.p-8').querySelector('.panel-rechazo').classList.toggle('hidden')"
-                    class="w-full py-4 bg-white text-gray-400 text-[12px] font-bold uppercase tracking-wider border border-gray-100 rounded-2xl hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
+                    class="w-full py-4 bg-white dark:bg-black/20 text-gray-400 text-[12px] font-bold uppercase tracking-wider border border-gray-100 dark:border-white/10 rounded-2xl hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-500 hover:border-red-100 dark:hover:border-red-500/20 transition-all flex items-center justify-center gap-2"
                   >
                     <i data-lucide="x" class="w-4 h-4"></i>
                     Rechazar
@@ -380,7 +395,7 @@
 
                 <!-- Reject Panel hidden -->
                 <div
-                  class="panel-rechazo hidden mt-6 pt-6 border-t border-gray-50"
+                  class="panel-rechazo hidden mt-6 pt-6 border-t border-gray-100 dark:border-white/5"
                 >
                   <form
                     th:action="@{/admin/validaciones/comprobante/validar}"
@@ -407,7 +422,7 @@
                       name="motivo"
                       required
                       placeholder="Explica el motivo brevemente..."
-                      class="w-full p-4 bg-red-50/30 border-transparent rounded-[20px] text-sm focus:bg-white focus:ring-4 focus:ring-red-100 transition-all outline-none h-24"
+                      class="input-rechazo h-28 resize-none"
                     ></textarea>
 
                     <button
@@ -422,7 +437,7 @@
                 <!-- motivo de rechazo -->
                 <div
                   th:if="${det.estadoValidacion.name() == 'RECHAZADO'}"
-                  class="mt-2 p-5 bg-red-50/30 rounded-2xl border border-red-50/50"
+                  class="mt-2 p-5 bg-red-500/[0.03] rounded-2xl border border-red-500/10"
                 >
                   <p
                     class="text-[10px] font-bold text-red-500 uppercase tracking-widest mb-1.5"
@@ -430,7 +445,7 @@
                     Motivo del rechazo
                   </p>
                   <p
-                    class="text-[13px] font-medium text-red-900/80 leading-relaxed"
+                    class="text-[13px] font-medium text-red-600 dark:text-red-400 leading-relaxed italic"
                     th:text="${det.motivoRechazo}"
                   >
                     Motivo
@@ -443,18 +458,18 @@
 
         <!--accion global -->
         <div
-          class="mt-16 bg-black rounded-[40px] p-12 text-white shadow-2xl shadow-black/20 flex flex-col md:flex-row items-center justify-between gap-10 overflow-hidden relative"
+          class="mt-16 bg-gray-900 dark:bg-[#1c1c1e] rounded-[40px] p-12 text-white shadow-2xl shadow-black/20 flex flex-col md:flex-row items-center justify-between gap-10 overflow-hidden relative group border border-white/5"
         >
           <!-- decoraciones-->
           <div
-            class="absolute -right-20 -bottom-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"
+            class="absolute -right-20 -bottom-20 w-64 h-64 bg-white/5 dark:bg-black/5 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"
           ></div>
 
           <div
             class="relative z-10 flex flex-col md:flex-row items-center gap-10"
           >
             <div
-              class="w-20 h-20 rounded-3xl bg-white/10 flex items-center justify-center text-green-400"
+              class="w-20 h-20 rounded-3xl bg-white/10 dark:bg-black/5 flex items-center justify-center text-green-400"
             >
               <i data-lucide="flag" class="w-10 h-10"></i>
             </div>
@@ -462,7 +477,7 @@
               <h2 class="text-3xl font-bold tracking-tight mb-2">
                 Finalizar Auditoría
               </h2>
-              <p class="text-lg text-gray-400 font-medium">
+              <p class="text-lg opacity-60 font-medium">
                 Se calculará el balance final y se generará la liquidación para
                 el cierre.
               </p>
@@ -472,15 +487,15 @@
           <form
             th:action="@{/admin/validaciones/finalizar}"
             method="post"
-            class="relative z-10"
+            class="relative z-10 flex-shrink-0"
           >
             <input type="hidden" name="solicitudId" th:value="${sol.id}" />
             <button
               type="submit"
-              class="px-12 py-5 bg-white text-black text-sm font-bold rounded-full hover:bg-gray-100 transition-all active:scale-95 shadow-xl flex items-center gap-3"
+              class="px-12 py-5 bg-white text-black text-sm font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3 whitespace-nowrap"
             >
               Finalizar y Liquidar
-              <i data-lucide="arrow-right" class="w-5 h-5 text-apple-blue"></i>
+              <i data-lucide="check-check" class="w-5 h-5"></i>
             </button>
           </form>
         </div>
