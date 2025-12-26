@@ -1,11 +1,9 @@
-package com.viatico.proyect.repository;
+package com.viatico.proyect.repository.jpa;
 
 import com.viatico.proyect.entity.LiquidacionFinal;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
-@Repository
-public interface LiquidacionFinalRepository extends JpaRepository<LiquidacionFinal, Long> {
+public interface LiquidacionFinalJpaRepository extends JpaRepository<LiquidacionFinal, Long> {
     Optional<LiquidacionFinal> findBySolicitudId(Long solicitudId);
 }

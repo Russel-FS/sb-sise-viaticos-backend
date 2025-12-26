@@ -1,7 +1,7 @@
 package com.viatico.proyect.controller;
 
 import com.viatico.proyect.entity.Empleado;
-import com.viatico.proyect.repository.RolRepository;
+import com.viatico.proyect.repository.interfaces.RolRepository;
 import com.viatico.proyect.security.UsuarioPrincipal;
 import com.viatico.proyect.service.interfaces.EmpleadoService;
 import com.viatico.proyect.service.interfaces.NivelJerarquicoService;

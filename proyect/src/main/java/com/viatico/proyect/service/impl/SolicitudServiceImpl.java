@@ -1,7 +1,10 @@
 package com.viatico.proyect.service.impl;
 
 import com.viatico.proyect.entity.*;
-import com.viatico.proyect.repository.*;
+import com.viatico.proyect.repository.interfaces.EmpleadoRepository;
+import com.viatico.proyect.repository.interfaces.SolicitudComisionRepository;
+import com.viatico.proyect.repository.interfaces.TarifarioRepository;
+import com.viatico.proyect.repository.interfaces.ZonaGeograficaRepository;
 import com.viatico.proyect.security.UsuarioPrincipal;
 import com.viatico.proyect.service.interfaces.SolicitudService;
 

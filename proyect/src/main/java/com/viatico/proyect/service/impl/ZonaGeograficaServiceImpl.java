@@ -1,7 +1,7 @@
 package com.viatico.proyect.service.impl;
 
 import com.viatico.proyect.entity.ZonaGeografica;
-import com.viatico.proyect.repository.ZonaGeograficaRepository;
+import com.viatico.proyect.repository.interfaces.ZonaGeograficaRepository;
 import com.viatico.proyect.service.interfaces.ZonaGeograficaService;
 
 import lombok.RequiredArgsConstructor;

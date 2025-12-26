@@ -3,9 +3,9 @@ package com.viatico.proyect.service.impl;
 import com.viatico.proyect.entity.Empleado;
 import com.viatico.proyect.entity.Rol;
 import com.viatico.proyect.entity.Usuario;
-import com.viatico.proyect.repository.EmpleadoRepository;
-import com.viatico.proyect.repository.RolRepository;
-import com.viatico.proyect.repository.UsuarioRepository;
+import com.viatico.proyect.repository.interfaces.EmpleadoRepository;
+import com.viatico.proyect.repository.interfaces.RolRepository;
+import com.viatico.proyect.repository.interfaces.UsuarioRepository;
 import com.viatico.proyect.service.interfaces.EmpleadoService;
 
 import lombok.RequiredArgsConstructor;

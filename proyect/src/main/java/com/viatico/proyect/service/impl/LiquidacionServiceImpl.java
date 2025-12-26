@@ -4,9 +4,9 @@ import com.viatico.proyect.entity.EstadoLiquidacion;
 import com.viatico.proyect.entity.LiquidacionFinal;
 import com.viatico.proyect.entity.RendicionCuentas;
 import com.viatico.proyect.entity.SolicitudComision;
-import com.viatico.proyect.repository.LiquidacionFinalRepository;
-import com.viatico.proyect.repository.RendicionCuentasRepository;
-import com.viatico.proyect.repository.SolicitudComisionRepository;
+import com.viatico.proyect.repository.interfaces.LiquidacionFinalRepository;
+import com.viatico.proyect.repository.interfaces.RendicionCuentasRepository;
+import com.viatico.proyect.repository.interfaces.SolicitudComisionRepository;
 import com.viatico.proyect.service.interfaces.LiquidacionService;
 
 import lombok.RequiredArgsConstructor;

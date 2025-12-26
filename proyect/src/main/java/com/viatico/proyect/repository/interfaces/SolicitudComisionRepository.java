@@ -1,11 +1,24 @@
-package com.viatico.proyect.repository;
+package com.viatico.proyect.repository.interfaces;
 
 import com.viatico.proyect.entity.EstadoSolicitud;
 import com.viatico.proyect.entity.SolicitudComision;
-import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
+import java.util.Optional;
 
-public interface SolicitudComisionRepository extends JpaRepository<SolicitudComision, Long> {
+public interface SolicitudComisionRepository {
+    SolicitudComision save(SolicitudComision solicitud);
+
+    Optional<SolicitudComision> findById(Long id);
+
+    void deleteById(Long id);
+
+    void delete(SolicitudComision solicitud);
+
+    List<SolicitudComision> findAll();
+
+    long count();
+
+    // Custom methods
     List<SolicitudComision> findByEmpleadoIdOrderByFechaCreaDesc(Long empleadoId);
 
     List<SolicitudComision> findByEstadoOrderByFechaCreaDesc(EstadoSolicitud estado);

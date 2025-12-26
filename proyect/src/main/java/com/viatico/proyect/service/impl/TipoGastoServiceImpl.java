@@ -1,7 +1,7 @@
 package com.viatico.proyect.service.impl;
 
 import com.viatico.proyect.entity.TipoGasto;
-import com.viatico.proyect.repository.TipoGastoRepository;
+import com.viatico.proyect.repository.interfaces.TipoGastoRepository;
 import com.viatico.proyect.service.interfaces.TipoGastoService;
 
 import lombok.RequiredArgsConstructor;

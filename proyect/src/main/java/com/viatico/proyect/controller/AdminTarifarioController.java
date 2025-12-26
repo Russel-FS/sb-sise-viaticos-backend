@@ -1,8 +1,8 @@
 package com.viatico.proyect.controller;
 
 import com.viatico.proyect.entity.Tarifario;
-import com.viatico.proyect.repository.NivelJerarquicoRepository;
-import com.viatico.proyect.repository.ZonaGeograficaRepository;
+import com.viatico.proyect.repository.interfaces.NivelJerarquicoRepository;
+import com.viatico.proyect.repository.interfaces.ZonaGeograficaRepository;
 import com.viatico.proyect.security.UsuarioPrincipal;
 import com.viatico.proyect.service.interfaces.TarifarioService;
 import com.viatico.proyect.service.interfaces.TipoGastoService;

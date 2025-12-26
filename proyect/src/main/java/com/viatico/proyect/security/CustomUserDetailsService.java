@@ -1,7 +1,8 @@
 package com.viatico.proyect.security;
 
 import com.viatico.proyect.entity.Usuario;
-import com.viatico.proyect.repository.UsuarioRepository;
+import com.viatico.proyect.repository.interfaces.UsuarioRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

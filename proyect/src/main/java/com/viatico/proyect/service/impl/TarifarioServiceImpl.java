@@ -1,7 +1,7 @@
 package com.viatico.proyect.service.impl;
 
 import com.viatico.proyect.entity.Tarifario;
-import com.viatico.proyect.repository.TarifarioRepository;
+import com.viatico.proyect.repository.interfaces.TarifarioRepository;
 import com.viatico.proyect.service.interfaces.TarifarioService;
 
 import lombok.RequiredArgsConstructor;

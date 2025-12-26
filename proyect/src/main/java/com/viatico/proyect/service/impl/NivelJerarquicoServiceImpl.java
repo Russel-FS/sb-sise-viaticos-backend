@@ -1,7 +1,7 @@
 package com.viatico.proyect.service.impl;
 
 import com.viatico.proyect.entity.NivelJerarquico;
-import com.viatico.proyect.repository.NivelJerarquicoRepository;
+import com.viatico.proyect.repository.interfaces.NivelJerarquicoRepository;
 import com.viatico.proyect.service.interfaces.NivelJerarquicoService;
 
 import lombok.RequiredArgsConstructor;
