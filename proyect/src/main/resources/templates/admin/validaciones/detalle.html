@@ -179,46 +179,50 @@
             </div>
           </div>
 
-          <!-- Summary Stats -->
-          <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="apple-card-refined p-6 text-center">
-              <p
-                class="text-[9px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 pl-0.5"
+          <div class="lg:col-span-2 flex items-center justify-around py-4">
+            <!-- Presupuesto -->
+            <div class="flex flex-col items-start gap-1">
+              <span
+                class="text-[11px] font-semibold text-apple-secondary uppercase tracking-wider"
+                >Presupuesto</span
               >
-                Asignado
-              </p>
-              <p
-                class="text-xl font-bold tracking-tighter text-gray-900 dark:text-white"
-                th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 0, 'POINT')}"
+              <span
+                class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white tabular-nums"
+                th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 2, 'POINT')}"
+                >S/ 0.00</span
               >
-                1,000
-              </p>
             </div>
-            <div class="apple-card-refined p-6 text-center border-blue-500/10">
-              <p
-                class="text-[9px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 pl-0.5"
+
+            <!-- Divider -->
+            <div class="w-[1px] h-10 bg-gray-200 dark:bg-white/10"></div>
+
+            <!-- Reportado -->
+            <div class="flex flex-col items-center gap-1">
+              <span
+                class="text-[11px] font-semibold text-apple-blue uppercase tracking-wider"
+                >Reportado</span
               >
-                Reportado
-              </p>
-              <p
-                class="text-xl font-bold tracking-tighter text-apple-blue"
-                th:text="${'S/ ' + #numbers.formatDecimal(ren.totalGastadoBruto, 1, 'COMMA', 0, 'POINT')}"
+              <span
+                class="text-2xl font-bold tracking-tight text-apple-blue tabular-nums"
+                th:text="${'S/ ' + #numbers.formatDecimal(ren.totalGastadoBruto, 1, 'COMMA', 2, 'POINT')}"
+                >S/ 0.00</span
               >
-                1,200
-              </p>
             </div>
-            <div class="apple-card-refined p-6 text-center border-green-500/10">
-              <p
-                class="text-[9px] font-bold text-apple-secondary uppercase tracking-widest mb-1.5 pl-0.5"
+
+            <!-- Divider -->
+            <div class="w-[1px] h-10 bg-gray-200 dark:bg-white/10"></div>
+
+            <!-- Auditado -->
+            <div class="flex flex-col items-end gap-1">
+              <span
+                class="text-[11px] font-semibold text-green-600 uppercase tracking-wider"
+                >Auditado</span
               >
-                Aceptado
-              </p>
-              <p
-                class="text-xl font-bold tracking-tighter text-green-600"
-                th:text="${'S/ ' + #numbers.formatDecimal(ren.totalAceptado, 1, 'COMMA', 0, 'POINT')}"
+              <span
+                class="text-2xl font-bold tracking-tight text-green-600 tabular-nums"
+                th:text="${'S/ ' + #numbers.formatDecimal(ren.totalAceptado, 1, 'COMMA', 2, 'POINT')}"
+                >S/ 0.00</span
               >
-                800
-              </p>
             </div>
           </div>
         </div>
