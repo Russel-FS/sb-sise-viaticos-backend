@@ -33,8 +33,8 @@ El nuevo sistema automatizará el ciclo completo de vida del viático:
 
 1.  **Solicitud y Cálculo Automático:** El empleado registra su "Comisión de Servicio" indicando fechas y destinos. El sistema, mediante procedimientos almacenados, consulta la Matriz de Tarifarios (Zona Geográfica vs. Nivel Jerárquico) y calcula automáticamente el monto a otorgar, eliminando la subjetividad.
 2.  **Aprobación y Desembolso:** El Jefe de Área revisa la solicitud digital. Al aprobarse, Tesorería registra la transferencia bancaria vinculada a esa comisión.
-3.  **Rendición y Validación:** Durante el viaje, el empleado carga fotos de sus comprobantes. El sistema valida reglas de negocio (ej. RUC válido, tope de consumo por tipo de gasto).
-4.  **Liquidación y Cierre:** Al finalizar, el sistema cruza lo Asignado vs. lo Rendido Validado. Genera automáticamente un balance indicando si existe un "Saldo a Devolver" (por el empleado) o un "Reembolso" (por la empresa).
+3.  **Rendición y Validación "High-End":** Durante el viaje, el empleado carga evidencias de sus comprobantes vía web/móvil. El sistema ofrece una interfaz prolija de inspección para Tesorería, con visor de PDF integrado y lightbox de imágenes, permitiendo una validación precisa contra reglas de negocio (ej. RUC válido, topes por zona).
+4.  **Liquidación y Cierre Inteligente:** Al finalizar, el sistema cruza lo Asignado vs. lo Rendido Validado mediante cálculos en PL/SQL. Genera un dashboard financiero minimalista indicando el balance final: "Saldo a Devolver" o "Reembolso".
 
 ---
 
@@ -108,5 +108,27 @@ Estas entidades registran la operación diaria.
 Estas entidades soportan la justificación de gastos y el cierre contable.
 
 - **`RENDICION_CUENTAS`**: Agrupador de los gastos presentados por el empleado al retornar del viaje.
-- **`DETALLE_COMPROBANTES`**: Registro individual de cada factura o boleta física. Contiene la evidencia (foto), datos tributarios (RUC) y el estado de validación individual.
+- **`DETALLE_COMPROBANTES`**: Registro individual de cada factura o boleta física. Contiene la evidencia (foto/PDF), datos tributarios (RUC) y el estado de validación individual.
 - **`LIQUIDACION_FINAL`**: Entidad de cierre que almacena el resultado del balance financiero (Asignado menos Validado), determinando la deuda final entre la empresa y el empleado.
+
+---
+
+## 5. Implementación Tecnológica y UI/UX
+
+El sistema no solo cumple con la lógica de negocio, sino que ha sido diseñado con un enfoque de **Experiencia de Usuario de Grado Empresarial**, inspirado en los ecosistemas modernos (estética Apple).
+
+### 5.1. Stack Tecnológico
+
+- **Base de Datos:** Oracle 21c (PL/SQL para lógica core).
+- **Backend:** Spring Boot 3.x (Java 17).
+- **Frontend:** Thymeleaf + Tailwind CSS.
+- **Iconografía:** Lucide Icons (Proyectos modernos).
+- **Tipografía:** SF Pro Display / Text (Apple System).
+
+### 5.2. Características de Diseño "Premium"
+
+- **Apple-like Aesthetic:** Interfaz minimalista, el uso de amplios espacios en blanco, bordes redondeados (28px - 32px) y sombras suaves ("Glassmorphism").
+- **Full Dark Mode Support:** Sistema de temas dinámico que detecta la preferencia del sistema y permite el cambio manual, optimizando la legibilidad y reduciendo la fatiga visual.
+- **Dashboard Typography-First:** En lugar de saturar con gráficos pesados, el sistema prioriza la tipografía tabular y jerarquías claras para los montos financieros.
+- **Visor Multimedia Integrado:** Herramientas de auditoría que permiten previsualizar PDF y fotos de comprobantes sin salir de la plataforma, acelerando el proceso de validación contable.
+- **Componentes Reactivos:** Modales centrados, barras de acción "sticky" y transiciones de estado suaves para una navegación fluida.
