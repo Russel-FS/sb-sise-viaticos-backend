@@ -265,6 +265,14 @@
           >
             Rendir Gastos <i data-lucide="receipt" class="w-4 h-4"></i>
           </a>
+          <!-- Ver Rendición  -->
+          <a
+            th:if="${sol.estado.name() == 'RENDIDO' || sol.estado.name() == 'LIQUIDADO'}"
+            th:href="@{'/rendiciones/solicitud/' + ${sol.id}}"
+            class="w-full py-3.5 bg-white dark:bg-white/10 text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 text-sm font-bold rounded-full hover:bg-gray-50 dark:hover:bg-white/20 transition-colors flex items-center justify-center gap-2 shadow-sm"
+          >
+            Ver Rendición <i data-lucide="file-text" class="w-4 h-4"></i>
+          </a>
           <form
             th:if="${sol.estado.name() == 'BORRADOR' || sol.estado.name() == 'PENDIENTE'}"
             th:action="@{'/solicitudes/cancelar/' + ${sol.id}}"
