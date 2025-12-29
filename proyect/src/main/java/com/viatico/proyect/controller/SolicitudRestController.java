@@ -41,7 +41,7 @@ public class SolicitudRestController {
                                                 .body(Map.of("error", "Debe incluir al menos un destino"));
                         }
 
-                        Empleado empleado = empleadoRepository.findById(user.getIdEmpleado())
+                        Empleado empleado = empleadoRepository.obtenerPorId(user.getIdEmpleado())
                                         .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
 
                         BigDecimal montoTotal = BigDecimal.ZERO;

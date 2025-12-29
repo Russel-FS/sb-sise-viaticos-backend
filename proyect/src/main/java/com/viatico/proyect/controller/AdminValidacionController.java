@@ -1,8 +1,8 @@
 package com.viatico.proyect.controller;
 
-import com.viatico.proyect.entity.EstadoSolicitud;
 import com.viatico.proyect.entity.RendicionCuentas;
 import com.viatico.proyect.entity.SolicitudComision;
+import com.viatico.proyect.enums.EstadoSolicitud;
 import com.viatico.proyect.service.interfaces.RendicionService;
 import com.viatico.proyect.service.interfaces.SolicitudService;
 
