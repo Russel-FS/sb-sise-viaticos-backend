@@ -4,9 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Validar Rendición - ISS Viáticos</title>
+
+    <!-- Fuentes y Recursos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- script del tema -->
+
+    <!-- Configuración del Tema -->
     <script>
       (function () {
         const savedTheme = localStorage.getItem("theme");
@@ -18,473 +27,446 @@
         }
       })();
     </script>
-    <!-- estilos del tema -->
     <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
+
     <script>
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
             fontFamily: {
-              sans: [
-                "-apple-system",
-                "BlinkMacSystemFont",
-                '"SF Pro Display"',
-                '"SF Pro Text"',
-                "Helvetica Neue",
-                "Arial",
-                "sans-serif",
-              ],
+              serif: ['"Instrument Serif"', "serif"],
+              sans: ['"Inter"', "sans-serif"],
             },
             colors: {
-              apple: {
-                bg: "#f5f5f7",
-                card: "#ffffff",
-                text: "#1d1d1f",
-                secondary: "#86868b",
-                blue: "#0071e3",
-                border: "rgba(0, 0, 0, 0.05)",
+              background: { light: "#F9F8F6", dark: "#0F1115" },
+              surface: { light: "#FFFFFF", dark: "#1C1E22" },
+              accent: {
+                sage: "#D8E2DC",
+                forest: "#2D3B2D",
+                clay: "#C4A484",
               },
             },
           },
         },
       };
     </script>
+
     <style>
       body {
-        background-color: var(--bg-primary);
-        color: var(--text-primary);
-        letter-spacing: -0.015em;
+        background-color: #f9f8f6;
+        color: #1f2937;
+        font-family: "Inter", sans-serif;
       }
-      .glass {
-        background: rgba(255, 255, 255, 0.72);
-        backdrop-filter: saturate(180%) blur(20px);
-        border-bottom: 1px solid var(--border-color);
+      .dark body {
+        background-color: #0f1115;
+        color: #f3f4f6;
       }
-      .dark .glass {
-        background: rgba(0, 0, 0, 0.72);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+      /* Navegación Flotante */
+      .nav-island {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
       }
-      .apple-card-refined {
-        background: var(--bg-secondary);
-        border-radius: 32px;
-        border: 1px solid var(--border-color);
-        box-shadow: var(--card-shadow);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      .dark .nav-island {
+        background: rgba(28, 30, 34, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
       }
-      .apple-card-refined:hover {
-        box-shadow: var(--card-hover-shadow);
-        transform: translateY(-2px);
+
+      /* Tarjetas Bento */
+      .bento-card {
+        background: white;
+        border-radius: 24px;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.01),
+          0 4px 12px rgba(0, 0, 0, 0.03);
       }
+      .dark .bento-card {
+        background: #1c1e22;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
       .input-rechazo {
         width: 100%;
         padding: 1.25rem;
-        background-color: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        border-radius: 20px;
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
         font-size: 14px;
         font-weight: 500;
         transition: all 0.2s;
         outline: none;
-        color: var(--text-primary);
+        color: #1f2937;
+      }
+      .dark .input-rechazo {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: white;
       }
       .input-rechazo:focus {
-        background-color: var(--bg-secondary);
-        border-color: #ef4444; /* red-500 */
+        border-color: #ef4444;
         box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
       }
     </style>
   </head>
-  <body class="antialiased selection:bg-apple-blue selection:text-white pb-20">
-    <!-- Nav -->
-    <nav class="fixed top-0 w-full z-50 glass">
-      <div
-        class="max-w-6xl mx-auto px-8 h-12 flex items-center justify-between"
-      >
-        <div class="flex items-center gap-10">
-          <a
-            href="/"
-            class="text-[14px] font-bold tracking-tight text-gray-900 dark:text-white"
-            >ISS Viáticos / Admin</a
-          >
-          <div class="hidden md:flex items-center gap-4">
-            <span class="text-gray-300 dark:text-gray-600">/</span>
-            <span
-              class="text-[12px] font-bold text-apple-secondary tracking-widest uppercase"
-              >Validación</span
-            >
-          </div>
-        </div>
-        <div class="flex gap-4 items-center">
-          <button
-            onclick="toggleTheme()"
-            class="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-gray-100 dark:hover:bg-white/10"
-            title="Cambiar tema"
-          >
-            <i
-              data-lucide="sun"
-              class="w-4 h-4 text-gray-500 hidden dark:block dark:text-yellow-400"
-            ></i>
-            <i
-              data-lucide="moon"
-              class="w-4 h-4 text-gray-500 block dark:hidden"
-            ></i>
-          </button>
-          <span class="w-[1px] h-3 bg-gray-200 dark:bg-gray-700"></span>
-          <a
-            href="/admin/validaciones"
-            class="text-[12px] font-bold text-apple-blue hover:underline"
-            >Regresar</a
+  <body
+    class="antialiased min-h-screen pb-20 selection:bg-accent-sage selection:text-accent-forest"
+  >
+    <!-- Navegación Flotante -->
+    <nav
+      class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-5xl nav-island rounded-full px-6 py-3 flex items-center justify-between transition-all duration-300"
+    >
+      <div class="flex items-center gap-8">
+        <a
+          href="/"
+          class="text-xl font-serif italic font-bold tracking-tight text-gray-900 dark:text-white hover:opacity-80 transition-opacity"
+        >
+          ISS Viáticos
+        </a>
+        <div class="hidden md:flex items-center gap-4">
+          <span class="text-gray-300 dark:text-gray-600">/</span>
+          <span
+            class="text-xs font-bold text-gray-500 uppercase tracking-widest"
+            >Auditoría</span
           >
         </div>
       </div>
+
+      <div class="flex items-center gap-4">
+        <button
+          onclick="toggleTheme()"
+          class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+        >
+          <i
+            data-lucide="sun"
+            class="w-4 h-4 text-gray-500 hidden dark:block"
+          ></i>
+          <i
+            data-lucide="moon"
+            class="w-4 h-4 text-gray-500 block dark:hidden"
+          ></i>
+        </button>
+        <span class="w-px h-4 bg-gray-200 dark:bg-white/10"></span>
+        <a
+          href="/admin/validaciones"
+          class="text-sm font-bold text-gray-900 dark:text-white hover:opacity-70 transition-opacity"
+          >Regresar</a
+        >
+      </div>
     </nav>
 
-    <main class="pt-24 px-8">
-      <div class="max-w-6xl mx-auto">
-        <!-- Dashboard Header -->
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 mb-12">
-          <div class="lg:col-span-2">
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-600"
-              >
-                <i data-lucide="shield-check" class="w-5 h-5"></i>
-              </div>
-              <span
-                class="text-[11px] font-bold text-apple-secondary uppercase tracking-[0.2em]"
-                th:text="${'Auditando Solicitud #' + sol.id}"
-                >Solicitud #000</span
-              >
-            </div>
-            <h1
-              class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-2"
-              th:text="${sol.motivoViaje}"
+    <main class="pt-32 px-6 md:px-12 max-w-7xl mx-auto">
+      <!-- Dashboard Header -->
+      <div
+        class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700"
+      >
+        <!-- Info Solicitud -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="flex items-center gap-3">
+            <span
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-xs font-bold uppercase tracking-wider border border-green-200 dark:border-green-800/30"
             >
-              Motivo del Viaje
-            </h1>
-            <div class="flex items-center gap-3 mt-4">
-              <div
-                class="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-[11px] font-bold text-apple-secondary uppercase border border-gray-200 dark:border-white/5"
-                th:text="${#strings.substring(sol.empleado.nombres,0,1) + #strings.substring(sol.empleado.apellidos,0,1)}"
-              >
-                EM
-              </div>
+              <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+              <span th:text="${'Auditoría #' + sol.id}">#000</span>
+            </span>
+          </div>
+          <h1
+            class="text-4xl md:text-5xl font-serif text-gray-900 dark:text-white leading-tight"
+            th:text="${sol.motivoViaje}"
+          >
+            Motivo del Viaje
+          </h1>
+
+          <div class="flex items-center gap-4">
+            <div
+              class="w-12 h-12 rounded-full bg-accent-sage/30 dark:bg-white/5 flex items-center justify-center text-sm font-bold text-accent-forest dark:text-white border border-accent-sage/20"
+              th:text="${#strings.substring(sol.empleado.nombres,0,1) + #strings.substring(sol.empleado.apellidos,0,1)}"
+            >
+              EM
+            </div>
+            <div>
               <p
-                class="text-lg text-apple-secondary font-medium"
+                class="text-lg font-medium text-gray-900 dark:text-white"
                 th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos}"
               >
                 Colaborador
               </p>
+              <p
+                class="text-xs font-bold text-gray-500 uppercase tracking-widest"
+                th:text="${sol.empleado.nivel.nombre}"
+              >
+                Nivel
+              </p>
             </div>
           </div>
+        </div>
 
-          <div class="lg:col-span-2 flex items-center justify-around py-4">
-            <!-- Presupuesto -->
-            <div class="flex flex-col items-start gap-1">
-              <span
-                class="text-[11px] font-semibold text-apple-secondary uppercase tracking-wider"
-                >Presupuesto</span
-              >
-              <span
-                class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white tabular-nums"
-                th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 2, 'POINT')}"
-                >S/ 0.00</span
-              >
-            </div>
+        <!-- Resumen Financiero -->
+        <div class="bento-card p-8 flex flex-col justify-between">
+          <div
+            class="flex items-center justify-between border-b border-gray-100 dark:border-white/5 pb-4 mb-4"
+          >
+            <span
+              class="text-xs font-bold text-gray-400 uppercase tracking-widest"
+              >Presupuesto</span
+            >
+            <span
+              class="text-xl font-serif font-medium text-gray-900 dark:text-white"
+              th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 2, 'POINT')}"
+              >0.00</span
+            >
+          </div>
 
-            <!-- Divider -->
-            <div class="w-[1px] h-10 bg-gray-200 dark:bg-white/10"></div>
-
-            <!-- Reportado -->
-            <div class="flex flex-col items-center gap-1">
+          <div class="grid grid-cols-2 gap-8">
+            <div>
               <span
-                class="text-[11px] font-semibold text-apple-blue uppercase tracking-wider"
+                class="block text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-1"
                 >Reportado</span
               >
               <span
-                class="text-2xl font-bold tracking-tight text-apple-blue tabular-nums"
+                class="text-2xl font-bold text-gray-900 dark:text-white tabular-nums"
                 th:text="${'S/ ' + #numbers.formatDecimal(ren.totalGastadoBruto, 1, 'COMMA', 2, 'POINT')}"
-                >S/ 0.00</span
+                >0.00</span
               >
             </div>
-
-            <!-- Divider -->
-            <div class="w-[1px] h-10 bg-gray-200 dark:bg-white/10"></div>
-
-            <!-- Auditado -->
-            <div class="flex flex-col items-end gap-1">
+            <div class="text-right">
               <span
-                class="text-[11px] font-semibold text-green-600 uppercase tracking-wider"
-                >Auditado</span
+                class="block text-[10px] font-bold text-green-500 uppercase tracking-widest mb-1"
+                >Aprobado</span
               >
               <span
-                class="text-2xl font-bold tracking-tight text-green-600 tabular-nums"
+                class="text-2xl font-bold text-gray-900 dark:text-white tabular-nums"
                 th:text="${'S/ ' + #numbers.formatDecimal(ren.totalAceptado, 1, 'COMMA', 2, 'POINT')}"
-                >S/ 0.00</span
+                >0.00</span
               >
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Comprobantes Grid -->
-        <div class="space-y-8">
-          <div class="flex items-center gap-3 mb-2 px-2">
-            <h2 class="text-2xl font-bold tracking-tight">
-              Comprobantes Presentados
-            </h2>
-            <span
-              class="text-xs font-bold text-apple-secondary px-2.5 py-1 bg-gray-100 rounded-lg"
-              th:text="${ren.detalles.size() + ' documentos'}"
-              >0 documentos</span
-            >
-          </div>
+      <!-- Comprobantes Grid -->
+      <div class="space-y-8 mb-24">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-serif text-gray-900 dark:text-white">
+            Comprobantes Presentados
+          </h2>
+          <span
+            class="px-3 py-1 bg-gray-100 dark:bg-white/5 rounded-full text-xs font-bold text-gray-500"
+            th:text="${ren.detalles.size() + ' documentos'}"
+            >0 documentos</span
+          >
+        </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div
+            th:each="det : ${ren.detalles}"
+            class="bento-card group overflow-hidden border-transparent hover:border-gray-200 dark:hover:border-white/10 transition-all duration-300"
+          >
+            <!-- Card Header -->
             <div
-              th:each="det : ${ren.detalles}"
-              class="apple-card-refined group overflow-hidden border-transparent hover:border-gray-100 dark:hover:border-white/5 transition-all duration-300"
+              class="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-gray-50/50 dark:bg-white/[0.02]"
             >
-              <!-- Header  -->
-              <div
-                class="px-8 py-5 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-gray-50/30 dark:bg-white/[0.02]"
+              <span
+                class="text-[10px] font-bold uppercase tracking-widest text-gray-400"
+                th:text="${det.tipoGasto.nombre}"
+                >TIPO</span
               >
-                <span
-                  class="text-[10px] font-bold uppercase tracking-[0.2em] text-apple-secondary"
-                  th:text="${det.tipoGasto.nombre}"
-                  >Tipo Gasto</span
-                >
 
-                <div class="flex items-center gap-2">
+              <!-- Estado Badge -->
+              <div th:switch="${det.estadoValidacion.name()}">
+                <span
+                  th:case="'PENDIENTE'"
+                  class="flex items-center gap-1.5 text-[9px] font-bold uppercase text-amber-500 tracking-widest"
+                >
                   <span
-                    th:if="${det.estadoValidacion.name() == 'PENDIENTE'}"
-                    class="flex items-center gap-1.5 text-[9px] font-bold uppercase text-amber-500 tracking-widest"
+                    class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"
+                  ></span>
+                  Pendiente
+                </span>
+                <span
+                  th:case="'ACEPTADO'"
+                  class="flex items-center gap-1.5 text-[9px] font-bold uppercase text-green-500 tracking-widest"
+                >
+                  <i data-lucide="check" class="w-3 h-3"></i> Aceptado
+                </span>
+                <span
+                  th:case="'RECHAZADO'"
+                  class="flex items-center gap-1.5 text-[9px] font-bold uppercase text-red-500 tracking-widest"
+                >
+                  <i data-lucide="x" class="w-3 h-3"></i> Rechazado
+                </span>
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-6">
+              <div class="flex justify-between items-start mb-6">
+                <div class="space-y-1">
+                  <h3
+                    class="text-lg font-bold text-gray-900 dark:text-white leading-tight line-clamp-2"
+                    th:text="${det.razonSocialProveedor}"
                   >
-                    <span
-                      class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"
-                    ></span>
-                    Pendiente
-                  </span>
-                  <span
-                    th:if="${det.estadoValidacion.name() == 'ACEPTADO'}"
-                    class="flex items-center gap-1.5 text-[9px] font-bold uppercase text-green-600 tracking-widest"
+                    Proveedor
+                  </h3>
+                  <p
+                    class="text-xs font-mono font-medium text-gray-400"
+                    th:text="${'RUC: ' + det.rucProveedor}"
                   >
-                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
-                    Aceptado
-                  </span>
-                  <span
-                    th:if="${det.estadoValidacion.name() == 'RECHAZADO'}"
-                    class="flex items-center gap-1.5 text-[9px] font-bold uppercase text-red-500 tracking-widest"
+                    RUC
+                  </p>
+                </div>
+                <div class="text-right">
+                  <p
+                    class="text-2xl font-serif text-gray-900 dark:text-white tabular-nums tracking-tight"
+                    th:text="${'S/ ' + #numbers.formatDecimal(det.montoTotal, 1, 'COMMA', 2, 'POINT')}"
                   >
-                    <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Rechazado
-                  </span>
+                    0.00
+                  </p>
+                  <p
+                    class="text-[10px] font-bold text-gray-400 tracking-widest"
+                    th:text="${det.serieNumeroComprobante}"
+                  >
+                    SERIE
+                  </p>
                 </div>
               </div>
 
-              <div class="p-8">
-                <div class="flex justify-between items-start mb-8">
-                  <div class="max-w-[65%]">
-                    <h3
-                      class="text-xl font-bold text-gray-900 dark:text-white leading-[1.2] mb-2"
-                      th:text="${det.razonSocialProveedor}"
-                    >
-                      Nombre Proveedor
-                    </h3>
-                    <p
-                      class="text-[10px] font-extrabold text-apple-secondary uppercase tracking-widest"
-                      th:text="${'RUC ' + det.rucProveedor}"
-                    >
-                      RUC 000
-                    </p>
-                  </div>
-                  <div class="text-right">
-                    <p
-                      class="text-3xl font-bold tracking-tighter text-gray-900 dark:text-white mb-1 tabular-nums"
-                      th:text="${'S/ ' + #numbers.formatDecimal(det.montoTotal, 1, 'COMMA', 2, 'POINT')}"
-                    >
-                      0.00
-                    </p>
-                    <p
-                      class="text-[11px] font-bold text-apple-secondary tracking-widest font-mono"
-                      th:text="${det.serieNumeroComprobante}"
-                    >
-                      SERIE
-                    </p>
-                  </div>
+              <!-- Meta & Actions -->
+              <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-2 text-xs text-gray-500">
+                  <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                  <span th:text="${det.fechaEmision}">Fecha</span>
                 </div>
 
-                <div class="flex items-center justify-between mb-10">
-                  <div class="flex items-center gap-2">
-                    <i
-                      data-lucide="calendar"
-                      class="w-4 h-4 text-apple-secondary opacity-50"
-                    ></i>
-                    <span
-                      class="text-[13px] font-medium text-apple-secondary"
-                      th:text="${'Emitido el ' + det.fechaEmision}"
-                      >01/01/2024</span
-                    >
-                  </div>
-
-                  <!-- Evidence Display -->
-                  <div
-                    th:if="${det.fotoEvidenciaUrl}"
-                    class="flex items-center"
+                <!-- Evidencia Link -->
+                <div th:if="${det.fotoEvidenciaUrl}">
+                  <a
+                    th:if="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
+                    th:href="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
+                    target="_blank"
+                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs font-bold hover:opacity-80 transition-opacity"
                   >
-                    <!-- PDF -->
-                    <a
-                      th:if="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
-                      th:href="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
-                      target="_blank"
-                      class="w-14 h-14 flex items-center justify-center bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 hover:scale-110 transition-all shadow-sm"
-                      title="Abrir PDF"
-                    >
-                      <i data-lucide="file-text" class="w-6 h-6"></i>
-                    </a>
-                    <!-- Imagen -->
-                    <div
-                      th:unless="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
-                      class="relative group/evid"
-                    >
-                      <img
-                        th:src="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
-                        class="w-16 h-16 object-cover rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm cursor-zoom-in hover:scale-105 transition-all"
-                        th:onclick="'abrirVisualizador(this.src)'"
-                      />
-                      <div
-                        class="absolute -top-1 -right-1 bg-black text-white p-1 rounded-full opacity-0 group-hover/evid:opacity-100 transition-opacity"
-                      >
-                        <i data-lucide="maximize-2" class="w-2.5 h-2.5"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Actions -->
-                <div
-                  th:if="${det.estadoValidacion.name() == 'PENDIENTE'}"
-                  class="grid grid-cols-2 gap-4"
-                >
-                  <form
-                    th:action="@{/admin/validaciones/comprobante/validar}"
-                    method="post"
-                  >
-                    <input
-                      type="hidden"
-                      name="detalleId"
-                      th:value="${det.id}"
-                    />
-                    <input
-                      type="hidden"
-                      name="solicitudId"
-                      th:value="${sol.id}"
-                    />
-                    <input type="hidden" name="estado" value="ACEPTADO" />
-                    <button
-                      type="submit"
-                      class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-black text-[12px] font-bold uppercase tracking-wider rounded-2xl hover:scale-[1.02] transition-all active:scale-95 shadow-lg shadow-black/10 flex items-center justify-center gap-2"
-                    >
-                      <i data-lucide="check" class="w-4 h-4"></i>
-                      Aceptar
-                    </button>
-                  </form>
+                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i> PDF
+                  </a>
                   <button
-                    type="button"
-                    onclick="this.closest('.p-8').querySelector('.panel-rechazo').classList.toggle('hidden')"
-                    class="w-full py-4 bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-400 text-[12px] font-bold uppercase tracking-wider border border-gray-200 dark:border-white/10 rounded-2xl hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-500 hover:border-red-100 dark:hover:border-red-500/20 transition-all flex items-center justify-center gap-2"
+                    th:unless="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
+                    th:data-url="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
+                    onclick="abrirVisualizador(this.dataset.url)"
+                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-gray-300 text-xs font-bold hover:bg-gray-200 dark:hover:bg-white/20 transition-colors"
                   >
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                    Rechazar
+                    <i data-lucide="image" class="w-3.5 h-3.5"></i> Ver Imagen
                   </button>
                 </div>
+              </div>
 
-                <!-- Reject Panel hidden -->
-                <div
-                  class="panel-rechazo hidden mt-6 pt-6 border-t border-gray-100 dark:border-white/5"
+              <!-- Action Buttons -->
+              <div
+                th:if="${det.estadoValidacion.name() == 'PENDIENTE'}"
+                class="grid grid-cols-2 gap-3"
+              >
+                <form
+                  th:action="@{/admin/validaciones/comprobante/validar}"
+                  method="post"
                 >
-                  <form
-                    th:action="@{/admin/validaciones/comprobante/validar}"
-                    method="post"
-                    class="space-y-4"
+                  <input type="hidden" name="detalleId" th:value="${det.id}" />
+                  <input
+                    type="hidden"
+                    name="solicitudId"
+                    th:value="${sol.id}"
+                  />
+                  <input type="hidden" name="estado" value="ACEPTADO" />
+                  <button
+                    type="submit"
+                    class="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-black text-[11px] font-bold uppercase tracking-widest rounded-xl hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
                   >
-                    <input
-                      type="hidden"
-                      name="detalleId"
-                      th:value="${det.id}"
-                    />
-                    <input
-                      type="hidden"
-                      name="solicitudId"
-                      th:value="${sol.id}"
-                    />
-                    <input type="hidden" name="estado" value="RECHAZADO" />
-
-                    <label
-                      class="block text-[10px] font-bold text-red-500 uppercase tracking-widest px-1"
-                      >Motivo de Rechazo</label
-                    >
-                    <textarea
-                      name="motivo"
-                      required
-                      placeholder="Explica el motivo brevemente..."
-                      class="input-rechazo h-28 resize-none"
-                    ></textarea>
-
-                    <button
-                      type="submit"
-                      class="w-full py-4 bg-red-500 text-white text-[12px] font-bold uppercase tracking-wider rounded-2xl hover:bg-red-600 transition-all shadow-lg shadow-red-500/10"
-                    >
-                      Confirmar Rechazo
-                    </button>
-                  </form>
-                </div>
-
-                <!-- motivo de rechazo -->
-                <div
-                  th:if="${det.estadoValidacion.name() == 'RECHAZADO'}"
-                  class="mt-2 p-5 bg-red-500/[0.03] rounded-2xl border border-red-500/10"
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i> Aceptar
+                  </button>
+                </form>
+                <button
+                  type="button"
+                  onclick="this.closest('.p-6').querySelector('.panel-rechazo').classList.toggle('hidden')"
+                  class="w-full py-3 bg-white dark:bg-white/5 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/10 text-[11px] font-bold uppercase tracking-widest rounded-xl hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-500/30 transition-all flex items-center justify-center gap-2"
                 >
-                  <p
-                    class="text-[10px] font-bold text-red-500 uppercase tracking-widest mb-1.5"
+                  <i data-lucide="x" class="w-3.5 h-3.5"></i> Rechazar
+                </button>
+              </div>
+
+              <!-- Panel Rechazo -->
+              <div
+                class="panel-rechazo hidden mt-4 pt-4 border-t border-gray-100 dark:border-white/5 animate-in slide-in-from-top-2 duration-200"
+              >
+                <form
+                  th:action="@{/admin/validaciones/comprobante/validar}"
+                  method="post"
+                  class="space-y-3"
+                >
+                  <input type="hidden" name="detalleId" th:value="${det.id}" />
+                  <input
+                    type="hidden"
+                    name="solicitudId"
+                    th:value="${sol.id}"
+                  />
+                  <input type="hidden" name="estado" value="RECHAZADO" />
+
+                  <textarea
+                    name="motivo"
+                    required
+                    placeholder="Motivo del rechazo..."
+                    class="input-rechazo h-24 resize-none text-xs"
+                  ></textarea>
+
+                  <button
+                    type="submit"
+                    class="w-full py-3 bg-red-500 text-white text-[11px] font-bold uppercase tracking-widest rounded-xl hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20"
                   >
-                    Motivo del rechazo
-                  </p>
-                  <p
-                    class="text-[13px] font-medium text-red-600 dark:text-red-400 leading-relaxed italic"
-                    th:text="${det.motivoRechazo}"
-                  >
-                    Motivo
-                  </p>
-                </div>
+                    Confirmar Rechazo
+                  </button>
+                </form>
+              </div>
+
+              <!-- Mostrar Motivo Rechazo -->
+              <div
+                th:if="${det.estadoValidacion.name() == 'RECHAZADO'}"
+                class="mt-4 p-4 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-100 dark:border-red-500/20"
+              >
+                <p
+                  class="text-[10px] font-bold text-red-500 uppercase tracking-widest mb-1"
+                >
+                  Motivo
+                </p>
+                <p
+                  class="text-xs text-red-700 dark:text-red-300 italic"
+                  th:text="${det.motivoRechazo}"
+                >
+                  Motivo...
+                </p>
               </div>
             </div>
           </div>
         </div>
 
-        <!--accion global -->
+        <!-- Finalizar Auditoría -->
         <div
-          class="mt-16 bg-black dark:bg-[#1c1c1e] rounded-[40px] p-12 text-white shadow-2xl shadow-black/20 flex flex-col md:flex-row items-center justify-between gap-10 overflow-hidden relative group border border-white/5"
+          class="mt-12 bg-black dark:bg-accent-forest rounded-[32px] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 group"
         >
-          <!-- decoraciones-->
           <div
-            class="absolute -right-20 -bottom-20 w-64 h-64 bg-white/5 dark:bg-black/5 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"
+            class="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"
           ></div>
 
-          <div
-            class="relative z-10 flex flex-col md:flex-row items-center gap-10"
-          >
+          <div class="relative z-10 flex items-center gap-6">
             <div
-              class="w-20 h-20 rounded-3xl bg-white/10 dark:bg-black/5 flex items-center justify-center text-green-400"
+              class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-green-400 border border-white/5"
             >
-              <i data-lucide="flag" class="w-10 h-10"></i>
+              <i data-lucide="flag" class="w-8 h-8"></i>
             </div>
-            <div class="text-center md:text-left">
-              <h2 class="text-3xl font-bold tracking-tight mb-2">
-                Finalizar Auditoría
-              </h2>
-              <p class="text-lg opacity-60 font-medium">
+            <div>
+              <h2 class="text-2xl font-bold mb-1">Finalizar Auditoría</h2>
+              <p class="text-sm text-gray-400 max-w-sm">
                 Se calculará el balance final y se generará la liquidación para
-                el cierre.
+                el cierre del proceso.
               </p>
             </div>
           </div>
@@ -492,15 +474,15 @@
           <form
             th:action="@{/admin/validaciones/finalizar}"
             method="post"
-            class="relative z-10 flex-shrink-0"
+            class="relative z-10"
           >
             <input type="hidden" name="solicitudId" th:value="${sol.id}" />
             <button
               type="submit"
-              class="px-12 py-5 bg-white dark:bg-black text-black dark:text-white text-sm font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3 whitespace-nowrap"
+              class="px-8 py-4 bg-white text-black rounded-full text-xs font-bold uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2"
             >
               Finalizar y Liquidar
-              <i data-lucide="check-check" class="w-5 h-5"></i>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </form>
         </div>
@@ -510,18 +492,18 @@
     <!-- Visualizador de Imagen -->
     <div
       id="visualizadorImg"
-      class="fixed inset-0 z-[110] hidden items-center justify-center p-8 bg-black/90 backdrop-blur-md transition-all"
+      class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-all opacity-0"
     >
       <button
         onclick="cerrarVisualizador()"
-        class="absolute top-8 right-8 text-white/40 hover:text-white transition-colors"
+        class="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
       >
         <i data-lucide="x" class="w-8 h-8"></i>
       </button>
       <img
         id="imgGrande"
         src=""
-        class="max-w-full max-h-[85vh] rounded-3xl shadow-2xl animate-in zoom-in-95 duration-300"
+        class="max-w-full max-h-[90vh] rounded-2xl shadow-2xl transform scale-95 transition-transform duration-300"
       />
     </div>
 
@@ -533,22 +515,36 @@
         const img = document.getElementById("imgGrande");
         img.src = src;
         modal.classList.remove("hidden");
-        modal.classList.add("flex");
+        // Force reflow
+        void modal.offsetWidth;
+        modal.classList.remove("opacity-0");
+        img.classList.remove("scale-95");
+        img.classList.add("scale-100");
       }
 
       function cerrarVisualizador() {
         const modal = document.getElementById("visualizadorImg");
-        modal.classList.remove("flex");
-        modal.classList.add("hidden");
+        const img = document.getElementById("imgGrande");
+        modal.classList.add("opacity-0");
+        img.classList.remove("scale-100");
+        img.classList.add("scale-95");
+        setTimeout(() => {
+          modal.classList.add("hidden");
+        }, 300);
       }
+
+      // Close on escape
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          cerrarVisualizador();
+        }
+      });
 
       window.onclick = function (event) {
         const modal = document.getElementById("visualizadorImg");
         if (event.target == modal) cerrarVisualizador();
       };
     </script>
-
-    <!-- script del toggle -->
     <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
   </body>
 </html>
