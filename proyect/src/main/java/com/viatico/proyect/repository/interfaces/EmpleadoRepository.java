@@ -18,4 +18,6 @@ public interface EmpleadoRepository {
     long count();
 
     Optional<Empleado> findByDni(String dni);
+
+    Optional<Empleado> findByEmail(String email);
 }

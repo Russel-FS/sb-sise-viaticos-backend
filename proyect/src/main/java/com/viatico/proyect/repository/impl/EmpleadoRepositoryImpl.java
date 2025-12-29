@@ -50,4 +50,9 @@ public class EmpleadoRepositoryImpl implements EmpleadoRepository {
     public Optional<Empleado> findByDni(String dni) {
         return jpaRepository.findByDni(dni);
     }
+
+    @Override
+    public Optional<Empleado> findByEmail(String email) {
+        return jpaRepository.findByEmail(email);
+    }
 }

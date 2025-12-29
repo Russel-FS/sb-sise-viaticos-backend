@@ -35,6 +35,20 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     public Empleado guardar(Empleado empleado, String password, Long rolId, String usernameCrea) {
         boolean isNew = (empleado.getId() == null);
 
+        // validacion de dni
+        empleadoRepository.findByDni(empleado.getDni()).ifPresent(existing -> {
+            if (empleado.getId() == null || !existing.getId().equals(empleado.getId())) {
+                throw new RuntimeException("Ya existe un empleado con el DNI: " + empleado.getDni());
+            }
+        });
+
+        // validacion de email
+        empleadoRepository.findByEmail(empleado.getEmail()).ifPresent(existing -> {
+            if (empleado.getId() == null || !existing.getId().equals(empleado.getId())) {
+                throw new RuntimeException("Ya existe un empleado con el email: " + empleado.getEmail());
+            }
+        });
+
         if (isNew) {
             empleado.setFechaCrea(LocalDateTime.now());
             empleado.setUserCrea(usernameCrea);
