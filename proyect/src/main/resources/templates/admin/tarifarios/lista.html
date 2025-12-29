@@ -4,9 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Configuración de Tarifas - ISS Viáticos</title>
+
+    <!-- Fuentes y Recursos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- script del tema -->
+
+    <!-- Configuración del Tema -->
     <script>
       (function () {
         const savedTheme = localStorage.getItem("theme");
@@ -18,422 +27,418 @@
         }
       })();
     </script>
-    <!-- estilos del tema -->
     <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
+
     <script>
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
             fontFamily: {
-              sans: [
-                "-apple-system",
-                "BlinkMacSystemFont",
-                '"SF Pro Display"',
-                '"SF Pro Text"',
-                "Helvetica Neue",
-                "Arial",
-                "sans-serif",
-              ],
+              serif: ['"Instrument Serif"', "serif"],
+              sans: ['"Inter"', "sans-serif"],
             },
             colors: {
-              apple: {
-                bg: "#f5f5f7",
-                card: "#ffffff",
-                text: "#1d1d1f",
-                secondary: "#86868b",
-                blue: "#0071e3",
-                border: "rgba(0, 0, 0, 0.05)",
+              background: { light: "#F9F8F6", dark: "#0F1115" },
+              surface: { light: "#FFFFFF", dark: "#1C1E22" },
+              accent: {
+                sage: "#D8E2DC",
+                forest: "#2D3B2D",
+                clay: "#C4A484",
               },
             },
           },
         },
       };
     </script>
+
     <style>
       body {
-        background-color: #f5f5f7;
-        color: #1d1d1f;
-        letter-spacing: -0.015em;
+        background-color: #f9f8f6;
+        color: #1f2937;
+        font-family: "Inter", sans-serif;
       }
       .dark body {
-        background-color: #000000;
-        color: #f5f5f7;
+        background-color: #0f1115;
+        color: #f3f4f6;
       }
-      .glass {
-        background: rgba(255, 255, 255, 0.72);
-        backdrop-filter: saturate(180%) blur(20px);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+
+      /* Navegación Flotante */
+      .nav-island {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
       }
-      .dark .glass {
-        background: rgba(28, 28, 30, 0.85);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      .dark .nav-island {
+        background: rgba(28, 30, 34, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
       }
-      .apple-card-refined {
-        background: #ffffff;
-        border-radius: 28px;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+
+      /* Tarjetas Bento */
+      .bento-card {
+        background: white;
+        border-radius: 24px;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.01),
+          0 4px 12px rgba(0, 0, 0, 0.03);
       }
-      .dark .apple-card-refined {
-        background: #1c1c1e;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      .dark .bento-card {
+        background: #1c1e22;
+        border: 1px solid rgba(255, 255, 255, 0.05);
       }
-      .apple-card-refined:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-      }
-      .dark .apple-card-refined:hover {
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      }
+
       select {
         appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2386868b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 5 3 3 3-3'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 5 3 3 3-3'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
-        background-position: right 1.5rem center;
+        background-position: right 1rem center;
+      }
+      .dark select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%239CA3AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 5 3 3 3-3'/%3E%3C/svg%3E");
+      }
+
+      .sub-nav-item {
+        transition: all 0.2s ease;
+      }
+      .sub-nav-item.active {
+        background-color: #2d3b2d;
+        color: white;
+      }
+      .dark .sub-nav-item.active {
+        background-color: #d8e2dc;
+        color: #0f1115;
       }
     </style>
   </head>
-  <body class="antialiased selection:bg-apple-blue selection:text-white pb-20">
-    <!-- Nav -->
-    <nav class="fixed top-0 w-full z-50 glass h-12">
-      <div
-        class="max-w-6xl mx-auto px-8 h-full flex items-center justify-between"
-      >
-        <div class="flex items-center gap-10">
+  <body
+    class="antialiased min-h-screen pb-20 selection:bg-accent-sage selection:text-accent-forest"
+  >
+    <!-- Navegación Principal -->
+    <nav
+      class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-5xl nav-island rounded-full px-6 py-3 flex items-center justify-between transition-all duration-300"
+    >
+      <div class="flex items-center gap-8">
+        <a
+          href="/"
+          class="text-xl font-serif italic font-bold tracking-tight text-gray-900 dark:text-white hover:opacity-80 transition-opacity"
+        >
+          ISS Viáticos
+        </a>
+        <div
+          class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-500 dark:text-gray-400"
+        >
           <a
-            href="/"
-            class="text-[15px] font-bold tracking-tight text-gray-900 dark:text-white"
-            >ISS Viáticos</a
+            href="/solicitudes"
+            class="hover:text-gray-900 dark:hover:text-white transition-colors"
+            >Solicitudes</a
           >
-          <div
-            class="hidden md:flex items-center gap-8 text-[13px] font-medium text-apple-secondary"
+          <a
+            href="/admin/aprobaciones"
+            class="hover:text-gray-900 dark:hover:text-white transition-colors"
+            >Aprobaciones</a
           >
-            <a
-              href="/solicitudes"
-              class="hover:text-apple-blue transition-colors"
-              >Solicitudes</a
-            >
-            <a
-              href="/admin/aprobaciones"
-              class="hover:text-apple-blue transition-colors"
-              >Aprobaciones</a
-            >
-            <a
-              href="/admin/validaciones"
-              class="hover:text-apple-blue transition-colors"
-              >Validaciones</a
-            >
-            <a
-              href="/admin/empleados"
-              class="hover:text-apple-blue transition-colors"
-              >Personal</a
-            >
-            <a
-              href="/admin/tarifarios"
-              class="text-gray-900 dark:text-white font-bold"
-              >Configuración</a
-            >
-          </div>
+          <a
+            href="/admin/tarifarios"
+            class="text-gray-900 dark:text-white font-semibold bg-gray-100 dark:bg-white/10 px-3 py-1 rounded-full"
+            >Configuración</a
+          >
         </div>
+      </div>
 
-        <div class="flex items-center gap-4">
-          <!-- botton de togle -->
+      <div class="flex items-center gap-4">
+        <button
+          onclick="toggleTheme()"
+          class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+        >
+          <i
+            data-lucide="sun"
+            class="w-4 h-4 text-gray-500 hidden dark:block"
+          ></i>
+          <i
+            data-lucide="moon"
+            class="w-4 h-4 text-gray-500 block dark:hidden"
+          ></i>
+        </button>
+        <span class="w-px h-4 bg-gray-200 dark:bg-white/10"></span>
+        <form th:action="@{/logout}" method="post">
           <button
-            onclick="toggleTheme()"
-            class="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-gray-100 dark:hover:bg-white/10"
-            title="Cambiar tema"
+            type="submit"
+            class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-red-500 transition-colors"
           >
-            <i
-              data-lucide="sun"
-              class="w-4 h-4 text-gray-500 hidden dark:block dark:text-yellow-400"
-            ></i>
-            <i
-              data-lucide="moon"
-              class="w-4 h-4 text-gray-500 block dark:hidden"
-            ></i>
+            Salir
           </button>
-          <span class="w-[1px] h-3 bg-gray-200 dark:bg-gray-700"></span>
-          <form th:action="@{/logout}" method="post" class="flex items-center">
-            <button
-              type="submit"
-              class="text-[12px] font-medium text-apple-blue hover:underline"
-            >
-              Salir
-            </button>
-          </form>
-        </div>
+        </form>
       </div>
     </nav>
 
-    <!-- navegacion-->
+    <!-- Sub-Nav de Configuración -->
     <div
-      class="fixed top-12 w-full z-40 glass h-14 border-b border-gray-100 flex items-center"
+      class="fixed top-24 left-1/2 -translate-x-1/2 z-40 w-fit nav-island rounded-full px-2 py-1.5 flex items-center gap-1"
     >
-      <div class="max-w-6xl mx-auto px-8 w-full flex items-center gap-3">
-        <a
-          href="/admin/tarifarios"
-          class="flex items-center gap-2.5 px-5 py-2 rounded-full text-[13px] font-bold transition-all bg-black text-white shadow-lg shadow-black/10"
-        >
-          <i data-lucide="calculator" class="w-4 h-4"></i>
-          <span>Tarifarios</span>
-        </a>
-        <a
-          href="/admin/conceptos"
-          class="flex items-center gap-2.5 px-5 py-2 rounded-full text-[13px] font-medium text-apple-secondary hover:text-gray-900 dark:text-white hover:bg-gray-100/80 transition-all group"
-        >
-          <i
-            data-lucide="tag"
-            class="w-4 h-4 text-gray-400 group-hover:text-gray-900 dark:text-white transition-colors"
-          ></i>
-          <span>Conceptos</span>
-        </a>
-        <a
-          href="/admin/zonas"
-          class="flex items-center gap-2.5 px-5 py-2 rounded-full text-[13px] font-medium text-apple-secondary hover:text-gray-900 dark:text-white hover:bg-gray-100/80 transition-all group"
-        >
-          <i
-            data-lucide="map"
-            class="w-4 h-4 text-gray-400 group-hover:text-gray-900 dark:text-white transition-colors"
-          ></i>
-          <span>Zonas</span>
-        </a>
-        <a
-          href="/admin/niveles"
-          class="flex items-center gap-2.5 px-5 py-2 rounded-full text-[13px] font-medium text-apple-secondary hover:text-gray-900 dark:text-white hover:bg-gray-100/80 transition-all group"
-        >
-          <i
-            data-lucide="layers"
-            class="w-4 h-4 text-gray-400 group-hover:text-gray-900 dark:text-white transition-colors"
-          ></i>
-          <span>Niveles</span>
-        </a>
-      </div>
+      <a
+        href="/admin/tarifarios"
+        class="sub-nav-item active px-4 py-1.5 rounded-full text-xs font-medium shadow-sm"
+        >Tarifarios</a
+      >
+      <a
+        href="/admin/conceptos"
+        class="sub-nav-item px-4 py-1.5 rounded-full text-xs font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+        >Conceptos</a
+      >
+      <a
+        href="/admin/zonas"
+        class="sub-nav-item px-4 py-1.5 rounded-full text-xs font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+        >Zonas</a
+      >
+      <a
+        href="/admin/niveles"
+        class="sub-nav-item px-4 py-1.5 rounded-full text-xs font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+        >Niveles</a
+      >
     </div>
 
-    <main class="pt-44 px-8">
-      <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <div
-          class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700"
-        >
-          <div>
-            <div class="flex items-center gap-3 mb-2">
-              <div
-                class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600"
-              >
-                <i data-lucide="calculator" class="w-5 h-5"></i>
-              </div>
-              <span
-                class="text-[10px] font-bold text-orange-600 uppercase tracking-[0.2em]"
-                >Configuración Base</span
-              >
-            </div>
-            <h1
-              class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-2"
-            >
-              Tarifarios
-            </h1>
-            <p class="text-xl text-apple-secondary font-medium">
-              Define los límites diarios por nivel, zona y concepto.
-            </p>
-          </div>
-          <button
-            onclick="document.getElementById('modalNuevo').classList.remove('hidden')"
-            class="px-8 py-4 bg-black text-white text-[13px] font-bold rounded-full hover:bg-gray-800 transition-all active:scale-95 shadow-xl shadow-black/10 flex items-center gap-2"
+    <main class="pt-44 px-6 md:px-12 max-w-7xl mx-auto">
+      <!-- Header -->
+      <div
+        class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700"
+      >
+        <div>
+          <span
+            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-sage/30 text-accent-forest dark:text-accent-sage text-xs font-bold uppercase tracking-wider mb-4 border border-accent-sage/20"
           >
-            <i data-lucide="plus" class="w-4 h-4"></i>
-            Nueva Tarifa
-          </button>
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-accent-forest dark:bg-accent-sage"
+            ></span>
+            Catálogo
+          </span>
+          <h1
+            class="text-5xl md:text-6xl font-serif text-gray-900 dark:text-white mb-4 leading-tight"
+          >
+            Tarifario
+          </h1>
+          <p
+            class="text-lg text-gray-500 dark:text-gray-400 font-light max-w-xl"
+          >
+            Define los límites diarios de gasto por nivel, zona y concepto.
+          </p>
         </div>
 
-        <!-- Tabla de Tarifas -->
-        <div class="apple-card-refined overflow-hidden mb-20">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left">
-              <thead>
-                <tr
-                  class="border-b border-gray-50 uppercase tracking-widest text-[10px] text-gray-400 font-bold"
+        <button
+          onclick="document.getElementById('modalNuevo').classList.remove('hidden')"
+          class="group relative px-6 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full text-sm font-bold overflow-hidden transition-all hover:shadow-lg active:scale-95 flex items-center gap-2"
+        >
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          Nueva Tarifa
+        </button>
+      </div>
+
+      <!-- Tabla -->
+      <div
+        class="bento-card overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100"
+      >
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr
+                class="border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/[0.02]"
+              >
+                <th
+                  class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-10"
                 >
-                  <th class="px-10 py-6 pl-10">Región / Zona</th>
-                  <th class="px-10 py-6">Nivel Jerárquico</th>
-                  <th class="px-10 py-6">Concepto</th>
-                  <th class="px-10 py-6 text-right">Monto Límite</th>
-                  <th class="px-10 py-6"></th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-50">
-                <tr
-                  th:each="tar : ${tarifarios}"
-                  class="group hover:bg-gray-50/50 transition-colors"
+                  Región / Zona
+                </th>
+                <th
+                  class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest"
                 >
-                  <td class="px-10 py-8">
-                    <div class="flex items-center gap-3">
-                      <div
-                        class="w-8 h-8 rounded-lg bg-apple-bg flex items-center justify-center text-apple-secondary"
-                      >
-                        <i data-lucide="map" class="w-4 h-4"></i>
-                      </div>
-                      <div
-                        class="font-bold text-gray-900 dark:text-white text-sm"
-                        th:text="${tar.zonaGeografica.nombre}"
-                      >
-                        ZONA
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-10 py-8">
+                  Nivel Jerárquico
+                </th>
+                <th
+                  class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest"
+                >
+                  Concepto
+                </th>
+                <th
+                  class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right"
+                >
+                  Monto Límite
+                </th>
+                <th
+                  class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right"
+                >
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-white/5">
+              <tr
+                th:each="tar : ${tarifarios}"
+                class="group hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
+              >
+                <td class="px-8 py-6 pl-10">
+                  <div class="flex items-center gap-4">
                     <div
-                      class="text-[11px] font-bold text-apple-secondary uppercase tracking-widest bg-gray-100 px-3 py-1 rounded-full inline-block"
-                      th:text="${tar.nivelJerarquico.nombre}"
+                      class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-400 group-hover:bg-accent-clay group-hover:text-white transition-all duration-300"
                     >
-                      NIVEL
+                      <i data-lucide="map" class="w-5 h-5"></i>
                     </div>
-                  </td>
-                  <td class="px-10 py-8">
-                    <div
-                      class="flex items-center gap-2 group-hover:translate-x-1 transition-transform"
+                    <span
+                      class="font-bold text-gray-900 dark:text-white text-sm"
+                      th:text="${tar.zonaGeografica.nombre}"
+                      >ZONA</span
                     >
-                      <span
-                        class="w-1.5 h-1.5 rounded-full bg-apple-blue"
-                      ></span>
-                      <span
-                        class="text-sm font-bold text-gray-900 dark:text-white"
-                        th:text="${tar.tipoGasto.nombre}"
-                        >CONCEPTO</span
-                      >
-                    </div>
-                  </td>
-                  <td class="px-10 py-8 text-right">
-                    <div
-                      class="text-xl font-bold tracking-tighter text-gray-900 dark:text-white tabular-nums"
-                    >
-                      <span class="text-[10px] text-apple-secondary mr-1"
-                        >S/</span
-                      >
-                      <span
-                        th:text="${#numbers.formatDecimal(tar.montoDiario, 1, 'COMMA', 2, 'POINT')}"
-                        >0.00</span
-                      >
-                    </div>
-                  </td>
-                  <td class="px-10 py-8 text-right">
-                    <a
-                      th:href="@{'/admin/tarifarios/eliminar/' + ${tar.id}}"
-                      class="w-10 h-10 rounded-full bg-apple-bg text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center mx-auto"
-                      onclick="return confirm('¿Desactivar esta tarifa?')"
-                      title="Desactivar"
-                    >
-                      <i data-lucide="power" class="w-4 h-4"></i>
-                    </a>
-                  </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(tarifarios)}">
-                  <td
-                    colspan="5"
-                    class="px-10 py-32 text-center text-apple-secondary"
+                  </div>
+                </td>
+                <td class="px-8 py-6">
+                  <span
+                    class="inline-block px-3 py-1 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full text-[11px] font-bold uppercase tracking-wide text-gray-600 dark:text-gray-300"
+                    th:text="${tar.nivelJerarquico.nombre}"
+                    >NIVEL</span
                   >
-                    <i
-                      data-lucide="database"
-                      class="w-12 h-12 mx-auto mb-6 opacity-10"
-                    ></i>
-                    <p class="text-lg font-bold text-gray-900 dark:text-white">
-                      Sin tarifas configuradas
-                    </p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                </td>
+                <td class="px-8 py-6">
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent-forest dark:bg-accent-sage"
+                    ></span>
+                    <span
+                      class="text-sm font-medium text-gray-900 dark:text-white"
+                      th:text="${tar.tipoGasto.nombre}"
+                      >CONCEPTO</span
+                    >
+                  </div>
+                </td>
+                <td class="px-8 py-6 text-right">
+                  <div
+                    class="text-lg font-bold tracking-tight text-gray-900 dark:text-white tabular-nums"
+                  >
+                    <span class="text-xs text-gray-400 mr-1 font-normal"
+                      >S/</span
+                    >
+                    <span
+                      th:text="${#numbers.formatDecimal(tar.montoDiario, 1, 'COMMA', 2, 'POINT')}"
+                      >0.00</span
+                    >
+                  </div>
+                </td>
+                <td class="px-8 py-6 text-right">
+                  <a
+                    th:href="@{'/admin/tarifarios/eliminar/' + ${tar.id}}"
+                    onclick="return confirm('¿Desactivar esta tarifa?')"
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-full text-gray-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
+                    title="Desactivar"
+                  >
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div th:if="${#lists.isEmpty(tarifarios)}" class="py-24 text-center">
+            <p class="text-sm font-medium text-gray-500 mb-2">
+              No hay tarifas configuradas.
+            </p>
+            <button
+              onclick="document.getElementById('modalNuevo').classList.remove('hidden')"
+              class="text-xs font-bold text-accent-forest dark:text-accent-sage hover:underline"
+            >
+              Crear la primera
+            </button>
           </div>
         </div>
       </div>
     </main>
 
-    <!-- Modal Nuevo Refinado -->
+    <!-- Modal Nueva Tarifa -->
     <div
       id="modalNuevo"
-      class="hidden fixed inset-0 z-[100] flex items-center justify-center px-6"
+      class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6"
     >
       <div
-        class="absolute inset-0 bg-black/40 backdrop-blur-[4px]"
+        class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onclick="document.getElementById('modalNuevo').classList.add('hidden')"
       ></div>
       <div
-        class="relative w-full max-w-[500px] bg-white rounded-[40px] p-12 shadow-2xl animate-in zoom-in-95 duration-200"
+        class="relative w-full max-w-lg bg-white dark:bg-[#1C1E22] rounded-3xl p-10 shadow-2xl transform transition-all animate-in zoom-in-95 duration-200"
       >
-        <h2
-          class="text-3xl font-bold mb-1 tracking-tight text-gray-900 dark:text-white"
-        >
+        <h3 class="text-3xl font-serif text-gray-900 dark:text-white mb-2">
           Nueva Tarifa
-        </h2>
-        <p class="text-apple-secondary font-medium mb-10">
+        </h3>
+        <p class="text-sm text-gray-500 mb-8">
           Asigna un límite de gasto diario específico.
         </p>
 
         <form
           th:action="@{/admin/tarifarios/guardar}"
           method="post"
-          class="space-y-8"
+          class="space-y-6"
         >
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label
-                class="block text-[10px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3 px-1"
-                >Zona Geográfica</label
+                class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 px-1"
+                >Zona</label
               >
-              <select
-                name="zonaGeografica.id"
-                required
-                class="w-full px-6 py-4 bg-apple-bg border-transparent rounded-[20px] text-sm font-bold focus:bg-white focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all"
-              >
-                <option
-                  th:each="z : ${zonas}"
-                  th:value="${z.id}"
-                  th:text="${z.nombre}"
-                ></option>
-              </select>
+              <div class="relative">
+                <select
+                  name="zonaGeografica.id"
+                  required
+                  class="w-full px-4 py-3 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-accent-forest/20 dark:focus:ring-white/20 transition-all dark:text-white"
+                >
+                  <option
+                    th:each="z : ${zonas}"
+                    th:value="${z.id}"
+                    th:text="${z.nombre}"
+                  ></option>
+                </select>
+              </div>
             </div>
-
             <div>
               <label
-                class="block text-[10px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3 px-1"
-                >Nivel Jerárquico</label
+                class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 px-1"
+                >Nivel</label
               >
-              <select
-                name="nivelJerarquico.id"
-                required
-                class="w-full px-6 py-4 bg-apple-bg border-transparent rounded-[20px] text-sm font-bold focus:bg-white focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all"
-              >
-                <option
-                  th:each="n : ${niveles}"
-                  th:value="${n.id}"
-                  th:text="${n.nombre}"
-                ></option>
-              </select>
+              <div class="relative">
+                <select
+                  name="nivelJerarquico.id"
+                  required
+                  class="w-full px-4 py-3 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-accent-forest/20 dark:focus:ring-white/20 transition-all dark:text-white"
+                >
+                  <option
+                    th:each="n : ${niveles}"
+                    th:value="${n.id}"
+                    th:text="${n.nombre}"
+                  ></option>
+                </select>
+              </div>
             </div>
           </div>
 
           <div>
             <label
-              class="block text-[10px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3 px-1"
+              class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 px-1"
               >Concepto de Gasto</label
             >
-            <select
-              name="tipoGasto.id"
-              required
-              class="w-full px-6 py-4 bg-apple-bg border-transparent rounded-[20px] text-sm font-bold focus:bg-white focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all"
-            >
-              <option
-                th:each="tg : ${tiposGasto}"
-                th:value="${tg.id}"
-                th:text="${tg.nombre}"
-              ></option>
-            </select>
+            <div class="relative">
+              <select
+                name="tipoGasto.id"
+                required
+                class="w-full px-4 py-3 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-accent-forest/20 dark:focus:ring-white/20 transition-all dark:text-white"
+              >
+                <option
+                  th:each="tg : ${tiposGasto}"
+                  th:value="${tg.id}"
+                  th:text="${tg.nombre}"
+                ></option>
+              </select>
+            </div>
           </div>
 
           <div>
             <label
-              class="block text-[10px] font-bold text-apple-secondary uppercase tracking-[0.2em] mb-3 px-1"
+              class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 px-1"
               >Monto Límite Diario (S/)</label
             >
             <input
@@ -442,23 +447,23 @@
               name="montoDiario"
               required
               placeholder="0.00"
-              class="w-full px-6 py-6 bg-apple-bg border-transparent rounded-[24px] text-3xl font-bold tracking-tighter focus:bg-white focus:ring-4 focus:ring-apple-blue/10 outline-none transition-all"
+              class="w-full px-4 py-4 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-2xl font-bold tracking-tight focus:outline-none focus:ring-2 focus:ring-accent-forest/20 dark:focus:ring-white/20 transition-all dark:text-white"
             />
           </div>
 
-          <div class="flex flex-col gap-3 pt-4">
+          <div class="flex flex-col gap-3 pt-2">
             <button
               type="submit"
-              class="w-full py-5 bg-black text-white text-sm font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-xl active:scale-95"
+              class="w-full py-3.5 bg-accent-forest text-white font-bold rounded-xl hover:bg-[#1a241a] transition-all shadow-lg shadow-green-900/20"
             >
               Guardar Configuración
             </button>
             <button
               type="button"
               onclick="document.getElementById('modalNuevo').classList.add('hidden')"
-              class="w-full py-5 text-apple-secondary text-sm font-bold hover:bg-apple-bg rounded-2xl transition-all"
+              class="w-full py-3.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 font-bold rounded-xl hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
             >
-              Cerrar
+              Cancelar
             </button>
           </div>
         </form>
@@ -468,8 +473,6 @@
     <script th:inline="javascript">
       lucide.createIcons();
     </script>
-
-    <!-- Theme Toggle Script -->
     <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
   </body>
 </html>
