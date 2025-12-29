@@ -20,7 +20,8 @@ CREATE TABLE zonas_geograficas (
     user_crea VARCHAR2(30) DEFAULT USER,
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_mod VARCHAR2(30),
-    fecha_mod TIMESTAMP
+    fecha_mod TIMESTAMP,
+    activo NUMBER(1) DEFAULT 1 CHECK (activo IN (0, 1))
 );
 /
 -- NIVELES_JERARQUICOS
@@ -32,7 +33,8 @@ CREATE TABLE niveles_jerarquicos (
     user_crea VARCHAR2(30) DEFAULT USER,
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_mod VARCHAR2(30),
-    fecha_mod TIMESTAMP
+    fecha_mod TIMESTAMP,
+    activo NUMBER(1) DEFAULT 1 CHECK (activo IN (0, 1))
 );
 /
 -- TIPOS_GASTO
@@ -48,7 +50,8 @@ CREATE TABLE tipos_gasto (
     user_crea VARCHAR2(30) DEFAULT USER,
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_mod VARCHAR2(30),
-    fecha_mod TIMESTAMP
+    fecha_mod TIMESTAMP,
+    activo NUMBER(1) DEFAULT 1 CHECK (activo IN (0, 1))
 );
 /
 -- TARIFARIO_VIATICOS
@@ -64,6 +67,7 @@ CREATE TABLE tarifario_viaticos (
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_mod VARCHAR2(30),
     fecha_mod TIMESTAMP,
+    activo NUMBER(1) DEFAULT 1 CHECK (activo IN (0, 1)),
     -- Constraints
     CONSTRAINT fk_tarifa_zona FOREIGN KEY (id_zona) REFERENCES zonas_geograficas (id_zona),
     CONSTRAINT fk_tarifa_nivel FOREIGN KEY (id_nivel) REFERENCES niveles_jerarquicos (id_nivel),
