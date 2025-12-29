@@ -43,6 +43,9 @@ CREATE OR REPLACE PACKAGE PKG_TARIFARIO AS
         p_id_tarifa IN NUMBER
     );
 
+    -- Contar tarifas
+    FUNCTION FNC_CONTAR_TARIFAS RETURN NUMBER;
+
 END PKG_TARIFARIO;
 /
 
@@ -156,6 +159,13 @@ CREATE OR REPLACE PACKAGE BODY PKG_TARIFARIO AS
         DELETE FROM tarifario_viaticos WHERE id_tarifa = p_id_tarifa;
         COMMIT;
     END PRC_ELIMINAR_TARIFA;
+
+    FUNCTION FNC_CONTAR_TARIFAS RETURN NUMBER AS
+        v_count NUMBER;
+    BEGIN
+        SELECT COUNT(*) INTO v_count FROM tarifario_viaticos;
+        RETURN v_count;
+    END FNC_CONTAR_TARIFAS;
 
 END PKG_TARIFARIO;
 /

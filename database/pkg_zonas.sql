@@ -9,6 +9,11 @@ CREATE OR REPLACE PACKAGE PKG_ZONAS AS
         p_cursor OUT SYS_REFCURSOR
     );
 
+    -- Obtener zona por ID
+    FUNCTION FNC_OBTENER_POR_ID (
+        p_id_zona IN NUMBER
+    ) RETURN SYS_REFCURSOR;
+
     -- Obtener zona por Nombre
     FUNCTION FNC_OBTENER_POR_NOMBRE (
         p_nombre IN VARCHAR2
@@ -33,6 +38,9 @@ CREATE OR REPLACE PACKAGE PKG_ZONAS AS
     PROCEDURE PRC_ELIMINAR_ZONA (
         p_id_zona IN NUMBER
     );
+
+    -- Contar zonas
+    FUNCTION FNC_CONTAR_ZONAS RETURN NUMBER;
 
 END PKG_ZONAS;
 /
@@ -118,6 +126,13 @@ CREATE OR REPLACE PACKAGE BODY PKG_ZONAS AS
         DELETE FROM zonas_geograficas WHERE id_zona = p_id_zona;
         COMMIT;
     END PRC_ELIMINAR_ZONA;
+
+    FUNCTION FNC_CONTAR_ZONAS RETURN NUMBER AS
+        v_count NUMBER;
+    BEGIN
+        SELECT COUNT(*) INTO v_count FROM zonas_geograficas;
+        RETURN v_count;
+    END FNC_CONTAR_ZONAS;
 
 END PKG_ZONAS;
 /

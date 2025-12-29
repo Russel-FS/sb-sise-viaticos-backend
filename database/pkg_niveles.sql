@@ -38,6 +38,9 @@ CREATE OR REPLACE PACKAGE PKG_NIVELES AS
         p_id_nivel IN NUMBER
     );
 
+    -- Contar niveles
+    FUNCTION FNC_CONTAR_NIVELES RETURN NUMBER;
+
 END PKG_NIVELES;
 /
 
@@ -122,6 +125,13 @@ CREATE OR REPLACE PACKAGE BODY PKG_NIVELES AS
         DELETE FROM niveles_jerarquicos WHERE id_nivel = p_id_nivel;
         COMMIT;
     END PRC_ELIMINAR_NIVEL;
+
+    FUNCTION FNC_CONTAR_NIVELES RETURN NUMBER AS
+        v_count NUMBER;
+    BEGIN
+        SELECT COUNT(*) INTO v_count FROM niveles_jerarquicos;
+        RETURN v_count;
+    END FNC_CONTAR_NIVELES;
 
 END PKG_NIVELES;
 /
