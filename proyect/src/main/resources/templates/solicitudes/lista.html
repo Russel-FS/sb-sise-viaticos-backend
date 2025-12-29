@@ -4,9 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mis Solicitudes - ISS Viáticos</title>
+
+    <!-- recursos externos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- script del tema -->
+
+    <!-- manejo de temas -->
     <script>
       (function () {
         const savedTheme = localStorage.getItem("theme");
@@ -18,425 +27,501 @@
         }
       })();
     </script>
-    <!-- estilos del tema -->
     <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
+
     <script>
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
             fontFamily: {
+              serif: ['"Instrument Serif"', "serif"],
               sans: [
+                "Inter",
                 "-apple-system",
                 "BlinkMacSystemFont",
-                '"SF Pro Display"',
-                '"SF Pro Text"',
-                "Helvetica Neue",
-                "Arial",
                 "sans-serif",
               ],
             },
             colors: {
-              apple: {
-                bg: "#f5f5f7",
-                card: "#ffffff",
-                text: "#1d1d1f",
-                secondary: "#86868b",
-                blue: "#0071e3",
-                border: "rgba(0, 0, 0, 0.05)",
+              canvas: {
+                light: "#F9F8F6",
+                dark: "#0F1115",
               },
+              card: {
+                light: "#FFFFFF",
+                dark: "#1C1E22",
+              },
+              accent: {
+                sage: "#E3ECD2",
+                forest: "#2D3B2D",
+                clay: "#D4A373",
+                sand: "#EFEBE0",
+              },
+              apple: {
+                blue: "#007aff",
+              },
+            },
+            borderRadius: {
+              "4xl": "2rem",
+            },
+            boxShadow: {
+              premium: "0 20px 40px -12px rgba(0, 0, 0, 0.05)",
             },
           },
         },
       };
     </script>
+
     <style>
       body {
-        background-color: #f5f5f7;
-        color: #1d1d1f;
-        letter-spacing: -0.015em;
+        background-color: #f9f8f6;
+        color: #1a1a1a;
+        font-family: "Inter", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
       }
       .dark body {
-        background-color: #000000;
-        color: #f5f5f7;
+        background-color: #0f1115;
+        color: #f1f1f1;
       }
-      .glass {
-        background: rgba(255, 255, 255, 0.72);
-        backdrop-filter: saturate(180%) blur(20px);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+
+      h1,
+      h2,
+      h3,
+      .serif-font {
+        font-family: "Instrument Serif", serif;
       }
-      .dark .glass {
-        background: rgba(28, 28, 30, 0.85);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+      .nav-island {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
       }
-      .apple-card-refined {
-        background: #ffffff;
-        border-radius: 28px;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+      .dark .nav-island {
+        background: rgba(28, 30, 34, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
       }
-      .dark .apple-card-refined {
-        background: #1c1c1e;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+      .bento-card {
+        background: white;
+        border-radius: 2rem;
+        border: 1px solid rgba(0, 0, 0, 0.02);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02),
+          0 2px 4px -1px rgba(0, 0, 0, 0.02);
+      }
+      .dark .bento-card {
+        background: #1c1e22;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .status-pill {
+        @apply px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest inline-flex items-center gap-1.5;
+      }
+
+      /* animaciones */
+      @keyframes fade-in-up {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-enter {
+        animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+      }
+      .delay-100 {
+        animation-delay: 100ms;
+      }
+      .delay-200 {
+        animation-delay: 200ms;
       }
     </style>
   </head>
-  <body class="antialiased selection:bg-apple-blue selection:text-white pb-20">
-    <!-- Nav -->
-    <nav class="fixed top-0 w-full z-50 glass h-12">
-      <div
-        class="max-w-6xl mx-auto px-8 h-full flex items-center justify-between"
+  <body
+    class="min-h-screen pb-20 selection:bg-accent-sage selection:text-accent-forest"
+  >
+    <!-- Top Navigation "Floating Island" -->
+    <div class="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+      <nav
+        class="nav-island rounded-full px-6 py-3 flex items-center gap-8 animate-enter min-w-[320px] md:min-w-[600px]"
       >
-        <div class="flex items-center gap-10">
-          <a href="/" class="text-[15px] font-bold tracking-tight text-black"
-            >ISS Viáticos</a
+        <a
+          href="/"
+          class="serif-font text-xl font-medium tracking-tight hover:opacity-70 transition-opacity"
+        >
+          ISS V
+        </a>
+
+        <div
+          class="hidden md:flex items-center gap-1 bg-gray-100/50 dark:bg-white/5 rounded-full p-1"
+        >
+          <a
+            href="/solicitudes"
+            class="px-4 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-white/10 shadow-sm transition-all text-black dark:text-white"
+            >Solicitudes</a
           >
-          <div
-            class="hidden md:flex items-center gap-8 text-[13px] font-medium text-apple-secondary"
-          >
-            <a href="/solicitudes" class="text-black font-bold">Solicitudes</a>
+
+          <th:block th:if="${isAdmin}">
             <a
-              th:if="${isAdmin}"
               href="/admin/aprobaciones"
-              class="hover:text-apple-blue transition-colors"
-              >Aprobaciones</a
+              class="px-4 py-1.5 rounded-full text-xs font-medium hover:bg-white dark:hover:bg-white/10 hover:shadow-sm transition-all text-gray-700 dark:text-gray-300"
+              >Aprobar</a
             >
             <a
-              th:if="${isAdmin}"
               href="/admin/validaciones"
-              class="hover:text-apple-blue transition-colors"
-              >Validaciones</a
+              class="px-4 py-1.5 rounded-full text-xs font-medium hover:bg-white dark:hover:bg-white/10 hover:shadow-sm transition-all text-gray-700 dark:text-gray-300"
+              >Validar</a
             >
             <a
-              th:if="${isAdmin}"
               href="/admin/empleados"
-              class="hover:text-apple-blue transition-colors"
-              >Personal</a
+              class="px-4 py-1.5 rounded-full text-xs font-medium hover:bg-white dark:hover:bg-white/10 hover:shadow-sm transition-all text-gray-700 dark:text-gray-300"
+              >Empleados</a
             >
-            <a
-              th:if="${isAdmin}"
-              href="/admin/tarifarios"
-              class="hover:text-apple-blue transition-colors"
-              >Configuración</a
-            >
-          </div>
+          </th:block>
         </div>
 
-        <div class="flex items-center gap-4" th:if="${currentUser != null}">
-          <!-- botton de togle -->
-          <button
-            onclick="toggleTheme()"
-            class="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-gray-100 dark:hover:bg-white/10"
-            title="Cambiar tema"
+        <div class="flex items-center gap-4">
+          <!-- User Profile Pill -->
+          <div
+            class="flex items-center gap-3 pl-4 border-l border-gray-200 dark:border-white/10"
           >
-            <i
-              data-lucide="sun"
-              class="w-4 h-4 text-gray-500 hidden dark:block dark:text-yellow-400"
-            ></i>
-            <i
-              data-lucide="moon"
-              class="w-4 h-4 text-gray-500 block dark:hidden"
-            ></i>
-          </button>
-          <span class="w-[1px] h-3 bg-gray-200 dark:bg-gray-700"></span>
-          <div class="text-right">
-            <p
-              class="text-[12px] font-bold text-gray-900 dark:text-white leading-none"
+            <span
+              class="text-xs font-medium text-gray-500 hidden sm:block"
+              th:if="${currentUser != null}"
               th:text="${currentUser.nombreCompleto}"
+              >User</span
             >
-              Nombre
-            </p>
-          </div>
-          <form th:action="@{/logout}" method="post" class="flex items-center">
             <button
-              type="submit"
-              class="text-[12px] font-medium text-apple-blue hover:underline"
+              onclick="toggleTheme()"
+              class="w-8 h-8 rounded-full hover:bg-black/5 dark:hover:bg-white/10 flex items-center justify-center transition-colors"
             >
-              Salir
+              <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+              <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
             </button>
-          </form>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <main class="max-w-[1200px] mx-auto px-6 pt-32">
+      <!-- Header -->
+      <div
+        class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-enter delay-100"
+      >
+        <div>
+          <h1 class="text-5xl font-serif text-gray-900 dark:text-white mb-2">
+            Mis Solicitudes
+          </h1>
+          <p class="text-gray-500 dark:text-gray-400 font-light">
+            Historial completo de tus comisiones y rendiciones.
+          </p>
+        </div>
+        <a
+          href="/solicitudes/nueva"
+          class="group px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full text-sm font-bold flex items-center gap-2 hover:scale-105 transition-transform shadow-lg shadow-gray-200 dark:shadow-none"
+        >
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          Nueva Solicitud
+        </a>
+      </div>
+
+      <!-- estados -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 animate-enter delay-100"
+      >
+        <div
+          class="bento-card p-6 flex flex-col justify-between h-32 group hover:bg-[#FFFBEB] dark:hover:bg-yellow-900/10 transition-colors cursor-default"
+        >
+          <div class="flex items-start justify-between">
+            <span
+              class="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-yellow-600/70"
+              >Pendientes</span
+            >
+            <i
+              data-lucide="clock"
+              class="w-5 h-5 text-gray-300 group-hover:text-yellow-500"
+            ></i>
+          </div>
+          <p
+            class="text-4xl font-serif text-gray-900 dark:text-white group-hover:text-yellow-700 dark:group-hover:text-yellow-400"
+            th:text="${#lists.size(solicitudes.?[estado.name() == 'PENDIENTE' || estado.name() == 'BORRADOR'])}"
+          >
+            0
+          </p>
+        </div>
+
+        <div
+          class="bento-card p-6 flex flex-col justify-between h-32 group hover:bg-[#F0FDF4] dark:hover:bg-green-900/10 transition-colors cursor-default"
+        >
+          <div class="flex items-start justify-between">
+            <span
+              class="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-green-600/70"
+              >Aprobadas</span
+            >
+            <i
+              data-lucide="check-circle"
+              class="w-5 h-5 text-gray-300 group-hover:text-green-500"
+            ></i>
+          </div>
+          <p
+            class="text-4xl font-serif text-gray-900 dark:text-white group-hover:text-green-700 dark:group-hover:text-green-400"
+            th:text="${#lists.size(solicitudes.?[estado.name() == 'APROBADO'])}"
+          >
+            0
+          </p>
+        </div>
+
+        <div
+          class="bento-card p-6 flex flex-col justify-between h-32 group hover:bg-[#F3F4F6] dark:hover:bg-blue-900/10 transition-colors cursor-default"
+        >
+          <div class="flex items-start justify-between">
+            <span
+              class="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-gray-600"
+              >Total</span
+            >
+            <i
+              data-lucide="layers"
+              class="w-5 h-5 text-gray-300 group-hover:text-gray-500"
+            ></i>
+          </div>
+          <p
+            class="text-4xl font-serif text-gray-900 dark:text-white"
+            th:text="${#lists.size(solicitudes)}"
+          >
+            0
+          </p>
         </div>
       </div>
-    </nav>
 
-    <main class="pt-32 px-8">
-      <div class="max-w-6xl mx-auto">
-        <!-- Header Section -->
-        <div
-          class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700"
-        >
-          <div>
-            <h1
-              class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-2"
-            >
-              Mis Solicitudes
-            </h1>
-            <p class="text-lg text-apple-secondary font-medium">
-              Historial de comisiones y estados de viáticos.
-            </p>
-          </div>
-          <a
-            href="/solicitudes/nueva"
-            class="px-6 py-3 bg-black text-white text-sm font-bold rounded-full hover:bg-gray-800 transition-all active:scale-95 shadow-lg shadow-black/5 flex items-center gap-2"
-          >
-            <i data-lucide="plus" class="w-4 h-4"></i>
-            Nueva Solicitud
-          </a>
-        </div>
-
-        <!-- Dashboard Stats Neutros -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12">
-          <div
-            class="apple-card-refined p-8 flex items-center gap-6 relative overflow-hidden group"
-          >
-            <div
-              class="text-gray-900 group-hover:scale-110 transition-transform duration-500"
-            >
-              <i data-lucide="send" class="w-8 h-8"></i>
-            </div>
-            <div>
-              <p
-                class="text-[10px] font-bold text-apple-secondary uppercase tracking-[0.1em] mb-1"
-              >
-                Total Enviadas
-              </p>
-              <p
-                class="text-3xl font-bold tracking-tighter text-gray-900"
-                th:text="${#lists.size(solicitudes)}"
-              >
-                0
-              </p>
-            </div>
-          </div>
-          <div
-            class="apple-card-refined p-8 flex items-center gap-6 relative overflow-hidden group"
-          >
-            <div
-              class="text-gray-900 group-hover:scale-110 transition-transform duration-500"
-            >
-              <i data-lucide="check-circle" class="w-8 h-8"></i>
-            </div>
-            <div>
-              <p
-                class="text-[10px] font-bold text-apple-secondary uppercase tracking-[0.1em] mb-1"
-              >
-                Aprobadas
-              </p>
-              <p
-                class="text-3xl font-bold tracking-tighter text-gray-900"
-                th:text="${#lists.size(solicitudes.?[estado.name() == 'APROBADO' || estado.name() == 'RENDIDO' || estado.name() == 'LIQUIDADO'])}"
-              >
-                0
-              </p>
-            </div>
-          </div>
-          <div
-            class="apple-card-refined p-8 flex items-center justify-between group overflow-hidden relative border border-black/[0.03]"
-          >
-            <div class="flex items-center gap-6">
-              <div
-                class="text-gray-900 group-hover:scale-110 transition-transform duration-500"
-              >
-                <i data-lucide="clock" class="w-8 h-8"></i>
-              </div>
-              <div>
-                <p
-                  class="text-[10px] font-bold text-apple-secondary uppercase tracking-[0.1em] mb-1"
+      <!-- tabla  -->
+      <div
+        class="bento-card overflow-hidden animate-enter delay-200 min-h-[500px]"
+      >
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-100 dark:border-white/5">
+                <th
+                  class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-8"
                 >
-                  Por Rendir
-                </p>
-                <p
-                  class="text-3xl font-bold tracking-tighter text-gray-900"
-                  th:text="${#lists.size(solicitudes.?[estado.name() == 'APROBADO'])}"
+                  ID
+                </th>
+                <th
+                  class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest"
                 >
-                  0
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tabla-->
-        <div class="apple-card-refined overflow-hidden mb-20">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left">
-              <thead>
-                <tr class="border-b border-gray-100 dark:border-white/5">
-                  <th
-                    class="px-10 py-6 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-10"
-                  >
-                    ID
-                  </th>
-                  <th
-                    class="px-10 py-6 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest"
-                  >
-                    Información
-                  </th>
-                  <th
-                    class="px-10 py-6 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest"
-                  >
-                    Periodo
-                  </th>
-                  <th
-                    class="px-10 py-6 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest text-right"
-                  >
-                    Presupuesto
-                  </th>
-                  <th
-                    class="px-10 py-6 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest text-center"
-                  >
-                    Estado
-                  </th>
-                  <th class="px-10 py-6"></th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-50">
-                <tr
-                  th:each="sol : ${solicitudes}"
-                  class="group hover:bg-gray-50/50 transition-colors"
+                  Destino
+                </th>
+                <th
+                  class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest"
                 >
-                  <td class="px-10 py-8">
-                    <span
-                      class="text-[13px] font-bold text-gray-300 group-hover:text-black transition-colors"
-                      th:text="${'#' + sol.id}"
-                    >
-                      #
-                    </span>
-                  </td>
-                  <td class="px-10 py-8">
+                  Fechas
+                </th>
+                <th
+                  class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right"
+                >
+                  Monto
+                </th>
+                <th
+                  class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center"
+                >
+                  Estado
+                </th>
+                <th
+                  class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right pr-8"
+                >
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50 dark:divide-white/5">
+              <tr
+                th:each="sol : ${solicitudes}"
+                class="group hover:bg-gray-50/80 dark:hover:bg-white/5 transition-colors"
+              >
+                <td class="px-8 py-6">
+                  <span
+                    class="font-mono text-xs text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors"
+                    th:text="${'#' + sol.id}"
+                    >#001</span
+                  >
+                </td>
+                <td class="px-8 py-6">
+                  <div class="flex items-center gap-3">
                     <div
-                      class="font-bold text-gray-900 text-sm mb-1"
-                      th:text="${sol.motivoViaje}"
+                      class="w-8 h-8 rounded-full bg-accent-sage/30 dark:bg-white/10 flex items-center justify-center text-accent-forest dark:text-white"
                     >
-                      Motivo
+                      <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
                     </div>
-                    <div class="flex items-center gap-1.5">
-                      <i
-                        data-lucide="navigation"
-                        class="w-3 h-3 text-gray-300"
-                      ></i>
-                      <span
-                        class="text-[11px] text-gray-500 dark:text-gray-400 font-medium"
-                        th:text="${sol.itinerarios[0].zonaDestino.nombre}"
-                        >Zona</span
-                      >
-                    </div>
-                  </td>
-                  <td class="px-10 py-8 whitespace-nowrap">
-                    <div
-                      class="text-gray-600 font-medium text-[13px]"
-                      th:text="${sol.fechaInicio + ' — ' + sol.fechaFin}"
-                    >
-                      Fecha
-                    </div>
-                  </td>
-                  <td class="px-10 py-8 text-right">
-                    <div
-                      class="font-bold text-gray-900 text-sm tabular-nums"
-                      th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}"
-                    >
-                      0.00
-                    </div>
-                  </td>
-                  <td class="px-10 py-8 text-center">
-                    <span
-                      th:if="${sol.estado.name() == 'BORRADOR'}"
-                      class="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                      >Borrador</span
-                    >
-                    <span
-                      th:if="${sol.estado.name() == 'PENDIENTE'}"
-                      class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                      >Pendiente</span
-                    >
-                    <span
-                      th:if="${sol.estado.name() == 'APROBADO'}"
-                      class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                      >Aprobado</span
-                    >
-                    <span
-                      th:if="${sol.estado.name() == 'RECHAZADO'}"
-                      class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                      >Rechazado</span
-                    >
-                    <span
-                      th:if="${sol.estado.name() == 'RENDIDO'}"
-                      class="px-3 py-1 bg-blue-50 text-apple-blue rounded-full text-[10px] font-bold uppercase tracking-wider"
-                      >Rendido</span
-                    >
-                    <span
-                      th:if="${sol.estado.name() == 'LIQUIDADO'}"
-                      class="px-3 py-2 bg-black text-white rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm"
-                      >Liquidado</span
-                    >
-                    <span
-                      th:if="${sol.estado.name() == 'CANCELADO'}"
-                      class="px-3 py-1 bg-gray-50 text-gray-500 dark:text-gray-400 rounded-full text-[10px] font-bold uppercase tracking-wider line-through"
-                      >Cancelado</span
-                    >
-                  </td>
-                  <td class="px-10 py-8 text-right">
-                    <div class="flex justify-end items-center gap-4">
-                      <!-- Botón Rendir -->
-                      <a
-                        th:if="${sol.estado.name() == 'APROBADO'}"
-                        th:href="@{'/rendiciones/solicitud/' + ${sol.id}}"
-                        class="px-4 py-2 bg-apple-blue text-white text-[11px] font-bold uppercase tracking-wide rounded-full hover:bg-blue-600 transition-all active:scale-95 shadow-lg shadow-blue-500/10"
-                      >
-                        Rendir
-                      </a>
-                      <!-- Botón Enviar -->
-                      <form
-                        th:if="${sol.estado.name() == 'BORRADOR'}"
-                        th:action="@{'/solicitudes/enviar/' + ${sol.id}}"
-                        method="post"
-                      >
-                        <button
-                          type="submit"
-                          class="px-4 py-2 bg-black text-white text-[11px] font-bold uppercase tracking-wide rounded-full hover:bg-gray-800 transition-all active:scale-95"
-                        >
-                          Enviar
-                        </button>
-                      </form>
-                      <!-- Ver Detalle -->
-                      <a
-                        th:href="@{'/solicitudes/' + ${sol.id}}"
-                        class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-apple-bg text-gray-500 dark:text-gray-400 hover:bg-black hover:text-white transition-all transform hover:scale-105"
-                      >
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Contenido vacío -->
-                <tr th:if="${#lists.isEmpty(solicitudes)}">
-                  <td colspan="6" class="px-10 py-32 text-center">
-                    <div class="flex flex-col items-center justify-center">
-                      <i
-                        data-lucide="inbox"
-                        class="w-12 h-12 text-gray-100 mb-6"
-                      ></i>
-                      <h3 class="text-xl font-bold text-gray-900 mb-2">
-                        Sin solicitudes
-                      </h3>
+                    <div>
                       <p
-                        class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-8"
+                        class="font-bold text-sm text-gray-900 dark:text-white"
+                        th:text="${sol.itinerarios[0].zonaDestino.nombre}"
                       >
-                        No hemos encontrado registros para mostrar.
+                        Zona Principal
                       </p>
-                      <a
-                        href="/solicitudes/nueva"
-                        class="px-6 py-3 bg-black text-white text-[13px] font-bold rounded-full"
+                      <p
+                        class="text-xs text-gray-500 font-medium mt-0.5"
+                        th:text="${sol.motivoViaje}"
                       >
-                        Nueva Solicitud
-                      </a>
+                        Motivo
+                      </p>
                     </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                  </div>
+                </td>
+                <td class="px-8 py-6">
+                  <div class="flex flex-col">
+                    <span
+                      class="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      th:text="${sol.fechaInicio}"
+                      >Inicio</span
+                    >
+                    <span
+                      class="text-xs text-gray-400 mt-0.5"
+                      th:text="${'Hasta ' + sol.fechaFin}"
+                      >Fin</span
+                    >
+                  </div>
+                </td>
+                <td class="px-8 py-6 text-right">
+                  <span
+                    class="font-serif text-lg text-gray-900 dark:text-white"
+                    th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}"
+                    >0.00</span
+                  >
+                </td>
+                <td class="px-8 py-6 text-center">
+                  <!-- Estado  -->
+                  <span
+                    th:if="${sol.estado.name() == 'BORRADOR'}"
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 border border-transparent"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                    Borrador
+                  </span>
+
+                  <span
+                    th:if="${sol.estado.name() == 'PENDIENTE'}"
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-[#FFF9E6] dark:bg-yellow-500/10 text-[#B45309] dark:text-yellow-400 border border-[#FEF3C7] dark:border-yellow-500/20"
+                  >
+                    <span class="relative flex h-2 w-2">
+                      <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"
+                      ></span>
+                      <span
+                        class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"
+                      ></span>
+                    </span>
+                    Pendiente
+                  </span>
+
+                  <!-- Estado: Aprobado   -->
+                  <span
+                    th:if="${sol.estado.name() == 'APROBADO'}"
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-[#E3ECD2] dark:bg-[#2D3B2D] text-[#2D3B2D] dark:text-[#E3ECD2] border border-[#2D3B2D]/10"
+                  >
+                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                    Aprobado
+                  </span>
+
+                  <!-- Estado: Rechazado   -->
+                  <span
+                    th:if="${sol.estado.name() == 'RECHAZADO'}"
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800/30"
+                  >
+                    <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
+                    Rechazado
+                  </span>
+
+                  <!-- Estado: Liquidado -->
+                  <span
+                    th:if="${sol.estado.name() == 'LIQUIDADO'}"
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-black dark:bg-white text-white dark:text-black border border-transparent shadow-sm"
+                  >
+                    <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
+                    Liquidado
+                  </span>
+
+                  <!-- Estado: Rendido -->
+                  <span
+                    th:if="${sol.estado.name() == 'Rendido'}"
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-[#F0F9FF] dark:bg-blue-900/20 text-[#0071e3] dark:text-blue-400 border border-[#0071e3]/10"
+                  >
+                    <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+                    Rendido
+                  </span>
+                </td>
+
+                <td class="px-8 py-6 text-right">
+                  <div
+                    class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity"
+                  >
+                    <!-- Action: Rendir -->
+                    <a
+                      th:if="${sol.estado.name() == 'APROBADO'}"
+                      th:href="@{'/rendiciones/solicitud/' + ${sol.id}}"
+                      class="px-3 py-1.5 bg-accent-forest text-white text-[10px] font-bold uppercase tracking-wide rounded-full hover:bg-black transition-colors"
+                    >
+                      Rendir
+                    </a>
+
+                    <!-- Action: Enviar -->
+                    <form
+                      th:if="${sol.estado.name() == 'BORRADOR'}"
+                      th:action="@{'/solicitudes/enviar/' + ${sol.id}}"
+                      method="post"
+                      class="inline"
+                    >
+                      <button
+                        type="submit"
+                        class="px-3 py-1.5 bg-black dark:bg-white text-white dark:text-black text-[10px] font-bold uppercase tracking-wide rounded-full hover:scale-105 transition-transform"
+                      >
+                        Enviar
+                      </button>
+                    </form>
+
+                    <!-- View Details -->
+                    <a
+                      th:href="@{'/solicitudes/' + ${sol.id}}"
+                      class="w-8 h-8 rounded-full border border-gray-200 dark:border-white/10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+                    >
+                      <i
+                        data-lucide="arrow-right"
+                        class="w-3.5 h-3.5 text-gray-500"
+                      ></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- estado vacio -->
+              <tr th:if="${#lists.isEmpty(solicitudes)}">
+                <td colspan="6" class="px-8 py-24 text-center">
+                  <div class="flex flex-col items-center justify-center">
+                    <div
+                      class="w-16 h-16 bg-gray-50 dark:bg-white/5 rounded-full flex items-center justify-center mb-4"
+                    >
+                      <i data-lucide="inbox" class="w-6 h-6 text-gray-300"></i>
+                    </div>
+                    <h3
+                      class="font-serif text-xl text-gray-900 dark:text-white mb-2"
+                    >
+                      Sin solicitudes activas
+                    </h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      Comienza creando tu primera comisión de servicio.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </main>
@@ -444,8 +529,6 @@
     <script th:inline="javascript">
       lucide.createIcons();
     </script>
-
-    <!-- Theme Toggle Script -->
     <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
   </body>
 </html>
