@@ -5,17 +5,17 @@ import java.util.Optional;
 import java.util.List;
 
 public interface UsuarioRepository {
-    Usuario save(Usuario usuario);
 
-    Optional<Usuario> findById(Long id);
+    void crearUsuario(Long idEmpleado, String username, String email,
+            String password, Long rolId, String userCrea);
 
-    void deleteById(Long id);
+    void eliminarPorEmpleado(Long idEmpleado);
 
-    void delete(Usuario usuario);
+    Long obtenerIdPorEmpleado(Long idEmpleado);
 
-    List<Usuario> findAll();
+    List<Usuario> listarTodos();
 
-    long count();
+    Optional<Usuario> obtenerPorUsername(String username);
 
-    Optional<Usuario> findByUsername(String username);
+    Optional<Usuario> obtenerPorEmail(String email);
 }

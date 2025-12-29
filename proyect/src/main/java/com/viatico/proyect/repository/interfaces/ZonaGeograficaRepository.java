@@ -17,5 +17,7 @@ public interface ZonaGeograficaRepository {
 
     long count();
 
+    Optional<ZonaGeografica> findByNombre(String nombre);
+
     List<ZonaGeografica> findByActivo(Integer activo);
 }

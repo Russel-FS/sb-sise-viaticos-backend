@@ -17,5 +17,7 @@ public interface TipoGastoRepository {
 
     long count();
 
+    Optional<TipoGasto> findByNombre(String nombre);
+
     List<TipoGasto> findByActivo(Integer activo);
 }
