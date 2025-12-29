@@ -1,23 +1,20 @@
 package com.viatico.proyect.repository.interfaces;
 
 import com.viatico.proyect.entity.Empleado;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 public interface EmpleadoRepository {
-    Empleado save(Empleado empleado);
 
-    Optional<Empleado> findById(Long id);
+    List<Empleado> listarTodos();
 
-    void deleteById(Long id);
+    Long guardarEmpleado(Empleado empleado, String userCrea);
 
-    void delete(Empleado empleado);
+    void eliminarEmpleado(Long id);
 
-    List<Empleado> findAll();
+    Optional<Empleado> obtenerPorId(Long id);
 
-    long count();
+    boolean existeDni(String dni, Long idActual);
 
-    Optional<Empleado> findByDni(String dni);
-
-    Optional<Empleado> findByEmail(String email);
+    boolean existeEmail(String email, Long idActual);
 }

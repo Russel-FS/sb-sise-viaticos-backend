@@ -1,7 +1,8 @@
 package com.viatico.proyect.repository.interfaces;
 
-import com.viatico.proyect.entity.EstadoSolicitud;
 import com.viatico.proyect.entity.SolicitudComision;
+import com.viatico.proyect.enums.EstadoSolicitud;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,6 @@ public interface SolicitudComisionRepository {
 
     long count();
 
-    // Custom methods
     List<SolicitudComision> findByEmpleadoIdOrderByFechaCreaDesc(Long empleadoId);
 
     List<SolicitudComision> findByEstadoOrderByFechaCreaDesc(EstadoSolicitud estado);
