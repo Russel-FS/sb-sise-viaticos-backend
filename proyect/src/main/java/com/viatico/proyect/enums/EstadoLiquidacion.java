@@ -1,4 +1,4 @@
-package com.viatico.proyect.entity;
+package com.viatico.proyect.enums;
 
 public enum EstadoLiquidacion {
     PENDIENTE, // El cálculo está hecho, esperando acción de pago/devolución

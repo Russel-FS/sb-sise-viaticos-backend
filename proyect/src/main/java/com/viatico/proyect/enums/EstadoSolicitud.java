@@ -1,4 +1,4 @@
-package com.viatico.proyect.entity;
+package com.viatico.proyect.enums;
 
 public enum EstadoSolicitud {
     BORRADOR,
