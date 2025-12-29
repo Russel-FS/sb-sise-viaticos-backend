@@ -30,6 +30,9 @@ CREATE OR REPLACE PACKAGE PKG_ROLES AS
         p_id_rol IN NUMBER
     );
 
+    -- Contar roles
+    FUNCTION FNC_CONTAR_ROLES RETURN NUMBER;
+
 END PKG_ROLES;
 /
 
@@ -40,7 +43,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_ROLES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT id_rol, nombre_rol, codigo
+            SELECT id_rol, nombre_rol, codigo_rol AS codigo
             FROM roles
             ORDER BY nombre_rol;
     END PRC_LISTAR_ROLES;
@@ -51,7 +54,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_ROLES AS
         v_cursor SYS_REFCURSOR;
     BEGIN
         OPEN v_cursor FOR
-            SELECT id_rol, nombre_rol, codigo
+            SELECT id_rol, nombre_rol, codigo_rol AS codigo
             FROM roles
             WHERE id_rol = p_id_rol;
         RETURN v_cursor;
@@ -63,9 +66,9 @@ CREATE OR REPLACE PACKAGE BODY PKG_ROLES AS
         v_cursor SYS_REFCURSOR;
     BEGIN
         OPEN v_cursor FOR
-            SELECT id_rol, nombre_rol, codigo
+            SELECT id_rol, nombre_rol, codigo_rol AS codigo
             FROM roles
-            WHERE UPPER(codigo) = UPPER(p_codigo);
+            WHERE UPPER(codigo_rol) = UPPER(p_codigo);
         RETURN v_cursor;
     END FNC_OBTENER_POR_CODIGO;
 
@@ -77,14 +80,14 @@ CREATE OR REPLACE PACKAGE BODY PKG_ROLES AS
     BEGIN
         IF p_id_rol IS NULL THEN
             INSERT INTO roles (
-                nombre_rol, codigo
+                nombre_rol, codigo_rol
             ) VALUES (
                 p_nombre, p_codigo
             ) RETURNING id_rol INTO p_id_rol;
         ELSE
             UPDATE roles SET
                 nombre_rol = p_nombre,
-                codigo = p_codigo
+                codigo_rol = p_codigo
             WHERE id_rol = p_id_rol;
         END IF;
         COMMIT;
@@ -97,6 +100,13 @@ CREATE OR REPLACE PACKAGE BODY PKG_ROLES AS
         DELETE FROM roles WHERE id_rol = p_id_rol;
         COMMIT;
     END PRC_ELIMINAR_ROL;
+
+    FUNCTION FNC_CONTAR_ROLES RETURN NUMBER AS
+        v_count NUMBER;
+    BEGIN
+        SELECT COUNT(*) INTO v_count FROM roles;
+        RETURN v_count;
+    END FNC_CONTAR_ROLES;
 
 END PKG_ROLES;
 /

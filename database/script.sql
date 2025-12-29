@@ -247,7 +247,8 @@ CREATE TABLE roles (
     user_crea VARCHAR2(30) DEFAULT USER,
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_mod VARCHAR2(30),
-    fecha_mod TIMESTAMP
+    fecha_mod TIMESTAMP,
+    activo NUMBER(1) DEFAULT 1 CHECK (activo IN (0, 1))
 );
 /
 -- USUARIOS
