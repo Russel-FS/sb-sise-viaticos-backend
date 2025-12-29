@@ -4,8 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Iniciar Sesión - ISS Viáticos</title>
+
+    <!-- Fuentes y Recursos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Configuración del Tema -->
     <script>
       (function () {
         const savedTheme = localStorage.getItem("theme");
@@ -18,242 +28,254 @@
       })();
     </script>
     <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
+
     <script>
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
             fontFamily: {
-              sans: [
-                "-apple-system",
-                "BlinkMacSystemFont",
-                "San Francisco",
-                "Segoe UI",
-                "Roboto",
-                "Helvetica Neue",
-                "sans-serif",
-              ],
+              serif: ['"Instrument Serif"', "serif"],
+              sans: ['"Inter"', "sans-serif"],
             },
             colors: {
-              apple: {
-                blue: "#0071e3",
-                bg: "#f5f5f7",
-                secondary: "#86868b",
-                gray: "#fbfbfd",
+              background: { light: "#F9F8F6", dark: "#0F1115" },
+              surface: { light: "#FFFFFF", dark: "#1C1E22" },
+              accent: {
+                sage: "#D8E2DC",
+                forest: "#2D3B2D",
+                clay: "#C4A484",
               },
-            },
-            boxShadow: {
-              glass: "0 8px 32px 0 rgba(31, 38, 135, 0.07)",
-            },
-            animation: {
-              "fade-in-up": "fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
-              "fade-in": "fadeIn 1s ease-out",
             },
             keyframes: {
-              fadeInUp: {
-                "0%": { opacity: "0", transform: "translateY(20px)" },
-                "100%": { opacity: "1", transform: "translateY(0)" },
+              "slide-up": {
+                "0%": { transform: "translateY(20px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
               },
-              fadeIn: {
-                "0%": { opacity: "0" },
-                "100%": { opacity: "1" },
-              },
+            },
+            animation: {
+              "slide-up": "slide-up 0.6s ease-out forwards",
             },
           },
         },
       };
     </script>
+
     <style>
       body {
-        background-color: #f5f5f7;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Helvetica, Arial, sans-serif;
-        /* Apple-esque subtle abstract background gradient for light mode */
-        background-image: radial-gradient(
-            at 0% 0%,
-            rgba(255, 255, 255, 0.8) 0px,
-            transparent 50%
-          ),
-          radial-gradient(
-            at 100% 0%,
-            rgba(245, 245, 247, 1) 0px,
-            transparent 50%
-          );
+        background-color: #f9f8f6;
+        color: #1f2937;
+        font-family: "Inter", sans-serif;
+        overflow: hidden;
       }
-
       .dark body {
-        background-color: #000000;
-        /* Apple-esque subtle glow for dark mode */
-        background-image: radial-gradient(
-          circle at 50% 0%,
-          #1a1a1a 0%,
-          #000000 70%
-        );
+        background-color: #0f1115;
+        color: #f3f4f6;
       }
 
-      /* Premium Glass Effect */
-      .glass-card {
-        background: rgba(255, 255, 255, 0.65);
-        backdrop-filter: blur(25px) saturate(180%);
-        -webkit-backdrop-filter: blur(25px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      .bg-split {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+      }
+      .bg-left {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #f9f8f6;
+        transition: all 0.5s ease;
+      }
+      .dark .bg-left {
+        background: #0f1115;
       }
 
-      .dark .glass-card {
-        background: rgba(28, 28, 30, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      @media (min-width: 1024px) {
+        .bg-left {
+          width: 50%;
+        }
+        .bg-right {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 50%;
+          height: 100%;
+          background-image: url("https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop");
+          background-size: cover;
+          background-position: center;
+        }
+        .dark .bg-right {
+          background-image: url("https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=2301&auto=format&fit=crop");
+        }
+        /* Gradient Overlay for Image */
+        .bg-right::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to right, #f9f8f6 0%, transparent 20%);
+        }
+        .dark .bg-right::after {
+          background: linear-gradient(to right, #0f1115 0%, transparent 50%);
+        }
       }
 
-      .input-apple {
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      .input-underlined {
+        width: 100%;
+        background: transparent;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 0;
+        font-size: 16px;
+        color: #1f2937;
+        transition: border-color 0.3s ease;
+        border-radius: 0;
+        outline: none;
       }
-      .input-icon-wrapper:focus-within .input-icon {
-        color: #0071e3;
+      .dark .input-underlined {
+        border-color: #374151;
+        color: white;
+      }
+
+      .input-underlined:focus {
+        border-color: #1f2937;
+      }
+      .dark .input-underlined:focus {
+        border-color: white;
+      }
+
+      .brand-title {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
       }
     </style>
   </head>
   <body
-    class="antialiased w-full h-screen flex flex-col items-center justify-center overflow-hidden relative selection:bg-apple-blue/20 selection:text-apple-blue"
+    class="antialiased h-screen w-full flex items-center justify-center lg:justify-start relative"
   >
-    <div
-      class="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-blue-400/10 rounded-full blur-[120px] pointer-events-none mix-blend-multiply dark:mix-blend-screen dark:bg-blue-900/10"
-    ></div>
-    <div
-      class="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-purple-400/10 rounded-full blur-[100px] pointer-events-none mix-blend-multiply dark:mix-blend-screen dark:bg-purple-900/10"
-    ></div>
+    <div class="bg-split">
+      <div class="bg-left"></div>
+      <div
+        class="bg-right hidden lg:block animate-in fade-in duration-1000"
+      ></div>
+    </div>
 
-    <div class="absolute top-8 right-8 z-50 animate-fade-in">
+    <div class="fixed top-8 left-8 z-50">
       <button
         onclick="toggleTheme()"
-        class="group flex items-center justify-center w-10 h-10 rounded-full bg-white/50 dark:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/5 shadow-sm hover:scale-110 transition-all duration-300"
+        class="w-10 h-10 rounded-full flex items-center justify-center bg-transparent border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-all group"
       >
         <i
           data-lucide="sun"
-          class="w-5 h-5 text-gray-800 dark:text-yellow-300 transition-transform duration-500 rotate-0 dark:-rotate-90 hidden dark:block"
+          class="w-4 h-4 text-gray-500 hidden dark:block group-hover:text-white transition-colors"
         ></i>
         <i
           data-lucide="moon"
-          class="w-5 h-5 text-gray-600 dark:text-gray-300 transition-transform duration-500 rotate-0 dark:rotate-90 block dark:hidden"
+          class="w-4 h-4 text-gray-500 block dark:hidden group-hover:text-black transition-colors"
         ></i>
       </button>
     </div>
 
-    <!-- Main Container -->
-    <main class="w-full max-w-md px-6 z-10">
-      <!-- Logo / Header Area -->
-      <div class="text-center mb-8 animate-fade-in-up">
-        <div
-          class="inline-flex items-center justify-center w-16 h-16 rounded-[22px] bg-white dark:bg-[#1c1c1e] shadow-xl mb-6"
-        >
-          <!-- Placeholder Logo Icon -->
-          <i
-            class="w-8 h-8 text-black dark:text-white"
-            data-lucide="command"
-          ></i>
+    <main
+      class="relative z-10 w-full max-w-lg lg:ml-[8%] px-8 flex flex-col justify-center h-full"
+    >
+      <div class="w-full animate-slide-up" style="animation-delay: 0.1s">
+        <div class="mb-16">
+          <div
+            class="w-12 h-12 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center mb-8 shadow-xl"
+          >
+            <i data-lucide="layers" class="w-6 h-6"></i>
+          </div>
+          <h1
+            class="text-6xl font-serif italic text-gray-900 dark:text-white mb-4 tracking-tight leading-none brand-title"
+          >
+            Bienvenido
+          </h1>
+          <p
+            class="text-lg text-gray-500 dark:text-gray-400 font-light max-w-xs"
+          >
+            Ingresa tus credenciales para acceder al sistema de gestión de
+            viáticos.
+          </p>
         </div>
-        <h1
-          class="text-3xl font-semibold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7]"
-        >
-          Iniciar sesión
-        </h1>
-        <p class="text-[15px] text-[#86868b] mt-3 font-normal leading-relaxed">
-          Bienvenido a Ingeniería y Servicios del Sur S.A.C.
-        </p>
-      </div>
 
-      <!-- Login Card -->
-      <div
-        class="glass-card rounded-[32px] p-10 animate-fade-in-up [animation-delay:150ms]"
-      >
-        <form th:action="@{/login}" method="post" class="space-y-6">
-          <!-- nombre de usuario Input -->
-          <div class="space-y-1.5">
-            <label
-              class="block text-xs font-medium text-[#86868b] uppercase tracking-wider ml-1"
-              >Usuario</label
-            >
-            <div class="relative group input-icon-wrapper">
-              <div
-                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10"
+        <form th:action="@{/login}" method="post" class="space-y-10">
+          <div class="space-y-6">
+            <div class="group">
+              <label
+                class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 group-focus-within:text-gray-900 dark:group-focus-within:text-white transition-colors"
+                >Usuario</label
               >
-                <i
-                  data-lucide="user"
-                  class="input-icon w-5 h-5 text-[#86868b] dark:text-[#98989d] group-hover:text-[#1d1d1f] dark:group-hover:text-[#f5f5f7] transition-colors duration-300"
-                ></i>
-              </div>
               <input
                 type="text"
                 name="username"
                 required
-                class="input-apple w-full pl-12 pr-4 py-4 bg-white/60 dark:bg-black/20 backdrop-blur-sm border border-transparent focus:border-apple-blue/50 dark:focus:border-apple-blue/50 rounded-2xl text-[17px] text-[#1d1d1f] dark:text-[#f5f5f7] placeholder-[#86868b]/70 focus:outline-none focus:ring-4 focus:ring-apple-blue/10 focus:bg-white dark:focus:bg-[#1c1c1e]"
-                placeholder="ing.servicios@example.com"
+                placeholder="nombre.apellido"
+                class="input-underlined placeholder-gray-300 dark:placeholder-gray-600"
               />
             </div>
-          </div>
 
-          <!-- contraseña Input -->
-          <div class="space-y-1.5">
-            <label
-              class="block text-xs font-medium text-[#86868b] uppercase tracking-wider ml-1"
-              >Contraseña</label
-            >
-            <div class="relative group input-icon-wrapper">
-              <div
-                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-20"
+            <div class="group">
+              <label
+                class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 group-focus-within:text-gray-900 dark:group-focus-within:text-white transition-colors"
+                >Contraseña</label
               >
-                <i
-                  data-lucide="lock"
-                  class="input-icon w-5 h-5 text-[#86868b] dark:text-[#98989d] group-hover:text-[#1d1d1f] dark:group-hover:text-[#f5f5f7] transition-colors duration-300"
-                ></i>
-              </div>
               <input
                 type="password"
                 name="password"
                 required
-                class="input-apple w-full pl-12 pr-4 py-4 bg-white/60 dark:bg-black/20 backdrop-blur-sm border border-transparent focus:border-apple-blue/50 dark:focus:border-apple-blue/50 rounded-2xl text-[17px] text-[#1d1d1f] dark:text-[#f5f5f7] placeholder-[#86868b]/70 focus:outline-none focus:ring-4 focus:ring-apple-blue/10 focus:bg-white dark:focus:bg-[#1c1c1e]"
                 placeholder="••••••••"
+                class="input-underlined placeholder-gray-300 dark:placeholder-gray-600"
               />
             </div>
           </div>
 
-          <!-- Error Alert -->
           <div
             th:if="${param.error}"
-            class="flex items-center gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm font-medium animate-fade-in"
+            class="flex items-center gap-3 text-red-600 dark:text-red-400 text-sm animate-in fade-in slide-in-from-left-2 duration-300"
           >
-            <i data-lucide="alert-circle" class="w-5 h-5 px-0.5"></i>
-            <span>Credenciales incorrectas. Inténtalo de nuevo.</span>
+            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+            <span class="font-medium">Credenciales incorrectas</span>
           </div>
 
-          <!-- Boton de Ingreso -->
-          <button
-            type="submit"
-            class="w-full py-4 bg-[#0071e3] hover:bg-[#0077ed] text-white font-medium text-[17px] rounded-2xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 transform hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2"
-          >
-            <span>Ingresar</span>
-            <i data-lucide="arrow-right" class="w-5 h-5"></i>
-          </button>
+          <div class="pt-4 flex items-center justify-between">
+            <a
+              href="#"
+              class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >¿Olvidaste tu contraseña?</a
+            >
+
+            <button
+              type="submit"
+              class="w-16 h-16 rounded-full bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 hover:shadow-black/20 group"
+            >
+              <i
+                data-lucide="arrow-right"
+                class="w-6 h-6 group-hover:translate-x-0.5 transition-transform"
+              ></i>
+            </button>
+          </div>
         </form>
       </div>
 
-      <!-- Footer Link -->
-      <div class="mt-8 text-center animate-fade-in-up [animation-delay:300ms]">
-        <a
-          href="#"
-          class="text-sm text-[#86868b] hover:text-[#0071e3] transition-colors duration-200"
-        >
-          ¿Olvidaste tu contraseña?
-        </a>
-        <p class="mt-8 text-xs text-[#86868b]/60">
-          © 2025 Ingeniería y Servicios del Sur S.A.C.
-        </p>
+      <div
+        class="absolute bottom-10 left-8 lg:left-0 lg:relative lg:mt-auto lg:bottom-0 text-xs text-gray-400 uppercase tracking-widest opacity-40 animate-in fade-in duration-1000 delay-500"
+      >
+        ISS Viáticos &copy; 2025
       </div>
     </main>
 
     <script th:inline="javascript">
       lucide.createIcons();
+      function toggleTheme() {
+        if (document.documentElement.classList.contains("dark")) {
+          document.documentElement.classList.remove("dark");
+          localStorage.setItem("theme", "light");
+        } else {
+          document.documentElement.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+        }
+      }
     </script>
     <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
   </body>
