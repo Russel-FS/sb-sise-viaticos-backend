@@ -3,19 +3,19 @@ package com.viatico.proyect.config;
 import com.viatico.proyect.entity.Empleado;
 import com.viatico.proyect.entity.NivelJerarquico;
 import com.viatico.proyect.entity.Rol;
-import com.viatico.proyect.entity.Usuario;
+
 import com.viatico.proyect.entity.ZonaGeografica;
 import com.viatico.proyect.enums.RolNombre;
-import com.viatico.proyect.repository.interfaces.EmpleadoRepository;
 import com.viatico.proyect.repository.interfaces.NivelJerarquicoRepository;
 import com.viatico.proyect.repository.interfaces.RolRepository;
+
 import com.viatico.proyect.repository.interfaces.UsuarioRepository;
 import com.viatico.proyect.repository.interfaces.ZonaGeograficaRepository;
+import com.viatico.proyect.service.interfaces.EmpleadoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -27,9 +27,8 @@ public class DataInitializer implements CommandLineRunner {
     private final ZonaGeograficaRepository zonaRepository;
     private final RolRepository rolRepository;
     private final NivelJerarquicoRepository nivelRepository;
-    private final EmpleadoRepository empleadoRepository;
     private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final EmpleadoService empleadoService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -77,33 +76,22 @@ public class DataInitializer implements CommandLineRunner {
                     return nivelRepository.save(n);
                 });
 
-        Empleado empleadoAdmin = empleadoRepository.findByDni("00000000")
-                .orElseGet(() -> {
-                    Empleado e = new Empleado();
-                    e.setNombres("Administrador");
-                    e.setApellidos("Del Sistema");
-                    e.setDni("00000000");
-                    e.setEmail("admin@iss.com.pe");
-                    e.setNivel(nivelAdmin);
-                    e.setFechaCrea(LocalDateTime.now());
-                    e.setUserCrea("SYSTEM");
-                    return empleadoRepository.save(e);
-                });
+        boolean existeAdmin = usuarioRepository.obtenerPorEmail("admin@iss.com.pe").isPresent();
 
-        if (usuarioRepository.findByUsername("admin").isEmpty()) {
+        if (!existeAdmin) {
+            Empleado e = new Empleado();
+            e.setNombres("Administrador");
+            e.setApellidos("Del Sistema");
+            e.setDni("00000000");
+            e.setEmail("admin@iss.com.pe");
+            e.setNivel(nivelAdmin);
+
             Rol rolAdmin = rolRepository.findByCodigo(RolNombre.ADMIN.getCodigo()).get();
+            empleadoService.guardar(e, "admin123", rolAdmin.getId(), "SYSTEM");
 
-            Usuario userAdmin = new Usuario();
-            userAdmin.setEmpleado(empleadoAdmin);
-            userAdmin.setUsername("admin");
-            userAdmin.setPassword(passwordEncoder.encode("admin123"));
-            userAdmin.setRol(rolAdmin);
-            userAdmin.setActivo(1);
-            userAdmin.setFechaCrea(LocalDateTime.now());
-            userAdmin.setUserCrea("SYSTEM");
-
-            usuarioRepository.save(userAdmin);
-            log.info("Usuario administrador por defecto creado: admin / admin123");
+            log.info("Empleado y usuario administrador creado: admin@iss.com.pe / admin123");
+        } else {
+            log.info("Empleado admin ya existe");
         }
 
         log.info("Inicialización de datos completada.");

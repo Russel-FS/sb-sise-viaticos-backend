@@ -1,9 +1,9 @@
 package com.viatico.proyect.service.impl;
 
-import com.viatico.proyect.entity.EstadoLiquidacion;
 import com.viatico.proyect.entity.LiquidacionFinal;
 import com.viatico.proyect.entity.RendicionCuentas;
 import com.viatico.proyect.entity.SolicitudComision;
+import com.viatico.proyect.enums.EstadoLiquidacion;
 import com.viatico.proyect.repository.interfaces.LiquidacionFinalRepository;
 import com.viatico.proyect.repository.interfaces.RendicionCuentasRepository;
 import com.viatico.proyect.repository.interfaces.SolicitudComisionRepository;

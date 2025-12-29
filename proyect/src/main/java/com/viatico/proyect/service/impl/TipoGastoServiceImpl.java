@@ -30,11 +30,6 @@ public class TipoGastoServiceImpl implements TipoGastoService {
             tipoGasto.setFechaCrea(LocalDateTime.now());
         }
 
-        if (tipoGasto.getRequiereFactura() == null)
-            tipoGasto.setRequiereFactura(0);
-        if (tipoGasto.getEsAsignablePorDia() == null)
-            tipoGasto.setEsAsignablePorDia(0);
-
         return tipoGastoRepository.save(tipoGasto);
     }
 

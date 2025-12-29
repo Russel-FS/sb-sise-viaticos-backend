@@ -1,6 +1,7 @@
 package com.viatico.proyect.service.impl;
 
 import com.viatico.proyect.entity.*;
+import com.viatico.proyect.enums.EstadoSolicitud;
 import com.viatico.proyect.repository.interfaces.DetalleComprobanteRepository;
 import com.viatico.proyect.repository.interfaces.RendicionCuentasRepository;
 import com.viatico.proyect.repository.interfaces.SolicitudComisionRepository;
@@ -59,13 +60,14 @@ public class RendicionServiceImpl implements RendicionService {
                 DetalleComprobante det = new DetalleComprobante();
                 det.setRendicion(ren);
                 det.setTipoGasto(tipo);
-                det.setRucProveedor(ruc);
-                det.setRazonSocialProveedor(razonSocial);
-                det.setSerieNumeroComprobante(serie);
-                det.setFechaEmision(LocalDate.parse(fecha));
+                det.setRucEmisor(ruc);
+                det.setRazonSocialEmisor(razonSocial);
+                det.setSerieComprobante(serie);
+                det.setNumeroComprobante(serie);
+                det.setFechaEmision(LocalDate.parse(fecha).atStartOfDay());
                 det.setMontoTotal(monto);
-                det.setFotoEvidenciaUrl(fotoUrl);
-                det.setEstadoValidacion(EstadoComprobante.PENDIENTE);
+                det.setImagenComprobanteUrl(fotoUrl);
+                det.setValidado(false);
                 det.setFechaCrea(LocalDateTime.now());
                 det.setUserCrea(username);
 
@@ -86,8 +88,8 @@ public class RendicionServiceImpl implements RendicionService {
                 RendicionCuentas ren = det.getRendicion();
                 ren.setTotalGastadoBruto(ren.getTotalGastadoBruto().subtract(det.getMontoTotal()));
 
-                if (det.getFotoEvidenciaUrl() != null) {
-                        storageService.deleteFile(det.getFotoEvidenciaUrl());
+                if (det.getImagenComprobanteUrl() != null) {
+                        storageService.deleteFile(det.getImagenComprobanteUrl());
                 }
 
                 detalleRepository.delete(det);
@@ -119,7 +121,7 @@ public class RendicionServiceImpl implements RendicionService {
                 DetalleComprobante det = detalleRepository.findById(detalleId)
                                 .orElseThrow(() -> new RuntimeException("Comprobante no encontrado"));
 
-                det.setEstadoValidacion(EstadoComprobante.valueOf(estado));
+                det.setValidado("ACEPTADO".equalsIgnoreCase(estado));
                 det.setMotivoRechazo(motivo);
 
                 detalleRepository.save(det);
@@ -132,7 +134,7 @@ public class RendicionServiceImpl implements RendicionService {
                                 .orElseThrow(() -> new RuntimeException("Rendición no encontrada"));
 
                 BigDecimal totalAceptado = ren.getDetalles().stream()
-                                .filter(d -> d.getEstadoValidacion() == EstadoComprobante.ACEPTADO)
+                                .filter(DetalleComprobante::isValidado)
                                 .map(DetalleComprobante::getMontoTotal)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 

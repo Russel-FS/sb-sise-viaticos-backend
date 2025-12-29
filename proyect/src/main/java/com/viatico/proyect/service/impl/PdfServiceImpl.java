@@ -115,11 +115,13 @@ public class PdfServiceImpl implements PdfService {
                 }
 
                 for (DetalleComprobante det : ren.getDetalles()) {
-                    if (det.getEstadoValidacion() == EstadoComprobante.ACEPTADO) {
+                    if (det.isValidado()) {
                         detallesTable.addCell(new PdfPCell(new Phrase(det.getTipoGasto().getNombre(), normalFont)));
-                        detallesTable.addCell(new PdfPCell(new Phrase(det.getRazonSocialProveedor(), normalFont)));
-                        detallesTable.addCell(new PdfPCell(new Phrase(det.getSerieNumeroComprobante(), normalFont)));
-                        detallesTable.addCell(new PdfPCell(new Phrase(det.getFechaEmision().toString(), normalFont)));
+                        detallesTable.addCell(new PdfPCell(new Phrase(det.getRazonSocialEmisor(), normalFont)));
+                        detallesTable.addCell(new PdfPCell(
+                                new Phrase(det.getSerieComprobante() + "-" + det.getNumeroComprobante(), normalFont)));
+                        detallesTable.addCell(
+                                new PdfPCell(new Phrase(det.getFechaEmision().toLocalDate().toString(), normalFont)));
 
                         PdfPCell priceCell = new PdfPCell(new Phrase("S/ " + det.getMontoTotal(), boldFont));
                         priceCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
