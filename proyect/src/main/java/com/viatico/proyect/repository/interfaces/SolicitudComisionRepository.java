@@ -32,4 +32,7 @@ public interface SolicitudComisionRepository {
     long countByEstado(EstadoSolicitud estado);
 
     long countByEmpleadoIdAndEstado(Long empleadoId, EstadoSolicitud estado);
+
+    Long registrarSolicitudFull(Long empleadoId, String motivo, java.time.LocalDate fechaInicio,
+            List<Long> idZonas, List<String> ciudades, List<Integer> noches, String userCrea);
 }
