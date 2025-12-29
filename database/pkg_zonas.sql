@@ -1,3 +1,4 @@
+-- Active: 1766458157960@@127.0.0.1@1521@XE@C
 -- PAQUETE: PKG_ZONAS
 -- DESCRIPCIÓN: Gestión de zonas geográficas
 
