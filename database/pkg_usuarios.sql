@@ -14,6 +14,11 @@ CREATE OR REPLACE PACKAGE PKG_USUARIOS AS
         p_username IN VARCHAR2
     ) RETURN SYS_REFCURSOR;
 
+    -- Buscar usuario por email
+    FUNCTION FNC_OBTENER_POR_EMAIL (
+        p_email IN VARCHAR2
+    ) RETURN SYS_REFCURSOR;
+
     -- Crear nuevo usuario asociado a un empleado
     PROCEDURE PRC_CREAR_USUARIO (
         p_id_empleado IN NUMBER,
@@ -49,14 +54,19 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
             SELECT 
                 u.id_usuario,
                 u.id_empleado,
+                e.nombres AS nombres_empleado,
+                e.apellidos AS apellidos_empleado,
                 u.username,
                 u.email,
                 u.password,
                 u.id_rol,
+                r.codigo_rol AS codigo_rol,
                 u.activo,
                 u.user_crea,
                 u.fecha_crea
             FROM usuarios u
+            INNER JOIN empleados e ON u.id_empleado = e.id_empleado
+            INNER JOIN roles r ON u.id_rol = r.id_rol
             ORDER BY u.username;
     END PRC_LISTAR_USUARIOS;
 
@@ -70,18 +80,51 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
             SELECT 
                 u.id_usuario,
                 u.id_empleado,
+                e.nombres AS nombres_empleado,
+                e.apellidos AS apellidos_empleado,
                 u.username,
                 u.email,
                 u.password,
                 u.id_rol,
+                r.codigo_rol AS codigo_rol,
                 u.activo,
                 u.user_crea,
                 u.fecha_crea
             FROM usuarios u
+            INNER JOIN empleados e ON u.id_empleado = e.id_empleado
+            INNER JOIN roles r ON u.id_rol = r.id_rol
             WHERE u.username = p_username;
         
         RETURN v_cursor;
     END FNC_OBTENER_POR_USERNAME;
+
+    -- Buscar usuario por email
+    FUNCTION FNC_OBTENER_POR_EMAIL (
+        p_email IN VARCHAR2
+    ) RETURN SYS_REFCURSOR AS
+        v_cursor SYS_REFCURSOR;
+    BEGIN
+        OPEN v_cursor FOR
+            SELECT 
+                u.id_usuario,
+                u.id_empleado,
+                e.nombres AS nombres_empleado,
+                e.apellidos AS apellidos_empleado,
+                u.username,
+                u.email,
+                u.password,
+                u.id_rol,
+                r.codigo_rol AS codigo_rol,
+                u.activo,
+                u.user_crea,
+                u.fecha_crea
+            FROM usuarios u
+            INNER JOIN empleados e ON u.id_empleado = e.id_empleado
+            INNER JOIN roles r ON u.id_rol = r.id_rol
+            WHERE u.email = p_email;
+        
+        RETURN v_cursor;
+    END FNC_OBTENER_POR_EMAIL;
 
     -- Crear nuevo usuario asociado a un empleado
     PROCEDURE PRC_CREAR_USUARIO (
