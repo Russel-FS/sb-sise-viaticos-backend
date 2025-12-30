@@ -50,7 +50,7 @@ public class RendicionController {
             @RequestParam String razonSocial,
             @RequestParam String serie,
             @RequestParam String fecha,
-            @RequestParam BigDecimal monto,
+            @RequestParam BigDecimal montoTotal,
             @RequestParam(value = "archivo", required = false) MultipartFile archivo,
             @AuthenticationPrincipal UsuarioPrincipal user) {
 
@@ -59,8 +59,8 @@ public class RendicionController {
             fotoUrl = storageService.store(archivo);
         }
 
-        rendicionService.agregarComprobante(rendicionId, tipoGastoId, ruc, razonSocial, serie, fecha, monto,
-                fotoUrl, user.getUsername());
+        rendicionService.agregarComprobante(rendicionId, tipoGastoId, ruc, razonSocial, serie, fecha,
+                montoTotal, fotoUrl, user.getUsername());
 
         return "redirect:/rendiciones/solicitud/" + solicitudId + "?success";
     }

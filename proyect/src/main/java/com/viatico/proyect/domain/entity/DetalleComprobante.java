@@ -21,7 +21,7 @@ public class DetalleComprobante {
     private String rucEmisor;
     private String razonSocialEmisor;
     private BigDecimal montoBruto = BigDecimal.ZERO;
-    private BigDecimal montoIgp = BigDecimal.ZERO;
+    private BigDecimal montoIgv = BigDecimal.ZERO;
     private BigDecimal montoTotal = BigDecimal.ZERO;
     private String archivoComprobanteUrl;
     private boolean validado = false;

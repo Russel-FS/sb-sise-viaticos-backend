@@ -8,7 +8,8 @@ public interface RendicionService {
     RendicionCuentas obtenerOCrearPorSolicitud(Long solicitudId, String username);
 
     void agregarComprobante(Long rendicionId, Long tipoGastoId, String ruc, String razonSocial,
-            String serie, String fecha, BigDecimal monto, String fotoUrl, String username);
+            String serie, String fecha, BigDecimal montoTotal,
+            String fotoUrl, String username);
 
     void eliminarComprobante(Long detalleId);
 

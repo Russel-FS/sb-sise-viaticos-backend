@@ -499,25 +499,11 @@
                 </div>
               </div>
 
-              <div class="space-y-1.5">
-                <label
-                  class="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1"
-                  >Establecimiento</label
-                >
-                <input
-                  type="text"
-                  name="razonSocial"
-                  required
-                  placeholder="Nombre comercial"
-                  class="input-premium text-gray-900 dark:text-white"
-                />
-              </div>
-
               <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                   <label
                     class="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1"
-                    >Fecha</label
+                    >Fecha Emisión</label
                   >
                   <input
                     type="date"
@@ -526,24 +512,92 @@
                     class="input-premium text-gray-900 dark:text-white"
                   />
                 </div>
-                <div class="space-y-1.5">
-                  <label
-                    class="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1"
-                    >Monto Total</label
-                  >
-                  <div class="relative">
-                    <span
-                      class="absolute left-4 top-3.5 text-gray-400 font-bold text-sm"
-                      >S/</span
+                <div class="hidden md:block"></div>
+              </div>
+
+              <div class="space-y-1.5">
+                <label
+                  class="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1"
+                  >Establecimiento / Razón Social</label
+                >
+                <input
+                  type="text"
+                  name="razonSocial"
+                  required
+                  placeholder="Nombre comercial del emisor"
+                  class="input-premium text-gray-900 dark:text-white"
+                />
+              </div>
+
+              <div class="pt-4 border-t border-gray-100 dark:border-white/5">
+                <p
+                  class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4 pl-1"
+                >
+                  Detalle de Importes
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                  <!-- Campo principal de entrada -->
+                  <div class="md:col-span-2 space-y-1.5">
+                    <label
+                      class="text-[10px] font-bold text-accent-forest uppercase tracking-widest pl-1"
+                      >Monto Total del Comprobante</label
                     >
-                    <input
-                      type="number"
-                      step="0.01"
-                      name="monto"
-                      required
-                      placeholder="0.00"
-                      class="input-premium pl-10 font-bold text-gray-900 dark:text-white"
-                    />
+                    <div class="relative group">
+                      <span
+                        class="absolute left-3 top-3.5 text-gray-400 font-bold text-[10px] group-focus-within:text-black dark:group-focus-within:text-white transition-colors"
+                        >S/</span
+                      >
+                      <input
+                        type="number"
+                        step="0.01"
+                        name="montoTotal"
+                        id="montoTotal"
+                        required
+                        placeholder="0.00"
+                        class="input-premium pl-8 text-lg font-bold text-gray-900 dark:text-white border-accent-forest/30 focus:border-accent-forest"
+                        oninput="calcularDesdeTotal()"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Previsualización informativa (No se envían al server) -->
+                  <div class="space-y-1.5 opacity-70">
+                    <label
+                      class="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1"
+                      >Bruto (Referencial)</label
+                    >
+                    <div class="relative">
+                      <span
+                        class="absolute left-3 top-3.5 text-gray-400 font-bold text-[10px]"
+                        >S/</span
+                      >
+                      <input
+                        type="number"
+                        id="montoBruto"
+                        readonly
+                        placeholder="0.00"
+                        class="input-premium pl-8 font-medium text-gray-500 bg-gray-50/30 dark:bg-white/5 cursor-not-allowed border-none"
+                      />
+                    </div>
+                  </div>
+                  <div class="space-y-1.5 opacity-70">
+                    <label
+                      class="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1"
+                      >IGV 18% (Referencial)</label
+                    >
+                    <div class="relative">
+                      <span
+                        class="absolute left-3 top-3.5 text-gray-400 font-bold text-[10px]"
+                        >S/</span
+                      >
+                      <input
+                        type="number"
+                        id="montoIgv"
+                        readonly
+                        placeholder="0.00"
+                        class="input-premium pl-8 font-medium text-gray-500 bg-gray-50/30 dark:bg-white/5 cursor-not-allowed border-none"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -657,7 +711,17 @@
                     <th
                       class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right"
                     >
-                      Monto
+                      Bruto
+                    </th>
+                    <th
+                      class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right"
+                    >
+                      IGV
+                    </th>
+                    <th
+                      class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right"
+                    >
+                      Total
                     </th>
                     <th
                       class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center"
@@ -722,6 +786,14 @@
                         001-123
                       </p>
                     </td>
+                    <td
+                      class="px-6 py-5 text-right font-mono text-[11px] text-gray-500"
+                      th:text="${'S/ ' + #numbers.formatDecimal(det.montoBruto, 1, 2)}"
+                    ></td>
+                    <td
+                      class="px-6 py-5 text-right font-mono text-[11px] text-gray-400"
+                      th:text="${'S/ ' + #numbers.formatDecimal(det.montoIgv, 1, 2)}"
+                    ></td>
                     <td class="px-6 py-5 text-right">
                       <span
                         class="font-bold text-gray-900 dark:text-white tabular-nums"
@@ -954,6 +1026,17 @@
           cerrarMotivoRechazo();
         }
       });
+
+      function calcularDesdeTotal() {
+        const total =
+          parseFloat(document.getElementById("montoTotal").value) || 0;
+        const bruto = total / 1.18;
+        const igv = total - bruto;
+
+        // vistas previas
+        document.getElementById("montoBruto").value = bruto.toFixed(2);
+        document.getElementById("montoIgv").value = igv.toFixed(2);
+      }
     </script>
     <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
   </body>

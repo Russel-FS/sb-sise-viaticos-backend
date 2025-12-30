@@ -26,7 +26,7 @@ public class DetalleComprobanteRepositoryImpl implements DetalleComprobanteRepos
     @Override
     public DetalleComprobante save(DetalleComprobante d) {
         return jdbcTemplate.execute((Connection con) -> {
-            String sql = "{call PKG_COMPROBANTES.PRC_GUARDAR_COMPROBANTE(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+            String sql = "{call PKG_COMPROBANTES.PRC_GUARDAR_COMPROBANTE(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
             try (CallableStatement stmt = con.prepareCall(sql)) {
                 if (d.getId() == null) {
                     stmt.setNull(1, Types.NUMERIC);
@@ -42,13 +42,11 @@ public class DetalleComprobanteRepositoryImpl implements DetalleComprobanteRepos
                 stmt.setString(7, d.getNumeroComprobante());
                 stmt.setString(8, d.getRucEmisor());
                 stmt.setString(9, d.getRazonSocialEmisor());
-                stmt.setBigDecimal(10, d.getMontoBruto());
-                stmt.setBigDecimal(11, d.getMontoIgp());
-                stmt.setBigDecimal(12, d.getMontoTotal());
-                stmt.setString(13, d.getArchivoComprobanteUrl());
-                stmt.setInt(14, d.isValidado() ? 1 : 0);
-                stmt.setString(15, d.getMotivoRechazo());
-                stmt.setString(16, d.getUserCrea());
+                stmt.setBigDecimal(10, d.getMontoTotal());
+                stmt.setString(11, d.getArchivoComprobanteUrl());
+                stmt.setInt(12, d.isValidado() ? 1 : 0);
+                stmt.setString(13, d.getMotivoRechazo());
+                stmt.setString(14, d.getUserCrea());
 
                 stmt.execute();
 
@@ -163,7 +161,7 @@ public class DetalleComprobanteRepositoryImpl implements DetalleComprobanteRepos
         d.setRucEmisor(rs.getString("ruc_emisor"));
         d.setRazonSocialEmisor(rs.getString("razon_social_emisor"));
         d.setMontoBruto(rs.getBigDecimal("monto_bruto"));
-        d.setMontoIgp(rs.getBigDecimal("monto_igv"));
+        d.setMontoIgv(rs.getBigDecimal("monto_igv"));
         d.setMontoTotal(rs.getBigDecimal("monto_total"));
         d.setArchivoComprobanteUrl(rs.getString("archivo_url"));
         d.setValidado(rs.getInt("validado") == 1);

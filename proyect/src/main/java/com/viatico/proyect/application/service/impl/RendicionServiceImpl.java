@@ -52,7 +52,8 @@ public class RendicionServiceImpl implements RendicionService {
         @Override
         @Transactional
         public void agregarComprobante(Long rendicionId, Long tipoGastoId, String ruc, String razonSocial,
-                        String serie, String fecha, BigDecimal monto, String fotoUrl, String username) {
+                        String serie, String fecha, BigDecimal montoTotal,
+                        String fotoUrl, String username) {
 
                 RendicionCuentas ren = rendicionRepository.findById(rendicionId)
                                 .orElseThrow(() -> new RuntimeException("Rendicion no encontrada"));
@@ -68,7 +69,7 @@ public class RendicionServiceImpl implements RendicionService {
                 det.setSerieComprobante(serie);
                 det.setNumeroComprobante(serie);
                 det.setFechaEmision(LocalDate.parse(fecha).atStartOfDay());
-                det.setMontoTotal(monto);
+                det.setMontoTotal(montoTotal);
                 det.setArchivoComprobanteUrl(fotoUrl);
                 det.setValidado(false);
                 det.setFechaCrea(LocalDateTime.now());
@@ -77,7 +78,7 @@ public class RendicionServiceImpl implements RendicionService {
                 detalleRepository.save(det);
 
                 // Actualizar total de la rendición
-                BigDecimal nuevoTotal = ren.getTotalGastadoBruto().add(monto);
+                BigDecimal nuevoTotal = ren.getTotalGastadoBruto().add(montoTotal);
                 ren.setTotalGastadoBruto(nuevoTotal);
                 rendicionRepository.save(ren);
         }
