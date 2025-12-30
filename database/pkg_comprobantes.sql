@@ -55,7 +55,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT * FROM detalles_comprobantes
+            SELECT * FROM detalle_comprobantes
             ORDER BY fecha_crea DESC;
     END PRC_LISTAR_TODOS;
 
@@ -65,7 +65,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT * FROM detalles_comprobantes 
+            SELECT * FROM detalle_comprobantes 
             WHERE id_rendicion = p_id_rendicion
             ORDER BY fecha_emision DESC;
     END PRC_LISTAR_POR_RENDICION;
@@ -76,7 +76,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT * FROM detalles_comprobantes 
+            SELECT * FROM detalle_comprobantes 
             WHERE id_detalle = p_id_detalle;
     END PRC_OBTENER_COMPROBANTE;
 
@@ -100,7 +100,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
     ) AS
     BEGIN
         IF p_id_detalle IS NULL THEN
-            INSERT INTO detalles_comprobantes (
+            INSERT INTO detalle_comprobantes (
                 id_rendicion, id_tipo_gasto, fecha_emision, tipo_comprobante,
                 serie_comprobante, numero_comprobante, ruc_emisor, razon_social_emisor,
                 monto_bruto, monto_igv, monto_total, imagen_url, validado,
@@ -112,7 +112,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
                 p_motivo_rechazo, p_user_crea, SYSTIMESTAMP
             ) RETURNING id_detalle INTO p_id_detalle;
         ELSE
-            UPDATE detalles_comprobantes SET
+            UPDATE detalle_comprobantes SET
                 id_tipo_gasto = p_id_tipo_gasto,
                 fecha_emision = p_fecha_emision,
                 tipo_comprobante = p_tipo_comprobante,
@@ -130,13 +130,15 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
                 fecha_mod = SYSTIMESTAMP
             WHERE id_detalle = p_id_detalle;
         END IF;
+        COMMIT;
     END PRC_GUARDAR_COMPROBANTE;
 
     PROCEDURE PRC_ELIMINAR_COMPROBANTE (
         p_id_detalle IN NUMBER
     ) AS
     BEGIN
-        DELETE FROM detalles_comprobantes WHERE id_detalle = p_id_detalle;
+        DELETE FROM detalle_comprobantes WHERE id_detalle = p_id_detalle;
+        COMMIT;
     END PRC_ELIMINAR_COMPROBANTE;
 
 END PKG_COMPROBANTES;

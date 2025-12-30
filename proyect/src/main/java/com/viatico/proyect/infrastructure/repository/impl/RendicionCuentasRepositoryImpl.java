@@ -107,7 +107,7 @@ public class RendicionCuentasRepositoryImpl implements RendicionCuentasRepositor
 
     @Override
     public long count() {
-        return jdbcTemplate.queryForObject("SELECT count(*) FROM rendiciones_cuentas", Long.class);
+        return jdbcTemplate.queryForObject("SELECT count(*) FROM rendicion_cuentas", Long.class);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class RendicionCuentasRepositoryImpl implements RendicionCuentasRepositor
         r.setId(rs.getLong("id_rendicion"));
 
         SolicitudComision sol = new SolicitudComision();
-        sol.setId(rs.getLong("id_solicitud"));
+        sol.setId(rs.getLong("id_comision"));
         r.setSolicitud(sol);
 
         r.setTotalGastadoBruto(rs.getBigDecimal("total_gastado_bruto"));
