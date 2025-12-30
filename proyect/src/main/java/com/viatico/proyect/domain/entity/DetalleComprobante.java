@@ -24,7 +24,6 @@ public class DetalleComprobante {
     private BigDecimal montoIgv = BigDecimal.ZERO;
     private BigDecimal montoTotal = BigDecimal.ZERO;
     private String archivoComprobanteUrl;
-    private boolean validado = false;
     private EstadoComprobante estadoValidacion = EstadoComprobante.PENDIENTE;
     private String motivoRechazo;
     private String userCrea;

@@ -10,6 +10,7 @@ import com.viatico.proyect.application.service.interfaces.PdfService;
 import com.viatico.proyect.application.service.interfaces.RendicionService;
 import com.viatico.proyect.application.service.interfaces.SolicitudService;
 import com.viatico.proyect.domain.entity.*;
+import com.viatico.proyect.domain.enums.EstadoComprobante;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -115,7 +116,7 @@ public class PdfServiceImpl implements PdfService {
                 }
 
                 for (DetalleComprobante det : ren.getDetalles()) {
-                    if (det.isValidado()) {
+                    if (det.getEstadoValidacion() == EstadoComprobante.ACEPTADO) {
                         detallesTable.addCell(new PdfPCell(new Phrase(det.getTipoGasto().getNombre(), normalFont)));
                         detallesTable.addCell(new PdfPCell(new Phrase(det.getRazonSocialEmisor(), normalFont)));
                         detallesTable.addCell(new PdfPCell(

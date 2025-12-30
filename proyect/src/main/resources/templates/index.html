@@ -451,7 +451,8 @@
               <div
                 th:each="sol : ${solicitudes}"
                 class="group flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 border border-transparent hover:border-gray-100 dark:hover:border-white/5 transition-all cursor-pointer"
-                th:onclick="'window.location.href=\'/solicitudes/' + ${sol.id} + '\''"
+                th:data-id="${sol.id}"
+                onclick="window.location.href='/solicitudes/' + this.dataset.id"
               >
                 <div class="flex items-center gap-5">
                   <div

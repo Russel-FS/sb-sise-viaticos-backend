@@ -193,7 +193,7 @@ CREATE TABLE detalle_comprobantes (
     monto_igv NUMBER(10, 2) DEFAULT 0,
     monto_total NUMBER(10, 2) NOT NULL,
     archivo_url VARCHAR2(255),
-    validado NUMBER(1) DEFAULT 0 CHECK (validado IN (0, 1)),
+    estado VARCHAR2(20) DEFAULT 'PENDIENTE',
     motivo_rechazo VARCHAR2(255),
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
@@ -202,8 +202,16 @@ CREATE TABLE detalle_comprobantes (
     fecha_mod TIMESTAMP,
     -- Constraints
     CONSTRAINT fk_det_rendicion FOREIGN KEY (id_rendicion) REFERENCES rendicion_cuentas (id_rendicion),
-    CONSTRAINT fk_det_tipo FOREIGN KEY (id_tipo_gasto) REFERENCES tipos_gasto (id_tipo)
+    CONSTRAINT fk_det_tipo FOREIGN KEY (id_tipo_gasto) REFERENCES tipos_gasto (id_tipo),
+    CONSTRAINT ck_det_estado CHECK (
+        estado IN (
+            'PENDIENTE',
+            'ACEPTADO',
+            'RECHAZADO'
+        )
+    )
 );
+
 /
 -- LIQUIDACION_FINAL
 CREATE TABLE liquidacion_final (

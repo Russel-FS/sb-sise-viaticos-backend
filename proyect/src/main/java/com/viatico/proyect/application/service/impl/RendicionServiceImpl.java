@@ -3,6 +3,7 @@ package com.viatico.proyect.application.service.impl;
 import com.viatico.proyect.application.service.interfaces.LiquidacionService;
 import com.viatico.proyect.application.service.interfaces.RendicionService;
 import com.viatico.proyect.domain.entity.*;
+import com.viatico.proyect.domain.enums.EstadoComprobante;
 import com.viatico.proyect.domain.enums.EstadoSolicitud;
 import com.viatico.proyect.domain.repositories.DetalleComprobanteRepository;
 import com.viatico.proyect.domain.repositories.RendicionCuentasRepository;
@@ -71,7 +72,7 @@ public class RendicionServiceImpl implements RendicionService {
                 det.setFechaEmision(LocalDate.parse(fecha).atStartOfDay());
                 det.setMontoTotal(montoTotal);
                 det.setArchivoComprobanteUrl(fotoUrl);
-                det.setValidado(false);
+                det.setEstadoValidacion(EstadoComprobante.PENDIENTE);
                 det.setFechaCrea(LocalDateTime.now());
                 det.setUserCrea(username);
 
@@ -130,7 +131,7 @@ public class RendicionServiceImpl implements RendicionService {
                 DetalleComprobante det = detalleRepository.findById(detalleId)
                                 .orElseThrow(() -> new RuntimeException("Comprobante no encontrado"));
 
-                det.setValidado("ACEPTADO".equalsIgnoreCase(estado));
+                det.setEstadoValidacion(EstadoComprobante.valueOf(estado.toUpperCase()));
                 det.setMotivoRechazo(motivo);
 
                 detalleRepository.save(det);
@@ -143,7 +144,7 @@ public class RendicionServiceImpl implements RendicionService {
                                 .orElseThrow(() -> new RuntimeException("Rendición no encontrada"));
 
                 BigDecimal totalAceptado = ren.getDetalles().stream()
-                                .filter(DetalleComprobante::isValidado)
+                                .filter(d -> d.getEstadoValidacion() == EstadoComprobante.ACEPTADO)
                                 .map(DetalleComprobante::getMontoTotal)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 

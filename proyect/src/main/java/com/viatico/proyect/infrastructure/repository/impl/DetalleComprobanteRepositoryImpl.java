@@ -3,6 +3,7 @@ package com.viatico.proyect.infrastructure.repository.impl;
 import com.viatico.proyect.domain.entity.DetalleComprobante;
 import com.viatico.proyect.domain.entity.RendicionCuentas;
 import com.viatico.proyect.domain.entity.TipoGasto;
+import com.viatico.proyect.domain.enums.EstadoComprobante;
 import com.viatico.proyect.domain.repositories.DetalleComprobanteRepository;
 
 import oracle.jdbc.OracleTypes;
@@ -44,7 +45,7 @@ public class DetalleComprobanteRepositoryImpl implements DetalleComprobanteRepos
                 stmt.setString(9, d.getRazonSocialEmisor());
                 stmt.setBigDecimal(10, d.getMontoTotal());
                 stmt.setString(11, d.getArchivoComprobanteUrl());
-                stmt.setInt(12, d.isValidado() ? 1 : 0);
+                stmt.setString(12, d.getEstadoValidacion().name());
                 stmt.setString(13, d.getMotivoRechazo());
                 stmt.setString(14, d.getUserCrea());
 
@@ -164,7 +165,10 @@ public class DetalleComprobanteRepositoryImpl implements DetalleComprobanteRepos
         d.setMontoIgv(rs.getBigDecimal("monto_igv"));
         d.setMontoTotal(rs.getBigDecimal("monto_total"));
         d.setArchivoComprobanteUrl(rs.getString("archivo_url"));
-        d.setValidado(rs.getInt("validado") == 1);
+        String estadoStr = rs.getString("estado");
+        if (estadoStr != null) {
+            d.setEstadoValidacion(EstadoComprobante.valueOf(estadoStr));
+        }
         d.setMotivoRechazo(rs.getString("motivo_rechazo"));
         d.setUserCrea(rs.getString("user_crea"));
 
