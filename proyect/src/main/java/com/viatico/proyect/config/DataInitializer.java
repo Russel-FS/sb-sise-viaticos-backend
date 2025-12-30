@@ -1,17 +1,16 @@
 package com.viatico.proyect.config;
 
-import com.viatico.proyect.entity.Empleado;
-import com.viatico.proyect.entity.NivelJerarquico;
-import com.viatico.proyect.entity.Rol;
+import com.viatico.proyect.application.service.interfaces.EmpleadoService;
+import com.viatico.proyect.domain.entity.Empleado;
+import com.viatico.proyect.domain.entity.NivelJerarquico;
+import com.viatico.proyect.domain.entity.Rol;
+import com.viatico.proyect.domain.entity.ZonaGeografica;
+import com.viatico.proyect.domain.enums.RolNombre;
+import com.viatico.proyect.domain.repositories.NivelJerarquicoRepository;
+import com.viatico.proyect.domain.repositories.RolRepository;
+import com.viatico.proyect.domain.repositories.UsuarioRepository;
+import com.viatico.proyect.domain.repositories.ZonaGeograficaRepository;
 
-import com.viatico.proyect.entity.ZonaGeografica;
-import com.viatico.proyect.enums.RolNombre;
-import com.viatico.proyect.repository.interfaces.NivelJerarquicoRepository;
-import com.viatico.proyect.repository.interfaces.RolRepository;
-
-import com.viatico.proyect.repository.interfaces.UsuarioRepository;
-import com.viatico.proyect.repository.interfaces.ZonaGeograficaRepository;
-import com.viatico.proyect.service.interfaces.EmpleadoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
