@@ -26,7 +26,7 @@ public class AdminValidacionController {
     @GetMapping
     public String listarPendientes(Model model) {
         List<SolicitudComision> rendidas = solicitudService.listarTodas().stream()
-                .filter(s -> s.getEstado() == EstadoSolicitud.RENDIDO)
+                .filter(s -> s.getEstado() == EstadoSolicitud.RENDIDO || s.getEstado() == EstadoSolicitud.OBSERVADO)
                 .toList();
 
         model.addAttribute("solicitudes", rendidas);
