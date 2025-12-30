@@ -45,7 +45,7 @@ public class DetalleComprobanteRepositoryImpl implements DetalleComprobanteRepos
                 stmt.setBigDecimal(10, d.getMontoBruto());
                 stmt.setBigDecimal(11, d.getMontoIgp());
                 stmt.setBigDecimal(12, d.getMontoTotal());
-                stmt.setString(13, d.getImagenComprobanteUrl());
+                stmt.setString(13, d.getArchivoComprobanteUrl());
                 stmt.setInt(14, d.isValidado() ? 1 : 0);
                 stmt.setString(15, d.getMotivoRechazo());
                 stmt.setString(16, d.getUserCrea());
@@ -163,7 +163,7 @@ public class DetalleComprobanteRepositoryImpl implements DetalleComprobanteRepos
         d.setMontoBruto(rs.getBigDecimal("monto_bruto"));
         d.setMontoIgp(rs.getBigDecimal("monto_igv"));
         d.setMontoTotal(rs.getBigDecimal("monto_total"));
-        d.setImagenComprobanteUrl(rs.getString("imagen_url"));
+        d.setArchivoComprobanteUrl(rs.getString("archivo_url"));
         d.setValidado(rs.getInt("validado") == 1);
         d.setMotivoRechazo(rs.getString("motivo_rechazo"));
         d.setUserCrea(rs.getString("user_crea"));

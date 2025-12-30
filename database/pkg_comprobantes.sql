@@ -34,7 +34,7 @@ CREATE OR REPLACE PACKAGE PKG_COMPROBANTES AS
         p_monto_bruto IN NUMBER,
         p_monto_igv IN NUMBER,
         p_monto_total IN NUMBER,
-        p_imagen_url IN VARCHAR2,
+        p_archivo_url IN VARCHAR2,
         p_validado IN NUMBER,
         p_motivo_rechazo IN VARCHAR2,
         p_user_crea IN VARCHAR2
@@ -93,7 +93,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
         p_monto_bruto IN NUMBER,
         p_monto_igv IN NUMBER,
         p_monto_total IN NUMBER,
-        p_imagen_url IN VARCHAR2,
+        p_archivo_url IN VARCHAR2,
         p_validado IN NUMBER,
         p_motivo_rechazo IN VARCHAR2,
         p_user_crea IN VARCHAR2
@@ -103,12 +103,12 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
             INSERT INTO detalle_comprobantes (
                 id_rendicion, id_tipo_gasto, fecha_emision, tipo_comprobante,
                 serie_comprobante, numero_comprobante, ruc_emisor, razon_social_emisor,
-                monto_bruto, monto_igv, monto_total, imagen_url, validado,
+                monto_bruto, monto_igv, monto_total, archivo_url, validado,
                 motivo_rechazo, user_crea, fecha_crea
             ) VALUES (
                 p_id_rendicion, p_id_tipo_gasto, p_fecha_emision, p_tipo_comprobante,
                 p_serie_comprobante, p_numero_comprobante, p_ruc_emisor, p_razon_social_emisor,
-                p_monto_bruto, p_monto_igv, p_monto_total, p_imagen_url, p_validado,
+                p_monto_bruto, p_monto_igv, p_monto_total, p_archivo_url, p_validado,
                 p_motivo_rechazo, p_user_crea, SYSTIMESTAMP
             ) RETURNING id_detalle INTO p_id_detalle;
         ELSE
@@ -123,7 +123,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
                 monto_bruto = p_monto_bruto,
                 monto_igv = p_monto_igv,
                 monto_total = p_monto_total,
-                imagen_url = p_imagen_url,
+                archivo_url = p_archivo_url,
                 validado = p_validado,
                 motivo_rechazo = p_motivo_rechazo,
                 user_mod = p_user_crea,

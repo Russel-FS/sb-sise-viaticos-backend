@@ -21,7 +21,7 @@ public class DetalleComprobante {
     private java.math.BigDecimal montoBruto = java.math.BigDecimal.ZERO;
     private java.math.BigDecimal montoIgp = java.math.BigDecimal.ZERO;
     private java.math.BigDecimal montoTotal = java.math.BigDecimal.ZERO;
-    private String imagenComprobanteUrl;
+    private String archivoComprobanteUrl;
     private boolean validado = false;
     private EstadoComprobante estadoValidacion = EstadoComprobante.PENDIENTE;
     private String motivoRechazo;

@@ -192,7 +192,7 @@ CREATE TABLE detalle_comprobantes (
     monto_bruto NUMBER(10, 2) DEFAULT 0,
     monto_igv NUMBER(10, 2) DEFAULT 0,
     monto_total NUMBER(10, 2) NOT NULL,
-    imagen_url VARCHAR2(255),
+    archivo_url VARCHAR2(255),
     validado NUMBER(1) DEFAULT 0 CHECK (validado IN (0, 1)),
     motivo_rechazo VARCHAR2(255),
     -- Auditoría

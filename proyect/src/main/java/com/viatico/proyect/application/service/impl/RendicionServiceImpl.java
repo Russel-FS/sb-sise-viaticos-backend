@@ -66,7 +66,7 @@ public class RendicionServiceImpl implements RendicionService {
                 det.setNumeroComprobante(serie);
                 det.setFechaEmision(LocalDate.parse(fecha).atStartOfDay());
                 det.setMontoTotal(monto);
-                det.setImagenComprobanteUrl(fotoUrl);
+                det.setArchivoComprobanteUrl(fotoUrl);
                 det.setValidado(false);
                 det.setFechaCrea(LocalDateTime.now());
                 det.setUserCrea(username);
@@ -88,8 +88,8 @@ public class RendicionServiceImpl implements RendicionService {
                 RendicionCuentas ren = det.getRendicion();
                 ren.setTotalGastadoBruto(ren.getTotalGastadoBruto().subtract(det.getMontoTotal()));
 
-                if (det.getImagenComprobanteUrl() != null) {
-                        storageService.deleteFile(det.getImagenComprobanteUrl());
+                if (det.getArchivoComprobanteUrl() != null) {
+                        storageService.deleteFile(det.getArchivoComprobanteUrl());
                 }
 
                 detalleRepository.delete(det);
