@@ -4,6 +4,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.viatico.proyect.domain.enums.EstadoSolicitud;
@@ -19,7 +20,7 @@ public class SolicitudComision {
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private EstadoSolicitud estado;
-    private List<ItinerarioViaje> itinerarios;
+    private List<ItinerarioViaje> itinerarios = new ArrayList<>();
     private BigDecimal montoTotal;
     private String userCrea;
     private LocalDateTime fechaLiquidacion;

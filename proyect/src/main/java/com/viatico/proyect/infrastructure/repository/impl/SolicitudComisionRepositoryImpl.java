@@ -92,7 +92,9 @@ public class SolicitudComisionRepositoryImpl implements SolicitudComisionReposit
 
                 try (ResultSet rs = (ResultSet) cs.getObject(1)) {
                     while (rs.next()) {
-                        lista.add(mapSolicitud(rs, 1));
+                        SolicitudComision sol = mapSolicitud(rs, 1);
+                        sol.setItinerarios(obtenerItinerarios(sol.getId()));
+                        lista.add(sol);
                     }
                 }
             }
@@ -124,7 +126,9 @@ public class SolicitudComisionRepositoryImpl implements SolicitudComisionReposit
 
                 try (ResultSet rs = (ResultSet) cs.getObject(2)) {
                     while (rs.next()) {
-                        lista.add(mapSolicitud(rs, 1));
+                        SolicitudComision sol = mapSolicitud(rs, 1);
+                        sol.setItinerarios(obtenerItinerarios(sol.getId()));
+                        lista.add(sol);
                     }
                 }
             }
@@ -143,7 +147,9 @@ public class SolicitudComisionRepositoryImpl implements SolicitudComisionReposit
 
                 try (ResultSet rs = (ResultSet) cs.getObject(2)) {
                     while (rs.next()) {
-                        lista.add(mapSolicitud(rs, 1));
+                        SolicitudComision sol = mapSolicitud(rs, 1);
+                        sol.setItinerarios(obtenerItinerarios(sol.getId()));
+                        lista.add(sol);
                     }
                 }
             }
@@ -164,7 +170,9 @@ public class SolicitudComisionRepositoryImpl implements SolicitudComisionReposit
 
                 try (ResultSet rs = (ResultSet) cs.getObject(3)) {
                     while (rs.next()) {
-                        lista.add(mapSolicitud(rs, 1));
+                        SolicitudComision sol = mapSolicitud(rs, 1);
+                        sol.setItinerarios(obtenerItinerarios(sol.getId()));
+                        lista.add(sol);
                     }
                 }
             }
@@ -183,7 +191,9 @@ public class SolicitudComisionRepositoryImpl implements SolicitudComisionReposit
 
                 try (ResultSet rs = (ResultSet) cs.getObject(2)) {
                     while (rs.next()) {
-                        lista.add(mapSolicitud(rs, 1));
+                        SolicitudComision sol = mapSolicitud(rs, 1);
+                        sol.setItinerarios(obtenerItinerarios(sol.getId()));
+                        lista.add(sol);
                     }
                 }
             }
@@ -201,7 +211,9 @@ public class SolicitudComisionRepositoryImpl implements SolicitudComisionReposit
 
                 try (ResultSet rs = (ResultSet) cs.getObject(1)) {
                     while (rs.next()) {
-                        lista.add(mapSolicitud(rs, 1));
+                        SolicitudComision sol = mapSolicitud(rs, 1);
+                        sol.setItinerarios(obtenerItinerarios(sol.getId()));
+                        lista.add(sol);
                     }
                 }
             }

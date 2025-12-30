@@ -374,7 +374,7 @@
                     <div>
                       <p
                         class="font-bold text-sm text-gray-900 dark:text-white"
-                        th:text="${sol.itinerarios[0].zonaDestino.nombre}"
+                        th:text="${!sol.itinerarios.isEmpty() ? sol.itinerarios[0].zonaDestino.nombre : 'Sin destino'}"
                       >
                         Zona Principal
                       </p>
