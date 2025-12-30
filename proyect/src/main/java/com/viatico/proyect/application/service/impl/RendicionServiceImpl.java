@@ -133,7 +133,6 @@ public class RendicionServiceImpl implements RendicionService {
 
                 det.setEstadoValidacion(EstadoComprobante.valueOf(estado.toUpperCase()));
                 det.setMotivoRechazo(motivo);
-
                 detalleRepository.save(det);
         }
 

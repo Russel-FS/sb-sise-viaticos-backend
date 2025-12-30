@@ -48,6 +48,20 @@ END PKG_COMPROBANTES;
 
 CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
 
+    PROCEDURE P_ACTUALIZAR_TOTAL_ACEPTADO(p_id_rendicion IN NUMBER) IS
+        v_total NUMBER(12,2);
+    BEGIN
+        SELECT NVL(SUM(monto_total), 0)
+        INTO v_total
+        FROM detalle_comprobantes
+        WHERE id_rendicion = p_id_rendicion
+          AND estado = 'ACEPTADO';
+          
+        UPDATE rendicion_cuentas
+        SET total_aceptado = v_total
+        WHERE id_rendicion = p_id_rendicion;
+    END;
+
     PROCEDURE PRC_LISTAR_TODOS (
         p_cursor OUT SYS_REFCURSOR
     ) AS
@@ -141,14 +155,24 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
                 fecha_mod = SYSTIMESTAMP
             WHERE id_detalle = p_id_detalle;
         END IF;
+        
+        -- Recalcular total aceptado
+        P_ACTUALIZAR_TOTAL_ACEPTADO(p_id_rendicion);
+        
         COMMIT;
     END PRC_GUARDAR_COMPROBANTE;
 
     PROCEDURE PRC_ELIMINAR_COMPROBANTE (
         p_id_detalle IN NUMBER
     ) AS
+        v_id_rendicion NUMBER;
     BEGIN
+        SELECT id_rendicion INTO v_id_rendicion FROM detalle_comprobantes WHERE id_detalle = p_id_detalle;
         DELETE FROM detalle_comprobantes WHERE id_detalle = p_id_detalle;
+        
+        -- Recalcular tras eliminación
+        P_ACTUALIZAR_TOTAL_ACEPTADO(v_id_rendicion);
+        
         COMMIT;
     END PRC_ELIMINAR_COMPROBANTE;
 
