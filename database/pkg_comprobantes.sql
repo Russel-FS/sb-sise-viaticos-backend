@@ -53,9 +53,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT d.*, t.nombre_gasto, t.cuenta_contable 
+            SELECT d.*, t.nombre_gasto, t.cuenta_contable, r.id_comision
             FROM detalle_comprobantes d
             JOIN tipos_gasto t ON d.id_tipo_gasto = t.id_tipo
+            JOIN rendicion_cuentas r ON d.id_rendicion = r.id_rendicion
             ORDER BY d.fecha_crea DESC;
     END PRC_LISTAR_TODOS;
 
@@ -65,9 +66,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT d.*, t.nombre_gasto, t.cuenta_contable 
+            SELECT d.*, t.nombre_gasto, t.cuenta_contable, r.id_comision
             FROM detalle_comprobantes d
             JOIN tipos_gasto t ON d.id_tipo_gasto = t.id_tipo
+            JOIN rendicion_cuentas r ON d.id_rendicion = r.id_rendicion
             WHERE d.id_rendicion = p_id_rendicion
             ORDER BY d.fecha_emision DESC;
     END PRC_LISTAR_POR_RENDICION;
@@ -78,9 +80,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT d.*, t.nombre_gasto, t.cuenta_contable 
+            SELECT d.*, t.nombre_gasto, t.cuenta_contable, r.id_comision
             FROM detalle_comprobantes d
             JOIN tipos_gasto t ON d.id_tipo_gasto = t.id_tipo
+            JOIN rendicion_cuentas r ON d.id_rendicion = r.id_rendicion
             WHERE d.id_detalle = p_id_detalle;
     END PRC_OBTENER_COMPROBANTE;
 

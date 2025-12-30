@@ -2,6 +2,7 @@ package com.viatico.proyect.infrastructure.repository.impl;
 
 import com.viatico.proyect.domain.entity.DetalleComprobante;
 import com.viatico.proyect.domain.entity.RendicionCuentas;
+import com.viatico.proyect.domain.entity.SolicitudComision;
 import com.viatico.proyect.domain.entity.TipoGasto;
 import com.viatico.proyect.domain.enums.EstadoComprobante;
 import com.viatico.proyect.domain.repositories.DetalleComprobanteRepository;
@@ -144,6 +145,9 @@ public class DetalleComprobanteRepositoryImpl implements DetalleComprobanteRepos
 
         RendicionCuentas ren = new RendicionCuentas();
         ren.setId(rs.getLong("id_rendicion"));
+        SolicitudComision sol = new SolicitudComision();
+        sol.setId(rs.getLong("id_comision"));
+        ren.setSolicitud(sol);
         d.setRendicion(ren);
 
         TipoGasto tg = new TipoGasto();
