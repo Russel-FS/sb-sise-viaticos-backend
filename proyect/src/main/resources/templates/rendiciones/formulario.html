@@ -697,13 +697,13 @@
                     <td class="px-6 py-5">
                       <p
                         class="font-medium text-sm text-gray-900 dark:text-white truncate max-w-[140px]"
-                        th:text="${det.razonSocialProveedor}"
+                        th:text="${det.razonSocialEmisor}"
                       >
                         Proveedor
                       </p>
                       <p
                         class="text-[10px] text-gray-400 mt-0.5"
-                        th:text="'RUC: ' + ${det.rucProveedor}"
+                        th:text="'RUC: ' + ${det.rucEmisor}"
                       >
                         RUC
                       </p>
@@ -717,7 +717,7 @@
                       </p>
                       <p
                         class="text-[10px] font-mono text-gray-400 mt-0.5"
-                        th:text="${det.serieNumeroComprobante}"
+                        th:text="${det.serieComprobante + '-' + det.numeroComprobante}"
                       >
                         001-123
                       </p>
@@ -731,13 +731,13 @@
                     </td>
                     <td class="px-6 py-5 text-center">
                       <div
-                        th:if="${det.fotoEvidenciaUrl}"
+                        th:if="${det.archivoComprobanteUrl}"
                         class="flex justify-center"
                       >
                         <!-- PDF -->
                         <a
-                          th:if="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
-                          th:href="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
+                          th:if="${#strings.toLowerCase(det.archivoComprobanteUrl).endsWith('.pdf')}"
+                          th:href="@{'/rendiciones/evidencias/' + ${det.archivoComprobanteUrl}}"
                           target="_blank"
                           class="w-8 h-8 flex items-center justify-center bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
                         >
@@ -745,13 +745,13 @@
                         </a>
                         <!-- Image -->
                         <button
-                          th:unless="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
+                          th:unless="${#strings.toLowerCase(det.archivoComprobanteUrl).endsWith('.pdf')}"
                           class="w-8 h-8 rounded-lg overflow-hidden border border-gray-200 dark:border-white/10 hover:scale-110 transition-transform"
-                          th:data-url="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
+                          th:data-url="@{'/rendiciones/evidencias/' + ${det.archivoComprobanteUrl}}"
                           onclick="abrirVisualizador(this.dataset.url)"
                         >
                           <img
-                            th:src="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
+                            th:src="@{'/rendiciones/evidencias/' + ${det.archivoComprobanteUrl}}"
                             class="w-full h-full object-cover"
                           />
                         </button>

@@ -360,13 +360,13 @@
                 <div class="space-y-1">
                   <h3
                     class="text-lg font-bold text-gray-900 dark:text-white leading-tight line-clamp-2"
-                    th:text="${det.razonSocialProveedor}"
+                    th:text="${det.razonSocialEmisor}"
                   >
                     Proveedor
                   </h3>
                   <p
                     class="text-xs font-mono font-medium text-gray-400"
-                    th:text="${'RUC: ' + det.rucProveedor}"
+                    th:text="${'RUC: ' + det.rucEmisor}"
                   >
                     RUC
                   </p>
@@ -380,7 +380,7 @@
                   </p>
                   <p
                     class="text-[10px] font-bold text-gray-400 tracking-widest"
-                    th:text="${det.serieNumeroComprobante}"
+                    th:text="${det.serieComprobante + '-' + det.numeroComprobante}"
                   >
                     SERIE
                   </p>
@@ -395,18 +395,18 @@
                 </div>
 
                 <!-- Evidencia Link -->
-                <div th:if="${det.fotoEvidenciaUrl}">
+                <div th:if="${det.archivoComprobanteUrl}">
                   <a
-                    th:if="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
-                    th:href="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
+                    th:if="${#strings.toLowerCase(det.archivoComprobanteUrl).endsWith('.pdf')}"
+                    th:href="@{'/rendiciones/evidencias/' + ${det.archivoComprobanteUrl}}"
                     target="_blank"
                     class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs font-bold hover:opacity-80 transition-opacity"
                   >
                     <i data-lucide="file-text" class="w-3.5 h-3.5"></i> PDF
                   </a>
                   <button
-                    th:unless="${#strings.toLowerCase(det.fotoEvidenciaUrl).endsWith('.pdf')}"
-                    th:data-url="@{'/rendiciones/evidencias/' + ${det.fotoEvidenciaUrl}}"
+                    th:unless="${#strings.toLowerCase(det.archivoComprobanteUrl).endsWith('.pdf')}"
+                    th:data-url="@{'/rendiciones/evidencias/' + ${det.archivoComprobanteUrl}}"
                     onclick="abrirVisualizador(this.dataset.url)"
                     class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-gray-300 text-xs font-bold hover:bg-gray-200 dark:hover:bg-white/20 transition-colors"
                   >

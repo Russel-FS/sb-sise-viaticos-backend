@@ -31,19 +31,22 @@ public class RendicionServiceImpl implements RendicionService {
         @Override
         @Transactional
         public RendicionCuentas obtenerOCrearPorSolicitud(Long solicitudId, String username) {
-                return rendicionRepository.findBySolicitudId(solicitudId)
+                RendicionCuentas ren = rendicionRepository.findBySolicitudId(solicitudId)
                                 .orElseGet(() -> {
                                         SolicitudComision sol = solicitudRepository.findById(solicitudId)
                                                         .orElseThrow(() -> new RuntimeException(
                                                                         "Solicitud no encontrada"));
 
-                                        RendicionCuentas ren = new RendicionCuentas();
-                                        ren.setSolicitud(sol);
-                                        ren.setFechaCrea(LocalDateTime.now());
-                                        ren.setUserCrea(username);
-                                        ren.setTotalGastadoBruto(BigDecimal.ZERO);
-                                        return rendicionRepository.save(ren);
+                                        RendicionCuentas nuevaRen = new RendicionCuentas();
+                                        nuevaRen.setSolicitud(sol);
+                                        nuevaRen.setFechaCrea(LocalDateTime.now());
+                                        nuevaRen.setUserCrea(username);
+                                        nuevaRen.setTotalGastadoBruto(BigDecimal.ZERO);
+                                        return rendicionRepository.save(nuevaRen);
                                 });
+
+                ren.setDetalles(detalleRepository.findByRendicionId(ren.getId()));
+                return ren;
         }
 
         @Override
@@ -98,7 +101,12 @@ public class RendicionServiceImpl implements RendicionService {
 
         @Override
         public RendicionCuentas obtenerPorSolicitud(Long solicitudId) {
-                return rendicionRepository.findBySolicitudId(solicitudId).orElse(null);
+                return rendicionRepository.findBySolicitudId(solicitudId)
+                                .map(ren -> {
+                                        ren.setDetalles(detalleRepository.findByRendicionId(ren.getId()));
+                                        return ren;
+                                })
+                                .orElse(null);
         }
 
         @Override

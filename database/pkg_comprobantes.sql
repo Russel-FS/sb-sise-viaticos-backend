@@ -55,8 +55,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT * FROM detalle_comprobantes
-            ORDER BY fecha_crea DESC;
+            SELECT d.*, t.nombre_gasto, t.cuenta_contable 
+            FROM detalle_comprobantes d
+            JOIN tipos_gasto t ON d.id_tipo_gasto = t.id_tipo
+            ORDER BY d.fecha_crea DESC;
     END PRC_LISTAR_TODOS;
 
     PROCEDURE PRC_LISTAR_POR_RENDICION (
@@ -65,9 +67,11 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT * FROM detalle_comprobantes 
-            WHERE id_rendicion = p_id_rendicion
-            ORDER BY fecha_emision DESC;
+            SELECT d.*, t.nombre_gasto, t.cuenta_contable 
+            FROM detalle_comprobantes d
+            JOIN tipos_gasto t ON d.id_tipo_gasto = t.id_tipo
+            WHERE d.id_rendicion = p_id_rendicion
+            ORDER BY d.fecha_emision DESC;
     END PRC_LISTAR_POR_RENDICION;
 
     PROCEDURE PRC_OBTENER_COMPROBANTE (
@@ -76,8 +80,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_COMPROBANTES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT * FROM detalle_comprobantes 
-            WHERE id_detalle = p_id_detalle;
+            SELECT d.*, t.nombre_gasto, t.cuenta_contable 
+            FROM detalle_comprobantes d
+            JOIN tipos_gasto t ON d.id_tipo_gasto = t.id_tipo
+            WHERE d.id_detalle = p_id_detalle;
     END PRC_OBTENER_COMPROBANTE;
 
     PROCEDURE PRC_GUARDAR_COMPROBANTE (

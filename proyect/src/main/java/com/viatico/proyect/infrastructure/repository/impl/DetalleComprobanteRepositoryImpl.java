@@ -149,6 +149,8 @@ public class DetalleComprobanteRepositoryImpl implements DetalleComprobanteRepos
 
         TipoGasto tg = new TipoGasto();
         tg.setId(rs.getLong("id_tipo_gasto"));
+        tg.setNombre(rs.getString("nombre_gasto"));
+        tg.setCuentaContable(rs.getString("cuenta_contable"));
         d.setTipoGasto(tg);
 
         Timestamp ts = rs.getTimestamp("fecha_emision");
