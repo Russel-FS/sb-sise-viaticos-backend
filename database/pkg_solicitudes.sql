@@ -158,9 +158,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_SOLICITUDES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email
+            SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email, e.id_nivel, n.nombre_nivel as nombre_nivel
             FROM solicitud_comision s
             JOIN empleados e ON s.id_empleado = e.id_empleado
+            LEFT JOIN niveles_jerarquicos n ON e.id_nivel = n.id_nivel
             ORDER BY s.fecha_crea DESC;
     END PRC_LISTAR_TODAS;
 
@@ -170,9 +171,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_SOLICITUDES AS
         v_cursor SYS_REFCURSOR;
     BEGIN
         OPEN v_cursor FOR
-            SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email
+            SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email, e.id_nivel, n.nombre_nivel as nombre_nivel
             FROM solicitud_comision s
             JOIN empleados e ON s.id_empleado = e.id_empleado
+            LEFT JOIN niveles_jerarquicos n ON e.id_nivel = n.id_nivel
             WHERE s.id_comision = p_id_comision;
         RETURN v_cursor;
     END FNC_OBTENER_POR_ID;
@@ -206,9 +208,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_SOLICITUDES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email
+            SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email, e.id_nivel, n.nombre_nivel as nombre_nivel
             FROM solicitud_comision s
             JOIN empleados e ON s.id_empleado = e.id_empleado
+            LEFT JOIN niveles_jerarquicos n ON e.id_nivel = n.id_nivel
             WHERE s.id_empleado = p_id_empleado
             ORDER BY s.fecha_crea DESC;
     END PRC_LISTAR_POR_EMPLEADO;
@@ -219,9 +222,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_SOLICITUDES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email
+            SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email, e.id_nivel, n.nombre_nivel as nombre_nivel
             FROM solicitud_comision s
             JOIN empleados e ON s.id_empleado = e.id_empleado
+            LEFT JOIN niveles_jerarquicos n ON e.id_nivel = n.id_nivel
             WHERE s.estado = p_estado
             ORDER BY s.fecha_crea DESC;
     END PRC_LISTAR_POR_ESTADO;
@@ -233,9 +237,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_SOLICITUDES AS
     ) AS
     BEGIN
         OPEN p_cursor FOR
-            SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email
+            SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email, e.id_nivel, n.nombre_nivel as nombre_nivel
             FROM solicitud_comision s
             JOIN empleados e ON s.id_empleado = e.id_empleado
+            LEFT JOIN niveles_jerarquicos n ON e.id_nivel = n.id_nivel
             WHERE s.id_empleado = p_id_empleado AND s.estado = p_estado
             ORDER BY s.fecha_crea DESC;
     END PRC_LISTAR_POR_EMP_Y_EST;
@@ -247,9 +252,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_SOLICITUDES AS
     BEGIN
         OPEN p_cursor FOR
             SELECT * FROM (
-                SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email
+                SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email, e.id_nivel, n.nombre_nivel as nombre_nivel
                 FROM solicitud_comision s
                 JOIN empleados e ON s.id_empleado = e.id_empleado
+                LEFT JOIN niveles_jerarquicos n ON e.id_nivel = n.id_nivel
                 WHERE s.id_empleado = p_id_empleado
                 ORDER BY s.fecha_crea DESC
             ) WHERE ROWNUM <= 5;
@@ -261,9 +267,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_SOLICITUDES AS
     BEGIN
         OPEN p_cursor FOR
             SELECT * FROM (
-                SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email
+                SELECT s.*, e.nombres, e.apellidos, e.dni, e.email as emp_email, e.id_nivel, n.nombre_nivel as nombre_nivel
                 FROM solicitud_comision s
                 JOIN empleados e ON s.id_empleado = e.id_empleado
+                LEFT JOIN niveles_jerarquicos n ON e.id_nivel = n.id_nivel
                 ORDER BY s.fecha_crea DESC
             ) WHERE ROWNUM <= 5;
     END PRC_TOP5_GENERAL;

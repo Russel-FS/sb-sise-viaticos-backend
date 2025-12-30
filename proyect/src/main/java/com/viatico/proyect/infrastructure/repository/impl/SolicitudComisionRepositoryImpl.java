@@ -2,6 +2,7 @@ package com.viatico.proyect.infrastructure.repository.impl;
 
 import com.viatico.proyect.domain.entity.Empleado;
 import com.viatico.proyect.domain.entity.ItinerarioViaje;
+import com.viatico.proyect.domain.entity.NivelJerarquico;
 import com.viatico.proyect.domain.entity.SolicitudComision;
 import com.viatico.proyect.domain.entity.ZonaGeografica;
 import com.viatico.proyect.domain.enums.EstadoSolicitud;
@@ -268,6 +269,14 @@ public class SolicitudComisionRepositoryImpl implements SolicitudComisionReposit
         emp.setApellidos(rs.getString("apellidos"));
         emp.setDni(rs.getString("dni"));
         emp.setEmail(rs.getString("emp_email"));
+
+        if (rs.getObject("id_nivel") != null) {
+            NivelJerarquico nivel = new NivelJerarquico();
+            nivel.setId(rs.getLong("id_nivel"));
+            nivel.setNombre(rs.getString("nombre_nivel"));
+            emp.setNivel(nivel);
+        }
+
         sol.setEmpleado(emp);
 
         return sol;

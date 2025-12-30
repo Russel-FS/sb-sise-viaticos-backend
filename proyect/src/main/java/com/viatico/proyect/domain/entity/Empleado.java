@@ -15,7 +15,7 @@ public class Empleado {
     private String apellidos;
     private String dni;
     private String email;
-    private NivelJerarquico nivel;
+    private NivelJerarquico nivel = new NivelJerarquico();
     private String cuentaBancaria;
     private String userCrea;
     private LocalDateTime fechaCrea;

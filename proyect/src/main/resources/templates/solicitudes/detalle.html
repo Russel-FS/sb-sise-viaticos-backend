@@ -355,7 +355,7 @@
                   </p>
                   <p
                     class="text-xs text-gray-500"
-                    th:text="${sol.empleado.nivel.nombre}"
+                    th:text="${sol.empleado.nivel.nombre ?: 'Sin Nivel'}"
                   >
                     Nivel
                   </p>
