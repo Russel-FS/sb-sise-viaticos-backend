@@ -399,7 +399,7 @@
                 </div>
               </div>
 
-              <!-- Meta & Actions -->
+              <!-- acciones -->
               <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-2 text-xs text-gray-500">
                   <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
@@ -427,7 +427,7 @@
                 </div>
               </div>
 
-              <!-- Action Buttons -->
+              <!-- Botones de Acciones -->
               <div
                 th:if="${det.estadoValidacion.name() == 'PENDIENTE'}"
                 class="grid grid-cols-2 gap-3"
@@ -557,7 +557,7 @@
     <!-- Visualizador de Imagen -->
     <div
       id="visualizadorImg"
-      class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-all opacity-0"
+      class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-all opacity-0"
     >
       <button
         onclick="cerrarVisualizador()"
