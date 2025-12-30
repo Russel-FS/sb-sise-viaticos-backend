@@ -7,5 +7,6 @@ public enum EstadoSolicitud {
     RECHAZADO,
     RENDIDO,
     LIQUIDADO,
-    CANCELADO
+    CANCELADO,
+    OBSERVADO
 }

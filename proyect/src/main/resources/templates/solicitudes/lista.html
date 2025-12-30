@@ -93,7 +93,6 @@
         font-family: "Instrument Serif", serif;
       }
 
-      /* Navegación Flotante Extended (Unified) */
       .nav-island {
         background: rgba(255, 255, 255, 0.6);
         backdrop-filter: blur(12px);
@@ -438,8 +437,16 @@
                     th:if="${sol.estado.name() == 'APROBADO'}"
                     class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-[#E3ECD2] dark:bg-[#2D3B2D] text-[#2D3B2D] dark:text-[#E3ECD2] border border-[#2D3B2D]/10"
                   >
-                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
                     Aprobado
+                  </span>
+
+                  <!-- Estado: Observado   -->
+                  <span
+                    th:if="${sol.estado.name() == 'OBSERVADO'}"
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400 border border-orange-100 dark:border-orange-800/30"
+                  >
+                    <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
+                    Observado
                   </span>
 
                   <!-- Estado: Rechazado   -->
@@ -476,7 +483,7 @@
                   >
                     <!-- Action: Rendir -->
                     <a
-                      th:if="${sol.estado.name() == 'APROBADO'}"
+                      th:if="${sol.estado.name() == 'APROBADO' || sol.estado.name() == 'OBSERVADO'}"
                       th:href="@{'/rendiciones/solicitud/' + ${sol.id}}"
                       class="px-3 py-1.5 bg-accent-forest text-white text-[10px] font-bold uppercase tracking-wide rounded-full hover:bg-black transition-colors"
                     >

@@ -58,4 +58,11 @@ public class AdminValidacionController {
         rendicionService.finalizarValidacion(solicitudId);
         return "redirect:/admin/validaciones?success";
     }
+
+    @PostMapping("/observar")
+    public String observarRendicion(@RequestParam Long solicitudId,
+            @RequestParam(required = false) String comentario) {
+        rendicionService.observarRendicion(solicitudId, comentario);
+        return "redirect:/admin/validaciones/detalle/" + solicitudId + "?observed";
+    }
 }

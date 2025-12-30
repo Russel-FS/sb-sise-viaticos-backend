@@ -428,8 +428,46 @@
               </div>
 
               <!-- Botones de Acciones -->
+              <!-- Estado Actual   -->
               <div
-                th:if="${det.estadoValidacion.name() == 'PENDIENTE'}"
+                th:unless="${det.estadoValidacion.name() == 'PENDIENTE'}"
+                th:id="'status-display-' + ${det.id}"
+                class="mb-6 text-center"
+              >
+                <div
+                  class="inline-flex items-center gap-3 px-4 py-2 bg-gray-50 dark:bg-white/5 rounded-full border border-gray-100 dark:border-white/10"
+                >
+                  <span
+                    th:if="${det.estadoValidacion.name() == 'ACEPTADO'}"
+                    class="text-xs font-bold text-green-600 dark:text-green-400 flex items-center gap-1.5"
+                  >
+                    <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                    Aceptado
+                  </span>
+                  <span
+                    th:if="${det.estadoValidacion.name() == 'RECHAZADO'}"
+                    class="text-xs font-bold text-red-600 dark:text-red-400 flex items-center gap-1.5"
+                  >
+                    <i data-lucide="x-circle" class="w-4 h-4"></i> Rechazado
+                  </span>
+
+                  <span class="w-px h-3 bg-gray-300 dark:bg-white/20"></span>
+
+                  <button
+                    type="button"
+                    th:data-id="${det.id}"
+                    onclick="mostrarAcciones(this.dataset.id)"
+                    class="text-[10px] uppercase font-bold text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  >
+                    Cambiar
+                  </button>
+                </div>
+              </div>
+
+              <!-- Botones de Acciones -->
+              <div
+                th:id="'acciones-' + ${det.id}"
+                th:classappend="${det.estadoValidacion.name() == 'PENDIENTE' ? '' : 'hidden'}"
                 class="grid grid-cols-2 gap-3"
               >
                 <form
@@ -536,7 +574,20 @@
             </div>
           </div>
 
+          <!-- Botón de Observar / Devolver -->
+          <button
+            type="button"
+            onclick="document.getElementById('modalObservacion').classList.remove('hidden'); document.getElementById('modalObservacion').classList.add('flex');"
+            class="relative z-10 px-6 py-4 bg-transparent border border-white/20 text-white rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-2"
+          >
+            <span
+              th:text="${sol.estado.name() == 'OBSERVADO' ? 'Editar Observación' : 'Observar y Devolver'}"
+              >Observar y Devolver</span
+            >
+          </button>
+
           <form
+            th:if="${sol.estado.name() != 'OBSERVADO'}"
             th:action="@{/admin/validaciones/finalizar}"
             method="post"
             class="relative z-10"
@@ -572,6 +623,64 @@
       />
     </div>
 
+    <!-- Modal Observación -->
+    <div
+      id="modalObservacion"
+      class="fixed inset-0 z-[120] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+    >
+      <div
+        class="bg-white dark:bg-[#1C1E22] w-full max-w-lg rounded-[32px] p-8 shadow-2xl animate-in zoom-in-95 duration-200"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-2xl font-serif text-gray-900 dark:text-white">
+            Observar Rendición
+          </h3>
+          <button
+            onclick="document.getElementById('modalObservacion').classList.add('hidden')"
+            class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+          >
+            <i data-lucide="x" class="w-5 h-5 text-gray-400"></i>
+          </button>
+        </div>
+
+        <form th:action="@{/admin/validaciones/observar}" method="post">
+          <input type="hidden" name="solicitudId" th:value="${sol.id}" />
+
+          <div class="mb-6">
+            <p class="text-sm text-gray-500 mb-4">
+              Indica los motivos por los cuales estás devolviendo esta rendición
+              al usuario. La solicitud volverá al estado OBSERVADO para ser
+              corregida.
+            </p>
+            <textarea
+              name="comentario"
+              rows="4"
+              class="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-accent-forest/20 resize-none dark:text-white"
+              placeholder="Ej: El comprobante de hospedaje no coincide con las fechas..."
+              required
+              th:text="${sol.comentarioRechazo}"
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end gap-3">
+            <button
+              type="button"
+              onclick="document.getElementById('modalObservacion').classList.add('hidden')"
+              class="px-6 py-3 text-sm font-bold text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="px-8 py-3 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full text-sm font-bold hover:opacity-90 transition-opacity"
+            >
+              Confirmar Devolución
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script th:inline="javascript">
       lucide.createIcons();
 
@@ -598,17 +707,15 @@
         }, 300);
       }
 
-      // Close on escape
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-          cerrarVisualizador();
-        }
-      });
-
       window.onclick = function (event) {
         const modal = document.getElementById("visualizadorImg");
         if (event.target == modal) cerrarVisualizador();
       };
+
+      function mostrarAcciones(id) {
+        document.getElementById("status-display-" + id).classList.add("hidden");
+        document.getElementById("acciones-" + id).classList.remove("hidden");
+      }
     </script>
     <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
   </body>

@@ -117,11 +117,13 @@ CREATE TABLE solicitud_comision (
             'RECHAZADO',
             'RENDIDO',
             'LIQUIDADO',
-            'CANCELADO'
+            'CANCELADO',
+            'OBSERVADO'
         )
     ),
     CONSTRAINT fk_sol_empleado FOREIGN KEY (id_empleado) REFERENCES empleados (id_empleado)
 );
+
 /
 -- ITINERARIO_VIAJE
 CREATE TABLE itinerario_viaje (

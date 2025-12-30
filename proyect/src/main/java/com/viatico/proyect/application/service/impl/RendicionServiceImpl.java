@@ -158,4 +158,18 @@ public class RendicionServiceImpl implements RendicionService {
 
                 liquidacionService.generarLiquidacion(solicitudId);
         }
+
+        @Override
+        @Transactional
+        public void observarRendicion(Long solicitudId, String comentario) {
+                RendicionCuentas ren = rendicionRepository.findBySolicitudId(solicitudId)
+                                .orElseThrow(() -> new RuntimeException("Rendición no encontrada"));
+
+                SolicitudComision sol = ren.getSolicitud();
+                sol.setEstado(EstadoSolicitud.OBSERVADO);
+                sol.setComentarioRechazo(comentario);
+
+                solicitudRepository.save(sol);
+                rendicionRepository.save(ren);
+        }
 }

@@ -20,4 +20,6 @@ public interface RendicionService {
     void validarComprobante(Long detalleId, String estado, String motivo);
 
     void finalizarValidacion(Long solicitudId);
+
+    void observarRendicion(Long solicitudId, String comentario);
 }

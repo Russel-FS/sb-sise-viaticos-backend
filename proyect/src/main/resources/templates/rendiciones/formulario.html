@@ -298,6 +298,32 @@
         </div>
       </div>
 
+      <!-- Alerta de Observación -->
+      <div
+        th:if="${sol.estado.name() == 'OBSERVADO'}"
+        class="mb-8 p-6 bg-orange-50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-500/20 rounded-2xl flex gap-6 items-start animate-in slide-in-from-top-4"
+      >
+        <div
+          class="w-12 h-12 bg-orange-100 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 rounded-xl flex items-center justify-center flex-shrink-0"
+        >
+          <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
+            Rendición Observada
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+            El administrador ha devuelto tu rendición con las siguientes
+            observaciones. Por favor corrígelas y vuelve a enviarla.
+          </p>
+          <div
+            class="bg-white dark:bg-black/20 p-4 rounded-xl text-sm italic text-gray-700 dark:text-gray-200 border border-orange-100/50 dark:border-white/5"
+          >
+            "<span th:text="${sol.comentarioRechazo}">Motivo...</span>"
+          </div>
+        </div>
+      </div>
+
       <!-- Financial Bento Grid -->
       <div
         class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 animate-enter delay-200"
@@ -416,7 +442,7 @@
         <!-- formulario de gastos -->
         <div class="lg:col-span-4 space-y-6">
           <div
-            th:if="${sol.estado.name() == 'APROBADO'}"
+            th:if="${sol.estado.name() == 'APROBADO' or sol.estado.name() == 'OBSERVADO'}"
             class="bento-card p-8 sticky top-24"
           >
             <div class="flex items-center gap-3 mb-8">
@@ -649,7 +675,7 @@
           </div>
 
           <div
-            th:if="${sol.estado.name() != 'APROBADO'}"
+            th:if="${sol.estado.name() != 'APROBADO' and sol.estado.name() != 'OBSERVADO'}"
             class="bento-card p-8 bg-gray-50 dark:bg-white/5 border-dashed border-gray-200 dark:border-white/10 text-center flex flex-col items-center justify-center min-h-[200px]"
           >
             <div
@@ -735,7 +761,7 @@
                     </th>
                     <th
                       class="px-6 py-4"
-                      th:if="${sol.estado.name() == 'APROBADO'}"
+                      th:if="${sol.estado.name() == 'APROBADO' or sol.estado.name() == 'OBSERVADO'}"
                     ></th>
                   </tr>
                 </thead>
@@ -857,7 +883,7 @@
                     </td>
                     <td
                       class="px-6 py-5 text-right pr-8"
-                      th:if="${sol.estado.name() == 'APROBADO'}"
+                      th:if="${sol.estado.name() == 'APROBADO' or sol.estado.name() == 'OBSERVADO'}"
                     >
                       <a
                         th:href="@{'/rendiciones/comprobante/eliminar/' + ${det.id} + '?solicitudId=' + ${sol.id}}"
@@ -891,7 +917,7 @@
 
             <!-- Footer -->
             <div
-              th:if="${sol.estado.name() == 'APROBADO'}"
+              th:if="${sol.estado.name() == 'APROBADO' or sol.estado.name() == 'OBSERVADO'}"
               class="p-8 bg-black dark:bg-[#151719] text-white flex flex-col md:flex-row justify-between items-center gap-6 mt-auto"
             >
               <div class="flex items-center gap-4">
