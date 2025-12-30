@@ -536,7 +536,7 @@
                   Detalle de Importes
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                  <!-- Campo principal de entrada -->
+                  <!-- Campo principal  -->
                   <div class="md:col-span-2 space-y-1.5">
                     <label
                       class="text-[10px] font-bold text-accent-forest uppercase tracking-widest pl-1"
@@ -925,7 +925,7 @@
     <!-- Visualizadores -->
     <div
       id="visualizadorImg"
-      class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-all opacity-0"
+      class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-all opacity-0"
     >
       <button
         onclick="cerrarVisualizador()"
@@ -991,6 +991,7 @@
         const img = document.getElementById("imgGrande");
         img.src = src;
         modal.classList.remove("hidden");
+        modal.classList.add("flex");
         void modal.offsetWidth;
         modal.classList.remove("opacity-0");
         img.classList.remove("scale-95");
@@ -1005,6 +1006,7 @@
         img.classList.add("scale-95");
         setTimeout(() => {
           modal.classList.add("hidden");
+          modal.classList.remove("flex");
         }, 300);
       }
 
