@@ -113,7 +113,10 @@ public class SolicitudServiceImpl implements SolicitudService {
                                 List<Tarifario> tarifas = tarifarioRepository.findAllByNivelJerarquicoAndZonaGeografica(
                                                 solicitud.getEmpleado().getNivel(),
                                                 iti.getZonaDestino());
-                                iti.setTarifas(tarifas);
+                                List<Tarifario> activas = tarifas.stream()
+                                                .filter(t -> t.getActivo() != null && t.getActivo() == 1)
+                                                .toList();
+                                iti.setTarifas(activas);
                         }
                 }
 

@@ -252,6 +252,13 @@
             >
               <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Rechazado
             </span>
+            <!-- Estado: cancelado -->
+            <span
+              th:if="${sol.estado.name() == 'CANCELADO'}"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800/30"
+            >
+              <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Cancelado
+            </span>
             <span
               th:if="${sol.estado.name() == 'LIQUIDADO'}"
               class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-black dark:bg-white text-white dark:text-black border border-transparent shadow-sm"
