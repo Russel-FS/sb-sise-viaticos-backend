@@ -20,4 +20,8 @@ public interface UsuarioRepository {
     Optional<Usuario> obtenerPorUsername(String username);
 
     Optional<Usuario> obtenerPorEmail(String email);
+
+    void actualizarPassword(Long idUsuario, String password);
+
+    void actualizarRol(Long idUsuario, Long rolId);
 }

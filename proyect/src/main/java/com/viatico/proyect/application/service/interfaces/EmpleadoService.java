@@ -8,7 +8,7 @@ import com.viatico.proyect.domain.entity.Usuario;
 public interface EmpleadoService {
     List<Empleado> listarTodos();
 
-    Empleado guardar(Empleado empleado, String password, Long rolId, String usernameCrea);
+    Empleado guardar(Empleado empleado, String password, Long rolId, String username, String usernameCrea);
 
     Empleado obtenerPorId(Long id);
 

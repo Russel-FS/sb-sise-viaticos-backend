@@ -28,24 +28,37 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     @Transactional
-    public Empleado guardar(Empleado empleado, String password, Long rolId, String usernameCrea) {
+    public Empleado guardar(Empleado empleado, String password, Long rolId, String username, String usernameCrea) {
         boolean esNuevo = (empleado.getId() == null);
-
         Long idEmpleado = empleadoRepository.guardarEmpleado(empleado, usernameCrea);
 
         if (esNuevo) {
             String passwordEncriptado = passwordEncoder.encode(password);
+
+            String finalUsername = (username != null && !username.trim().isEmpty()) ? username : empleado.getEmail();
+
             usuarioRepository.crearUsuario(
                     idEmpleado,
-                    empleado.getEmail(),
+                    finalUsername,
                     empleado.getEmail(),
                     passwordEncriptado,
                     rolId,
                     usernameCrea);
+        } else {
+            Usuario usuario = obtenerUsuarioPorEmpleado(idEmpleado);
+            if (usuario != null) {
+                if (password != null && !password.isEmpty()) {
+                    String passwordEncriptado = passwordEncoder.encode(password);
+                    usuarioRepository.actualizarPassword(usuario.getId(), passwordEncriptado);
+                }
+                if (rolId != null && usuario.getRol().getId() != rolId) {
+                    usuarioRepository.actualizarRol(usuario.getId(), rolId);
+                }
+            }
         }
 
         return empleadoRepository.obtenerPorId(idEmpleado)
-                .orElseThrow(() -> new RuntimeException("Error al recuperar empleado guardado"));
+                .orElseThrow(() -> new RuntimeException("Error al recuperar empleado guardado: " + idEmpleado));
     }
 
     @Override

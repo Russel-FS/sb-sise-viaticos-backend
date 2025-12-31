@@ -158,4 +158,31 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
 
         return usuario;
     }
+
+    @Override
+    public void actualizarPassword(Long idUsuario, String password) {
+        jdbcTemplate.execute((Connection con) -> {
+            String sql = "{call PKG_USUARIOS.PRC_ACTUALIZAR_PASSWORD(?, ?)}";
+            try (CallableStatement stmt = con.prepareCall(sql)) {
+                stmt.setLong(1, idUsuario);
+                stmt.setString(2, password);
+                stmt.execute();
+                return null;
+            }
+        });
+    }
+
+    @Override
+    public void actualizarRol(Long idUsuario, Long rolId) {
+        jdbcTemplate.execute((Connection con) -> {
+            String sql = "{call PKG_USUARIOS.PRC_ACTUALIZAR_ROL(?, ?)}";
+            try (CallableStatement stmt = con.prepareCall(sql)) {
+                stmt.setLong(1, idUsuario);
+                stmt.setLong(2, rolId);
+                stmt.execute();
+                return null;
+            }
+        });
+    }
+
 }

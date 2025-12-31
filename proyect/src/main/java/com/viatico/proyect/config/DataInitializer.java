@@ -86,7 +86,7 @@ public class DataInitializer implements CommandLineRunner {
             e.setNivel(nivelAdmin);
 
             Rol rolAdmin = rolRepository.findByCodigo(RolNombre.ADMIN.getCodigo()).get();
-            empleadoService.guardar(e, "admin123", rolAdmin.getId(), "SYSTEM");
+            empleadoService.guardar(e, "admin123", rolAdmin.getId(), null, "SYSTEM");
 
             log.info("Empleado y usuario administrador creado: admin@iss.com.pe / admin123");
         } else {
