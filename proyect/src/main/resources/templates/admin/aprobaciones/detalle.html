@@ -198,7 +198,7 @@
                             </p>
                             <p
                               class="text-xs text-gray-400"
-                              th:text="${'S/ ' + #numbers.formatDecimal(tarifa.montoDiario, 1, 'COMMA', 2, 'POINT') + ' / día'}"
+                              th:text="${tarifa.tipoGasto.esAsignablePorDia ? 'S/ ' + #numbers.formatDecimal(tarifa.montoDiario, 1, 'COMMA', 2, 'POINT') + ' / día' : 'S/ ' + #numbers.formatDecimal(tarifa.montoDiario, 1, 'COMMA', 2, 'POINT')}"
                             >
                               0.00
                             </p>
@@ -208,15 +208,15 @@
                         <div class="text-right">
                           <p
                             class="text-sm font-mono font-bold text-gray-900 dark:text-white"
-                            th:text="${'S/ ' + #numbers.formatDecimal(tarifa.montoDiario * itinerario.noches, 1, 'COMMA', 2, 'POINT')}"
+                            th:text="${tarifa.tipoGasto.esAsignablePorDia ? 'S/ ' + #numbers.formatDecimal(tarifa.montoDiario * itinerario.noches, 1, 'COMMA', 2, 'POINT') : 'S/ ' + #numbers.formatDecimal(tarifa.montoDiario, 1, 'COMMA', 2, 'POINT')}"
                           >
                             0.00
                           </p>
                           <p
                             class="text-[10px] text-gray-400 font-medium tracking-wide uppercase"
+                            th:text="${tarifa.tipoGasto.esAsignablePorDia ? 'Total (' + itinerario.noches + ' noches)' : 'Monto Fijo'}"
                           >
-                            Total (<span th:text="${itinerario.noches}">0</span>
-                            noches)
+                            Total (0 noches)
                           </p>
                         </div>
                       </div>

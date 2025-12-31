@@ -57,7 +57,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_TARIFARIO AS
     BEGIN
         OPEN p_cursor FOR
             SELECT t.id_tarifa, t.id_zona, z.nombre_zona, t.id_nivel, n.nombre_nivel, 
-                   t.id_tipo_gasto, tg.nombre_gasto, t.monto_limite_diario, t.moneda,
+                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto_limite_diario, t.moneda,
                    t.user_crea, t.fecha_crea, t.activo
             FROM tarifario_viaticos t
             JOIN zonas_geograficas z ON t.id_zona = z.id_zona
@@ -74,7 +74,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_TARIFARIO AS
     BEGIN
         OPEN p_cursor FOR
             SELECT t.id_tarifa, t.id_zona, z.nombre_zona, t.id_nivel, n.nombre_nivel, 
-                   t.id_tipo_gasto, tg.nombre_gasto, t.monto_limite_diario, t.moneda,
+                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto_limite_diario, t.moneda,
                    t.user_crea, t.fecha_crea, t.activo
             FROM tarifario_viaticos t
             JOIN zonas_geograficas z ON t.id_zona = z.id_zona
@@ -91,7 +91,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_TARIFARIO AS
     BEGIN
         OPEN p_cursor FOR
             SELECT t.id_tarifa, t.id_zona, z.nombre_zona, t.id_nivel, n.nombre_nivel, 
-                   t.id_tipo_gasto, tg.nombre_gasto, t.monto_limite_diario, t.moneda,
+                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto_limite_diario, t.moneda,
                    t.user_crea, t.fecha_crea, t.activo
             FROM tarifario_viaticos t
             JOIN zonas_geograficas z ON t.id_zona = z.id_zona
@@ -108,7 +108,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_TARIFARIO AS
     BEGIN
         OPEN v_cursor FOR
             SELECT t.id_tarifa, t.id_zona, z.nombre_zona, t.id_nivel, n.nombre_nivel, 
-                   t.id_tipo_gasto, tg.nombre_gasto, t.monto_limite_diario, t.moneda,
+                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto_limite_diario, t.moneda,
                    t.user_crea, t.fecha_crea, t.activo
             FROM tarifario_viaticos t
             JOIN zonas_geograficas z ON t.id_zona = z.id_zona

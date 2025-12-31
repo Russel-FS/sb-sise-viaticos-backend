@@ -168,6 +168,7 @@ public class TarifarioRepositoryImpl implements TarifarioRepository {
         TipoGasto tg = new TipoGasto();
         tg.setId(rs.getLong("id_tipo_gasto"));
         tg.setNombre(rs.getString("nombre_gasto"));
+        tg.setEsAsignablePorDia(rs.getBoolean("es_asignable_por_dia"));
         t.setTipoGasto(tg);
 
         t.setMontoDiario(rs.getBigDecimal("monto_limite_diario"));
