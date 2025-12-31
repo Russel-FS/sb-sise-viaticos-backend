@@ -267,14 +267,24 @@ CREATE TABLE usuarios (
     username VARCHAR2(50) NOT NULL UNIQUE,
     email VARCHAR2(200) NOT NULL UNIQUE,
     password VARCHAR2(255) NOT NULL,
-    id_rol NUMBER NOT NULL,
     activo NUMBER(1) DEFAULT 1 CHECK (activo IN (0, 1)),
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_mod VARCHAR2(30),
     fecha_mod TIMESTAMP,
-    CONSTRAINT fk_usuario_empleado FOREIGN KEY (id_empleado) REFERENCES empleados (id_empleado),
-    CONSTRAINT fk_usuario_rol FOREIGN KEY (id_rol) REFERENCES roles (id_rol)
+    CONSTRAINT fk_usuario_empleado FOREIGN KEY (id_empleado) REFERENCES empleados (id_empleado)
+);
+/
+
+-- usuario roles
+CREATE TABLE usuarios_roles (
+    id_usuario NUMBER NOT NULL,
+    id_rol NUMBER NOT NULL,
+    user_crea VARCHAR2(30) DEFAULT USER,
+    fecha_asignacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_usuario, id_rol),
+    CONSTRAINT fk_ur_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario) ON DELETE CASCADE,
+    CONSTRAINT fk_ur_rol FOREIGN KEY (id_rol) REFERENCES roles (id_rol)
 );
 /

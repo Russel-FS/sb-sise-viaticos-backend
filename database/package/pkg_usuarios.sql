@@ -1,6 +1,10 @@
 -- Active: 1766458157960@@127.0.0.1@1521@XE@C
 -- PAQUETE: PKG_USUARIOS
--- DESCRIPCIÓN: Gestión de usuarios del sistema
+-- DESCRIPCIÓN: Gestión de usuarios del sistema (con soporte multi-rol)
+
+-- lista de IDs de roles
+CREATE OR REPLACE TYPE T_ID_TAB AS TABLE OF NUMBER;
+/
 
 CREATE OR REPLACE PACKAGE PKG_USUARIOS AS
 
@@ -9,7 +13,7 @@ CREATE OR REPLACE PACKAGE PKG_USUARIOS AS
         p_cursor OUT SYS_REFCURSOR
     );
 
-    -- Buscar usuario por username
+    -- Buscar usuario por username (incluye roles)
     FUNCTION FNC_OBTENER_POR_USERNAME (
         p_username IN VARCHAR2
     ) RETURN SYS_REFCURSOR;
@@ -19,13 +23,27 @@ CREATE OR REPLACE PACKAGE PKG_USUARIOS AS
         p_email IN VARCHAR2
     ) RETURN SYS_REFCURSOR;
 
-    -- Crear nuevo usuario asociado a un empleado
+    -- Obtener roles de un usuario
+    PROCEDURE PRC_OBTENER_ROLES_USUARIO (
+        p_id_usuario IN NUMBER,
+        p_cursor OUT SYS_REFCURSOR
+    );
+
+    -- Crear nuevo usuario asociado a un empleado (sin roles inicialmente)
     PROCEDURE PRC_CREAR_USUARIO (
         p_id_empleado IN NUMBER,
         p_username IN VARCHAR2,
         p_email IN VARCHAR2,
         p_password IN VARCHAR2,
-        p_rol_id IN NUMBER,
+        p_user_crea IN VARCHAR2,
+        p_id_usuario OUT NUMBER
+    );
+
+    -- Asignar roles a un usuario (reemplaza los existentes)
+    -- Recibe una tabla de IDs de roles directamente
+    PROCEDURE PRC_ASIGNAR_ROLES (
+        p_id_usuario IN NUMBER,
+        p_roles_ids IN T_ID_TAB,
         p_user_crea IN VARCHAR2
     );
 
@@ -42,11 +60,6 @@ CREATE OR REPLACE PACKAGE PKG_USUARIOS AS
     PROCEDURE PRC_ACTUALIZAR_PASSWORD (
         p_id_usuario IN NUMBER,
         p_password IN VARCHAR2
-    );
-
-    PROCEDURE PRC_ACTUALIZAR_ROL (
-        p_id_usuario IN NUMBER,
-        p_rol_id IN NUMBER
     );
 
 END PKG_USUARIOS;
@@ -69,14 +82,11 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
                 u.username,
                 u.email,
                 u.password,
-                u.id_rol,
-                r.codigo_rol AS codigo_rol,
                 u.activo,
                 u.user_crea,
                 u.fecha_crea
             FROM usuarios u
             INNER JOIN empleados e ON u.id_empleado = e.id_empleado
-            INNER JOIN roles r ON u.id_rol = r.id_rol
             ORDER BY u.username;
     END PRC_LISTAR_USUARIOS;
 
@@ -95,14 +105,11 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
                 u.username,
                 u.email,
                 u.password,
-                u.id_rol,
-                r.codigo_rol AS codigo_rol,
                 u.activo,
                 u.user_crea,
                 u.fecha_crea
             FROM usuarios u
             INNER JOIN empleados e ON u.id_empleado = e.id_empleado
-            INNER JOIN roles r ON u.id_rol = r.id_rol
             WHERE u.username = p_username;
         
         RETURN v_cursor;
@@ -123,18 +130,29 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
                 u.username,
                 u.email,
                 u.password,
-                u.id_rol,
-                r.codigo_rol AS codigo_rol,
                 u.activo,
                 u.user_crea,
                 u.fecha_crea
             FROM usuarios u
             INNER JOIN empleados e ON u.id_empleado = e.id_empleado
-            INNER JOIN roles r ON u.id_rol = r.id_rol
             WHERE u.email = p_email;
         
         RETURN v_cursor;
     END FNC_OBTENER_POR_EMAIL;
+
+    -- Obtener roles de un usuario
+    PROCEDURE PRC_OBTENER_ROLES_USUARIO (
+        p_id_usuario IN NUMBER,
+        p_cursor OUT SYS_REFCURSOR
+    ) AS
+    BEGIN
+        OPEN p_cursor FOR
+            SELECT r.id_rol, r.codigo_rol, r.nombre_rol
+            FROM usuarios_roles ur
+            INNER JOIN roles r ON ur.id_rol = r.id_rol
+            WHERE ur.id_usuario = p_id_usuario
+            ORDER BY r.nombre_rol;
+    END PRC_OBTENER_ROLES_USUARIO;
 
     -- Crear nuevo usuario asociado a un empleado
     PROCEDURE PRC_CREAR_USUARIO (
@@ -142,8 +160,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
         p_username IN VARCHAR2,
         p_email IN VARCHAR2,
         p_password IN VARCHAR2,
-        p_rol_id IN NUMBER,
-        p_user_crea IN VARCHAR2
+        p_user_crea IN VARCHAR2,
+        p_id_usuario OUT NUMBER
     ) AS
         v_count NUMBER;
     BEGIN
@@ -171,7 +189,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
             username,
             email,
             password,
-            id_rol,
             activo,
             user_crea,
             fecha_crea
@@ -180,11 +197,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
             p_username,
             p_email,
             p_password,
-            p_rol_id,
-            1,  -- activo por defecto
+            1,
             p_user_crea,
             SYSTIMESTAMP
-        );
+        ) RETURNING id_usuario INTO p_id_usuario;
 
         COMMIT;
 
@@ -193,6 +209,31 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
             ROLLBACK;
             RAISE;
     END PRC_CREAR_USUARIO;
+ 
+    PROCEDURE PRC_ASIGNAR_ROLES (
+        p_id_usuario IN NUMBER,
+        p_roles_ids IN T_ID_TAB,
+        p_user_crea IN VARCHAR2
+    ) AS
+    BEGIN
+        -- Eliminar roles actuales
+        DELETE FROM usuarios_roles WHERE id_usuario = p_id_usuario;
+
+        
+        IF p_roles_ids IS NOT NULL AND p_roles_ids.COUNT > 0 THEN
+            FOR i IN 1..p_roles_ids.COUNT LOOP
+                INSERT INTO usuarios_roles (id_usuario, id_rol, user_crea, fecha_asignacion)
+                VALUES (p_id_usuario, p_roles_ids(i), p_user_crea, SYSTIMESTAMP);
+            END LOOP;
+        END IF;
+
+        COMMIT;
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE;
+    END PRC_ASIGNAR_ROLES;
 
     -- Eliminar usuario por ID de empleado
     PROCEDURE PRC_ELIMINAR_USUARIO_POR_EMPLEADO (
@@ -200,7 +241,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
     ) AS
         v_count NUMBER;
     BEGIN
-        -- Verificar que el usuario existe
         SELECT COUNT(*) INTO v_count
         FROM usuarios
         WHERE id_empleado = p_id_empleado;
@@ -209,7 +249,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
             RETURN;
         END IF;
 
-        -- Eliminar el usuario
         DELETE FROM usuarios
         WHERE id_empleado = p_id_empleado;
 
@@ -258,24 +297,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
             ROLLBACK;
             RAISE;
     END PRC_ACTUALIZAR_PASSWORD;
-
-    -- Actualizar rol
-    PROCEDURE PRC_ACTUALIZAR_ROL (
-        p_id_usuario IN NUMBER,
-        p_rol_id IN NUMBER
-    ) AS
-    BEGIN
-        UPDATE usuarios
-        SET id_rol = p_rol_id,
-            fecha_mod = SYSTIMESTAMP
-        WHERE id_usuario = p_id_usuario;
-        
-        COMMIT;
-    EXCEPTION
-        WHEN OTHERS THEN
-            ROLLBACK;
-            RAISE;
-    END PRC_ACTUALIZAR_ROL;
 
 END PKG_USUARIOS;
 /
