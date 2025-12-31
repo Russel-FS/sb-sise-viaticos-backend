@@ -40,21 +40,21 @@
             },
             colors: {
               background: { light: "#F9F8F6", dark: "#0F1115" },
-              surface: { light: "#FFFFFF", dark: "#1C1E22" },
-              accent: {
-                sage: "#D8E2DC",
-                forest: "#2D3B2D",
-                clay: "#C4A484",
-              },
+            },
+            animation: {
+              gradient: "gradient 15s ease infinite",
+              "slide-up":
+                "slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
             },
             keyframes: {
+              gradient: {
+                "0%, 100%": { "background-position": "0% 50%" },
+                "50%": { "background-position": "100% 50%" },
+              },
               "slide-up": {
                 "0%": { transform: "translateY(20px)", opacity: "0" },
                 "100%": { transform: "translateY(0)", opacity: "1" },
               },
-            },
-            animation: {
-              "slide-up": "slide-up 0.6s ease-out forwards",
             },
           },
         },
@@ -63,207 +63,179 @@
 
     <style>
       body {
-        background-color: #f9f8f6;
-        color: #1f2937;
         font-family: "Inter", sans-serif;
-        overflow: hidden;
+        background: linear-gradient(-45deg, #f3f4f6, #e5e7eb, #d1d5db, #f3f4f6);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       .dark body {
-        background-color: #0f1115;
-        color: #f3f4f6;
+        background: linear-gradient(-45deg, #0f1115, #1c1c1e, #111827, #0f1115);
       }
 
-      .bg-split {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
+      .login-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
       }
-      .bg-left {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #f9f8f6;
-        transition: all 0.5s ease;
-      }
-      .dark .bg-left {
-        background: #0f1115;
+      .dark .login-card {
+        background: rgba(28, 28, 30, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       }
 
-      @media (min-width: 1024px) {
-        .bg-left {
-          width: 50%;
-        }
-        .bg-right {
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 50%;
-          height: 100%;
-          background-image: url("https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop");
-          background-size: cover;
-          background-position: center;
-        }
-        .dark .bg-right {
-          background-image: url("https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=2301&auto=format&fit=crop");
-        }
-        /* Gradient Overlay for Image */
-        .bg-right::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to right, #f9f8f6 0%, transparent 20%);
-        }
-        .dark .bg-right::after {
-          background: linear-gradient(to right, #0f1115 0%, transparent 50%);
-        }
-      }
-
-      .input-underlined {
+      .input-premium {
         width: 100%;
-        background: transparent;
-        border-bottom: 1px solid #e5e7eb;
-        padding: 12px 0;
-        font-size: 16px;
-        color: #1f2937;
-        transition: border-color 0.3s ease;
-        border-radius: 0;
+        padding: 1rem 1.25rem;
+        background-color: white; /* Más contraste */
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.2s ease-in-out;
         outline: none;
+        color: #1f2937;
       }
-      .dark .input-underlined {
-        border-color: #374151;
+      .dark .input-premium {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
         color: white;
       }
-
-      .input-underlined:focus {
-        border-color: #1f2937;
+      .input-premium:focus {
+        border-color: #2d3b2d;
+        box-shadow: 0 0 0 4px rgba(45, 59, 45, 0.05);
+        transform: translateY(-1px);
       }
-      .dark .input-underlined:focus {
-        border-color: white;
-      }
-
-      .brand-title {
-        font-family: "Instrument Serif", serif;
-        font-style: italic;
+      .dark .input-premium:focus {
+        border-color: #d8e2dc;
+        box-shadow: 0 0 0 4px rgba(216, 226, 220, 0.1);
       }
     </style>
   </head>
-  <body
-    class="antialiased h-screen w-full flex items-center justify-center lg:justify-start relative"
-  >
-    <div class="bg-split">
-      <div class="bg-left"></div>
-      <div
-        class="bg-right hidden lg:block animate-in fade-in duration-1000"
-      ></div>
-    </div>
-
-    <div class="fixed top-8 left-8 z-50">
+  <body class="p-4">
+    <!-- Theme Toggle (Floating) -->
+    <div class="fixed top-6 right-6 z-50">
       <button
         onclick="toggleTheme()"
-        class="w-10 h-10 rounded-full flex items-center justify-center bg-transparent border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-all group"
+        class="w-10 h-10 rounded-full flex items-center justify-center bg-white/50 dark:bg-black/20 backdrop-blur-md border border-white/20 hover:scale-110 transition-all shadow-lg"
       >
         <i
           data-lucide="sun"
-          class="w-4 h-4 text-gray-500 hidden dark:block group-hover:text-white transition-colors"
+          class="w-4 h-4 text-gray-600 hidden dark:block"
         ></i>
         <i
           data-lucide="moon"
-          class="w-4 h-4 text-gray-500 block dark:hidden group-hover:text-black transition-colors"
+          class="w-4 h-4 text-gray-800 block dark:hidden"
         ></i>
       </button>
     </div>
 
-    <main
-      class="relative z-10 w-full max-w-lg lg:ml-[8%] px-8 flex flex-col justify-center h-full"
+    <!-- Login Card -->
+    <div
+      class="login-card w-full max-w-[420px] rounded-[32px] p-8 md:p-12 animate-slide-up relative overflow-hidden"
     >
-      <div class="w-full animate-slide-up" style="animation-delay: 0.1s">
-        <div class="mb-16">
-          <div
-            class="w-12 h-12 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center mb-8 shadow-xl"
-          >
-            <i data-lucide="layers" class="w-6 h-6"></i>
-          </div>
-          <h1
-            class="text-6xl font-serif italic text-gray-900 dark:text-white mb-4 tracking-tight leading-none brand-title"
-          >
-            Bienvenido
-          </h1>
-          <p
-            class="text-lg text-gray-500 dark:text-gray-400 font-light max-w-xs"
-          >
-            Ingresa tus credenciales para acceder al sistema de gestión de
-            viáticos.
-          </p>
-        </div>
+      <!-- Decoración sutil -->
+      <div
+        class="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"
+      ></div>
+      <div
+        class="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"
+      ></div>
 
-        <form th:action="@{/login}" method="post" class="space-y-10">
-          <div class="space-y-6">
-            <div class="group">
-              <label
-                class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 group-focus-within:text-gray-900 dark:group-focus-within:text-white transition-colors"
-                >Usuario</label
-              >
+      <!-- Header -->
+      <div class="text-center mb-10 relative z-10">
+        <div
+          class="w-14 h-14 mx-auto bg-gray-900 dark:bg-white text-white dark:text-black rounded-2xl flex items-center justify-center shadow-xl mb-6"
+        >
+          <i data-lucide="layers" class="w-7 h-7"></i>
+        </div>
+        <h1
+          class="text-4xl font-serif italic text-gray-900 dark:text-white mb-2"
+        >
+          Bienvenido
+        </h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Ingresa a tu cuenta para continuar
+        </p>
+      </div>
+
+      <!-- Form -->
+      <form th:action="@{/login}" method="post" class="space-y-6 relative z-10">
+        <div class="space-y-4">
+          <div>
+            <label
+              class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5 ml-1"
+              >Usuario</label
+            >
+            <div class="relative">
               <input
                 type="text"
                 name="username"
                 required
-                placeholder="nombre.apellido"
-                class="input-underlined placeholder-gray-300 dark:placeholder-gray-600"
+                placeholder="ej. juan.perez"
+                class="input-premium pl-11"
               />
+              <i
+                data-lucide="user"
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+              ></i>
             </div>
+          </div>
 
-            <div class="group">
-              <label
-                class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 group-focus-within:text-gray-900 dark:group-focus-within:text-white transition-colors"
-                >Contraseña</label
-              >
+          <div>
+            <label
+              class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5 ml-1"
+              >Contraseña</label
+            >
+            <div class="relative">
               <input
                 type="password"
                 name="password"
                 required
                 placeholder="••••••••"
-                class="input-underlined placeholder-gray-300 dark:placeholder-gray-600"
+                class="input-premium pl-11"
               />
+              <i
+                data-lucide="lock"
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+              ></i>
             </div>
           </div>
+        </div>
 
-          <div
-            th:if="${param.error}"
-            class="flex items-center gap-3 text-red-600 dark:text-red-400 text-sm animate-in fade-in slide-in-from-left-2 duration-300"
-          >
-            <i data-lucide="alert-circle" class="w-4 h-4"></i>
-            <span class="font-medium">Credenciales incorrectas</span>
-          </div>
+        <!-- Error mensaje -->
+        <div
+          th:if="${param.error}"
+          class="p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 flex items-center gap-3 text-red-600 dark:text-red-400 text-sm animate-in fade-in slide-in-from-top-2"
+        >
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+          <span class="font-medium">Credenciales incorrectas</span>
+        </div>
 
-          <div class="pt-4 flex items-center justify-between">
-            <a
-              href="#"
-              class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >¿Olvidaste tu contraseña?</a
-            >
+        <!-- Submit Boton -->
+        <button
+          type="submit"
+          class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-black font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-300 flex items-center justify-center gap-2 group"
+        >
+          <span>Iniciar Sesión</span>
+          <i
+            data-lucide="arrow-right"
+            class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+          ></i>
+        </button>
+      </form>
 
-            <button
-              type="submit"
-              class="w-16 h-16 rounded-full bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 hover:shadow-black/20 group"
-            >
-              <i
-                data-lucide="arrow-right"
-                class="w-6 h-6 group-hover:translate-x-0.5 transition-transform"
-              ></i>
-            </button>
-          </div>
-        </form>
+      <!-- Footer -->
+      <div class="mt-8 text-center">
+        <p class="text-xs text-gray-400 uppercase tracking-widest">
+          ISS Viáticos &copy; 2025
+        </p>
       </div>
-
-      <div
-        class="absolute bottom-10 left-8 lg:left-0 lg:relative lg:mt-auto lg:bottom-0 text-xs text-gray-400 uppercase tracking-widest opacity-40 animate-in fade-in duration-1000 delay-500"
-      >
-        ISS Viáticos &copy; 2025
-      </div>
-    </main>
+    </div>
 
     <script th:inline="javascript">
       lucide.createIcons();
