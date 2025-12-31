@@ -32,6 +32,12 @@ public class AdminTipoGastoController {
         return "redirect:/admin/conceptos?success";
     }
 
+    @GetMapping("/{id}")
+    @ResponseBody
+    public TipoGasto obtener(@PathVariable Long id) {
+        return tipoGastoService.obtenerPorId(id);
+    }
+
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id) {
         try {

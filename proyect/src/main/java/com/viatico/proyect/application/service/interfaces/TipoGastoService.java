@@ -9,5 +9,7 @@ public interface TipoGastoService {
 
     TipoGasto guardar(TipoGasto tipoGasto, String username);
 
+    TipoGasto obtenerPorId(Long id);
+
     void eliminar(Long id);
 }

@@ -34,6 +34,11 @@ public class TipoGastoServiceImpl implements TipoGastoService {
     }
 
     @Override
+    public TipoGasto obtenerPorId(Long id) {
+        return tipoGastoRepository.findById(id).orElseThrow(() -> new RuntimeException("Concepto no encontrado"));
+    }
+
+    @Override
     @Transactional
     public void eliminar(Long id) {
         TipoGasto tg = tipoGastoRepository.findById(id).orElseThrow();
