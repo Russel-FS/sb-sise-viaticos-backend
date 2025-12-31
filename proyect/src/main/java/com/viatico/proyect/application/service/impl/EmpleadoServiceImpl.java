@@ -26,9 +26,15 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         return empleadoRepository.listarTodos();
     }
 
-    @Override
-    @Transactional
     public Empleado guardar(Empleado empleado, String password, Long rolId, String username, String usernameCrea) {
+
+        if (empleadoRepository.existeDni(empleado.getDni(), empleado.getId())) {
+            throw new IllegalArgumentException("El DNI ingresado ya está registrado en el sistema.");
+        }
+        if (empleadoRepository.existeEmail(empleado.getEmail(), empleado.getId())) {
+            throw new IllegalArgumentException("El correo electrónico ya está en uso por otro empleado.");
+        }
+
         boolean esNuevo = (empleado.getId() == null);
         Long idEmpleado = empleadoRepository.guardarEmpleado(empleado, usernameCrea);
 
