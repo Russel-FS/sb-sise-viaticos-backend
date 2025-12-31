@@ -7,6 +7,9 @@ import com.viatico.proyect.domain.entity.Empleado;
 import com.viatico.proyect.domain.repositories.RolRepository;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,9 +45,11 @@ public class AdminEmpleadoController {
         com.viatico.proyect.domain.entity.Usuario usuario = empleadoService.obtenerUsuarioPorEmpleado(id);
 
         if (usuario != null) {
-            if (usuario.getRol() != null) {
-                model.addAttribute("rolId", usuario.getRol().getId());
-            }
+
+            java.util.List<Long> rolIds = usuario.getRoles().stream()
+                    .map(rol -> rol.getId())
+                    .collect(java.util.stream.Collectors.toList());
+            model.addAttribute("rolIds", rolIds);
             model.addAttribute("currentUsername", usuario.getUsername());
         }
 
@@ -57,12 +62,12 @@ public class AdminEmpleadoController {
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Empleado empleado,
             @RequestParam String password,
-            @RequestParam Long rolId,
+            @RequestParam(required = false) List<Long> rolIds,
             @RequestParam(required = false) String username,
             @AuthenticationPrincipal UsuarioPrincipal user,
             RedirectAttributes ra) {
         try {
-            empleadoService.guardar(empleado, password, rolId, username, user.getUsername());
+            empleadoService.guardar(empleado, password, rolIds, username, user.getUsername());
             ra.addFlashAttribute("success",
                     "Empleado " + (empleado.getId() != null ? "actualizado" : "registrado") + " correctamente");
         } catch (Exception e) {

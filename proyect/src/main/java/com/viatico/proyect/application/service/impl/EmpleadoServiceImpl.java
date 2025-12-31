@@ -26,7 +26,9 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         return empleadoRepository.listarTodos();
     }
 
-    public Empleado guardar(Empleado empleado, String password, Long rolId, String username, String usernameCrea) {
+    @Override
+    public Empleado guardar(Empleado empleado, String password, List<Long> rolIds, String username,
+            String usernameCrea) {
 
         if (empleadoRepository.existeDni(empleado.getDni(), empleado.getId())) {
             throw new IllegalArgumentException("El DNI ingresado ya está registrado en el sistema.");
@@ -40,16 +42,18 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
         if (esNuevo) {
             String passwordEncriptado = passwordEncoder.encode(password);
-
             String finalUsername = (username != null && !username.trim().isEmpty()) ? username : empleado.getEmail();
 
-            usuarioRepository.crearUsuario(
+            Long idUsuarioNuevo = usuarioRepository.crearUsuario(
                     idEmpleado,
                     finalUsername,
                     empleado.getEmail(),
                     passwordEncriptado,
-                    rolId,
                     usernameCrea);
+
+            if (rolIds != null && !rolIds.isEmpty()) {
+                usuarioRepository.asignarRoles(idUsuarioNuevo, rolIds, usernameCrea);
+            }
         } else {
             Usuario usuario = obtenerUsuarioPorEmpleado(idEmpleado);
             if (usuario != null) {
@@ -57,8 +61,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                     String passwordEncriptado = passwordEncoder.encode(password);
                     usuarioRepository.actualizarPassword(usuario.getId(), passwordEncriptado);
                 }
-                if (rolId != null && usuario.getRol().getId() != rolId) {
-                    usuarioRepository.actualizarRol(usuario.getId(), rolId);
+                if (rolIds != null && !rolIds.isEmpty()) {
+                    usuarioRepository.asignarRoles(usuario.getId(), rolIds, usernameCrea);
                 }
             }
         }

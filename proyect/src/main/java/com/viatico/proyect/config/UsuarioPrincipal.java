@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.viatico.proyect.domain.entity.Usuario;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.stream.Collectors;
 
 @Getter
 public class UsuarioPrincipal implements UserDetails {
@@ -27,7 +27,10 @@ public class UsuarioPrincipal implements UserDetails {
         this.password = usuario.getPassword();
         this.idEmpleado = usuario.getEmpleado().getId();
         this.nombreCompleto = usuario.getEmpleado().getNombres() + " " + usuario.getEmpleado().getApellidos();
-        this.authorities = Collections.singletonList(new SimpleGrantedAuthority(usuario.getRol().getCodigo()));
+
+        this.authorities = usuario.getRoles().stream()
+                .map(rol -> new SimpleGrantedAuthority(rol.getCodigo()))
+                .collect(Collectors.toList());
         this.activo = usuario.getActivo() == 1;
     }
 

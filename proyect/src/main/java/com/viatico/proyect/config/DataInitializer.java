@@ -17,6 +17,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -86,7 +87,7 @@ public class DataInitializer implements CommandLineRunner {
             e.setNivel(nivelAdmin);
 
             Rol rolAdmin = rolRepository.findByCodigo(RolNombre.ADMIN.getCodigo()).get();
-            empleadoService.guardar(e, "admin123", rolAdmin.getId(), null, "SYSTEM");
+            empleadoService.guardar(e, "admin123", List.of(rolAdmin.getId()), null, "SYSTEM");
 
             log.info("Empleado y usuario administrador creado: admin@iss.com.pe / admin123");
         } else {

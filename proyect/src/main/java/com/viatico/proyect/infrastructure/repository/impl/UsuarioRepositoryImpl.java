@@ -5,10 +5,12 @@ import com.viatico.proyect.domain.entity.Rol;
 import com.viatico.proyect.domain.entity.Usuario;
 import com.viatico.proyect.domain.repositories.UsuarioRepository;
 
+import oracle.jdbc.OracleConnection;
 import oracle.jdbc.OracleTypes;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,20 +26,65 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     }
 
     @Override
-    public void crearUsuario(Long idEmpleado, String username, String email,
-            String password, Long rolId, String userCrea) {
-        jdbcTemplate.execute((Connection con) -> {
+    public Long crearUsuario(Long idEmpleado, String username, String email,
+            String password, String userCrea) {
+        return jdbcTemplate.execute((Connection con) -> {
             String sql = "{call PKG_USUARIOS.PRC_CREAR_USUARIO(?, ?, ?, ?, ?, ?)}";
             try (CallableStatement stmt = con.prepareCall(sql)) {
                 stmt.setLong(1, idEmpleado);
                 stmt.setString(2, username);
                 stmt.setString(3, email);
                 stmt.setString(4, password);
-                stmt.setLong(5, rolId);
-                stmt.setString(6, userCrea);
+                stmt.setString(5, userCrea);
+                stmt.registerOutParameter(6, Types.NUMERIC);
+                stmt.execute();
+                return stmt.getLong(6);
+            }
+        });
+    }
+
+    @Override
+    public void asignarRoles(Long idUsuario, List<Long> rolIds, String userCrea) {
+        jdbcTemplate.execute((Connection con) -> {
+
+            BigDecimal[] rolesArray = rolIds.stream()
+                    .map(BigDecimal::valueOf)
+                    .toArray(BigDecimal[]::new);
+
+            OracleConnection oraConn = con.unwrap(OracleConnection.class);
+            Array sqlArray = oraConn.createOracleArray("T_ID_TAB", rolesArray);
+
+            String sql = "{call PKG_USUARIOS.PRC_ASIGNAR_ROLES(?, ?, ?)}";
+            try (CallableStatement stmt = con.prepareCall(sql)) {
+                stmt.setLong(1, idUsuario);
+                stmt.setArray(2, sqlArray);
+                stmt.setString(3, userCrea);
                 stmt.execute();
                 return null;
             }
+        });
+    }
+
+    @Override
+    public List<Rol> obtenerRolesUsuario(Long idUsuario) {
+        return jdbcTemplate.execute((Connection conn) -> {
+            List<Rol> roles = new ArrayList<>();
+            try (CallableStatement cs = conn.prepareCall("{call PKG_USUARIOS.PRC_OBTENER_ROLES_USUARIO(?, ?)}")) {
+                cs.setLong(1, idUsuario);
+                cs.registerOutParameter(2, OracleTypes.CURSOR);
+                cs.execute();
+
+                try (ResultSet rs = (ResultSet) cs.getObject(2)) {
+                    while (rs.next()) {
+                        Rol rol = new Rol();
+                        rol.setId(rs.getLong("id_rol"));
+                        rol.setCodigo(rs.getString("codigo_rol"));
+                        rol.setNombre(rs.getString("nombre_rol"));
+                        roles.add(rol);
+                    }
+                }
+            }
+            return roles;
         });
     }
 
@@ -79,6 +126,8 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
                 try (ResultSet rs = (ResultSet) cs.getObject(1)) {
                     while (rs.next()) {
                         Usuario usuario = mapUsuarioFromResultSet(rs);
+
+                        usuario.setRoles(obtenerRolesUsuario(usuario.getId()));
                         usuarios.add(usuario);
                     }
                 }
@@ -97,7 +146,10 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
 
                 try (ResultSet rs = (ResultSet) cs.getObject(1)) {
                     if (rs.next()) {
-                        return Optional.of(mapUsuarioFromResultSet(rs));
+                        Usuario usuario = mapUsuarioFromResultSet(rs);
+
+                        usuario.setRoles(obtenerRolesUsuario(usuario.getId()));
+                        return Optional.of(usuario);
                     }
                 }
             }
@@ -115,7 +167,10 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
 
                 try (ResultSet rs = (ResultSet) cs.getObject(1)) {
                     if (rs.next()) {
-                        return Optional.of(mapUsuarioFromResultSet(rs));
+                        Usuario usuario = mapUsuarioFromResultSet(rs);
+
+                        usuario.setRoles(obtenerRolesUsuario(usuario.getId()));
+                        return Optional.of(usuario);
                     }
                 }
             }
@@ -139,15 +194,6 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
         usuario.setUsername(rs.getString("username"));
         usuario.setEmail(rs.getString("email"));
         usuario.setPassword(rs.getString("password"));
-
-        Long idRol = rs.getLong("id_rol");
-        if (!rs.wasNull()) {
-            Rol rol = new Rol();
-            rol.setId(idRol);
-            rol.setCodigo(rs.getString("codigo_rol"));
-            usuario.setRol(rol);
-        }
-
         usuario.setActivo(rs.getInt("activo"));
         usuario.setUserCrea(rs.getString("user_crea"));
 
@@ -171,18 +217,4 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
             }
         });
     }
-
-    @Override
-    public void actualizarRol(Long idUsuario, Long rolId) {
-        jdbcTemplate.execute((Connection con) -> {
-            String sql = "{call PKG_USUARIOS.PRC_ACTUALIZAR_ROL(?, ?)}";
-            try (CallableStatement stmt = con.prepareCall(sql)) {
-                stmt.setLong(1, idUsuario);
-                stmt.setLong(2, rolId);
-                stmt.execute();
-                return null;
-            }
-        });
-    }
-
 }

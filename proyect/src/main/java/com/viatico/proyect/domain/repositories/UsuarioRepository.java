@@ -2,14 +2,17 @@ package com.viatico.proyect.domain.repositories;
 
 import java.util.Optional;
 
+import com.viatico.proyect.domain.entity.Rol;
 import com.viatico.proyect.domain.entity.Usuario;
 
 import java.util.List;
 
 public interface UsuarioRepository {
 
-    void crearUsuario(Long idEmpleado, String username, String email,
-            String password, Long rolId, String userCrea);
+    Long crearUsuario(Long idEmpleado, String username, String email,
+            String password, String userCrea);
+
+    void asignarRoles(Long idUsuario, List<Long> rolIds, String userCrea);
 
     void eliminarPorEmpleado(Long idEmpleado);
 
@@ -23,5 +26,5 @@ public interface UsuarioRepository {
 
     void actualizarPassword(Long idUsuario, String password);
 
-    void actualizarRol(Long idUsuario, Long rolId);
+    List<Rol> obtenerRolesUsuario(Long idUsuario);
 }
