@@ -107,7 +107,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_SOLICITUDES AS
             v_total_noches := v_total_noches + p_itinerario(i).noches;
             
             -- Suma del tarifario diario para la zona y nivel del empleado
-            SELECT SUM(monto_limite_diario)
+            SELECT SUM(monto)
             INTO v_monto_diario_zona
             FROM tarifario_viaticos
             WHERE id_zona = p_itinerario(i).id_zona

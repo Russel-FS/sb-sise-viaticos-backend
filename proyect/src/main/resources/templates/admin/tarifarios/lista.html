@@ -354,7 +354,7 @@
                       >S/</span
                     >
                     <span
-                      th:text="${#numbers.formatDecimal(tar.montoDiario, 1, 'COMMA', 2, 'POINT')}"
+                      th:text="${#numbers.formatDecimal(tar.monto, 1, 'COMMA', 2, 'POINT')}"
                       >0.00</span
                     >
                   </div>
@@ -476,12 +476,12 @@
           <div>
             <label
               class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 px-1"
-              >Monto Límite Diario (S/)</label
-            >
+              >Monto
+            </label>
             <input
               type="number"
               step="0.01"
-              name="montoDiario"
+              name="monto"
               required
               placeholder="0.00"
               class="w-full px-4 py-4 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-2xl font-bold tracking-tight focus:outline-none focus:ring-2 focus:ring-accent-forest/20 dark:focus:ring-white/20 transition-all dark:text-white"

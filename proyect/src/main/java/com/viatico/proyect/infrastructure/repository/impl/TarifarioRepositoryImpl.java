@@ -38,7 +38,7 @@ public class TarifarioRepositoryImpl implements TarifarioRepository {
                 cs.setLong(2, t.getZonaGeografica().getId());
                 cs.setLong(3, t.getNivelJerarquico().getId());
                 cs.setLong(4, t.getTipoGasto().getId());
-                cs.setBigDecimal(5, t.getMontoDiario());
+                cs.setBigDecimal(5, t.getMonto());
                 cs.setString(6, t.getMoneda());
                 cs.setInt(7, t.getActivo() != null ? t.getActivo() : 1);
                 cs.setString(8, t.getUserCrea());
@@ -171,7 +171,7 @@ public class TarifarioRepositoryImpl implements TarifarioRepository {
         tg.setEsAsignablePorDia(rs.getBoolean("es_asignable_por_dia"));
         t.setTipoGasto(tg);
 
-        t.setMontoDiario(rs.getBigDecimal("monto_limite_diario"));
+        t.setMonto(rs.getBigDecimal("monto"));
         t.setMoneda(rs.getString("moneda"));
         t.setActivo(rs.getInt("activo"));
         t.setUserCrea(rs.getString("user_crea"));

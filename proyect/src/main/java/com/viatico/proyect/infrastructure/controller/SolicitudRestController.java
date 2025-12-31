@@ -60,7 +60,7 @@ public class SolicitudRestController {
                                                                 empleado.getNivel(), zona);
 
                                 BigDecimal montoDiarioTotal = tarifarios.stream()
-                                                .map(Tarifario::getMontoDiario)
+                                                .map(Tarifario::getMonto)
                                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                                 int diasTramo = (i == idZonas.size() - 1) ? n + 1 : n;

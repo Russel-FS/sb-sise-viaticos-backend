@@ -60,7 +60,7 @@ CREATE TABLE tarifario_viaticos (
     id_zona NUMBER NOT NULL,
     id_nivel NUMBER NOT NULL,
     id_tipo_gasto NUMBER NOT NULL,
-    monto_limite_diario NUMBER(10, 2) NOT NULL,
+    monto NUMBER(10, 2) DEFAULT 0 NOT NULL,
     moneda CHAR(3) DEFAULT 'PEN',
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
@@ -73,6 +73,7 @@ CREATE TABLE tarifario_viaticos (
     CONSTRAINT fk_tarifa_nivel FOREIGN KEY (id_nivel) REFERENCES niveles_jerarquicos (id_nivel),
     CONSTRAINT fk_tarifa_tipo FOREIGN KEY (id_tipo_gasto) REFERENCES tipos_gasto (id_tipo)
 );
+
 /
 -- EMPLEADOS
 CREATE TABLE empleados (

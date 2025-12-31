@@ -57,7 +57,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_TARIFARIO AS
     BEGIN
         OPEN p_cursor FOR
             SELECT t.id_tarifa, t.id_zona, z.nombre_zona, t.id_nivel, n.nombre_nivel, 
-                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto_limite_diario, t.moneda,
+                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto, t.moneda,
                    t.user_crea, t.fecha_crea, t.activo
             FROM tarifario_viaticos t
             JOIN zonas_geograficas z ON t.id_zona = z.id_zona
@@ -74,7 +74,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_TARIFARIO AS
     BEGIN
         OPEN p_cursor FOR
             SELECT t.id_tarifa, t.id_zona, z.nombre_zona, t.id_nivel, n.nombre_nivel, 
-                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto_limite_diario, t.moneda,
+                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto, t.moneda,
                    t.user_crea, t.fecha_crea, t.activo
             FROM tarifario_viaticos t
             JOIN zonas_geograficas z ON t.id_zona = z.id_zona
@@ -91,7 +91,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_TARIFARIO AS
     BEGIN
         OPEN p_cursor FOR
             SELECT t.id_tarifa, t.id_zona, z.nombre_zona, t.id_nivel, n.nombre_nivel, 
-                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto_limite_diario, t.moneda,
+                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto, t.moneda,
                    t.user_crea, t.fecha_crea, t.activo
             FROM tarifario_viaticos t
             JOIN zonas_geograficas z ON t.id_zona = z.id_zona
@@ -108,7 +108,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_TARIFARIO AS
     BEGIN
         OPEN v_cursor FOR
             SELECT t.id_tarifa, t.id_zona, z.nombre_zona, t.id_nivel, n.nombre_nivel, 
-                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto_limite_diario, t.moneda,
+                   t.id_tipo_gasto, tg.nombre_gasto, tg.es_asignable_por_dia, t.monto, t.moneda,
                    t.user_crea, t.fecha_crea, t.activo
             FROM tarifario_viaticos t
             JOIN zonas_geograficas z ON t.id_zona = z.id_zona
@@ -132,7 +132,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_TARIFARIO AS
         IF p_id_tarifa IS NULL THEN
             INSERT INTO tarifario_viaticos (
                 id_zona, id_nivel, id_tipo_gasto, 
-                monto_limite_diario, moneda, activo, user_crea, fecha_crea
+                monto, moneda, activo, user_crea, fecha_crea
             ) VALUES (
                 p_id_zona, p_id_nivel, p_id_tipo_gasto, 
                 p_monto, p_moneda, p_activo, p_user, SYSTIMESTAMP
@@ -142,7 +142,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_TARIFARIO AS
                 id_zona = p_id_zona,
                 id_nivel = p_id_nivel,
                 id_tipo_gasto = p_id_tipo_gasto,
-                monto_limite_diario = p_monto,
+                monto = p_monto,
                 moneda = p_moneda,
                 activo = p_activo,
                 user_mod = p_user,

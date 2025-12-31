@@ -12,7 +12,7 @@ public class Tarifario {
     private ZonaGeografica zonaGeografica;
     private NivelJerarquico nivelJerarquico;
     private TipoGasto tipoGasto;
-    private BigDecimal montoDiario;
+    private BigDecimal monto;
     private String moneda;
     private String userCrea;
     private LocalDateTime fechaCrea;
