@@ -25,6 +25,12 @@ public class AdminZonaController {
         return "admin/zonas/lista";
     }
 
+    @GetMapping("/{id}")
+    @ResponseBody
+    public ZonaGeografica obtener(@PathVariable Long id) {
+        return zonaService.obtenerPorId(id);
+    }
+
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute ZonaGeografica zona,
             @AuthenticationPrincipal UsuarioPrincipal user) {

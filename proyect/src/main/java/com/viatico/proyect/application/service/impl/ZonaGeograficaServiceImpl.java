@@ -39,4 +39,9 @@ public class ZonaGeograficaServiceImpl implements ZonaGeograficaService {
         zg.setActivo(0);
         zonaRepository.save(zg);
     }
+
+    @Override
+    public ZonaGeografica obtenerPorId(Long id) {
+        return zonaRepository.findById(id).orElseThrow(() -> new RuntimeException("Zona no encontrada"));
+    }
 }

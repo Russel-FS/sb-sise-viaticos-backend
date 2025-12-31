@@ -255,7 +255,7 @@
         </div>
 
         <button
-          onclick="document.getElementById('modalNuevo').classList.remove('hidden')"
+          onclick="abrirModalNuevo()"
           class="group relative px-6 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full text-sm font-bold overflow-hidden transition-all hover:shadow-lg active:scale-95 flex items-center gap-2"
         >
           <i data-lucide="plus" class="w-4 h-4"></i>
@@ -316,7 +316,16 @@
                     >Descripción</span
                   >
                 </td>
-                <td class="px-8 py-6 text-right">
+                <td
+                  class="px-8 py-6 text-right flex items-center justify-end gap-2"
+                >
+                  <button
+                    th:onclick="'abrirModalEditar(' + ${z.id} + ')'"
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+                    title="Editar"
+                  >
+                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                  </button>
                   <a
                     th:href="@{'/admin/zonas/eliminar/' + ${z.id}}"
                     onclick="return confirm('¿Desactivar esta zona?')"
@@ -335,7 +344,7 @@
               No hay zonas geográficas registradas.
             </p>
             <button
-              onclick="document.getElementById('modalNuevo').classList.remove('hidden')"
+              onclick="abrirModalNuevo()"
               class="text-xs font-bold text-accent-forest dark:text-accent-sage hover:underline"
             >
               Crear la primera
@@ -365,10 +374,12 @@
         </p>
 
         <form
+          id="formZona"
           th:action="@{/admin/zonas/guardar}"
           method="post"
           class="space-y-6"
         >
+          <input type="hidden" name="id" id="zonaId" />
           <div>
             <label
               class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 px-1"
@@ -405,7 +416,7 @@
             </button>
             <button
               type="button"
-              onclick="document.getElementById('modalNuevo').classList.add('hidden')"
+              onclick="cerrarModal()"
               class="w-full py-3.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 font-bold rounded-xl hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
             >
               Cancelar
@@ -417,6 +428,37 @@
 
     <script th:inline="javascript">
       lucide.createIcons();
+
+      function abrirModalNuevo() {
+        document.getElementById("modalNuevo").classList.remove("hidden");
+        document.getElementById("zonaId").value = "";
+        document.getElementById("formZona").reset();
+        document.querySelector("#modalNuevo h3").innerText = "Nueva Zona";
+      }
+
+      function cerrarModal() {
+        document.getElementById("modalNuevo").classList.add("hidden");
+      }
+
+      async function abrirModalEditar(id) {
+        try {
+          document.getElementById("formZona").reset();
+
+          const response = await fetch(`/admin/zonas/${id}`);
+          const data = await response.json();
+
+          document.getElementById("zonaId").value = data.id;
+          document.querySelector('input[name="nombre"]').value = data.nombre;
+          document.querySelector('textarea[name="descripcion"]').value =
+            data.descripcion || "";
+
+          document.querySelector("#modalNuevo h3").innerText = "Editar Zona";
+          document.getElementById("modalNuevo").classList.remove("hidden");
+        } catch (error) {
+          console.error("Error al cargar datos:", error);
+          alert("Error al cargar los datos de la zona.");
+        }
+      }
     </script>
     <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
   </body>

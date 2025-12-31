@@ -39,4 +39,9 @@ public class NivelJerarquicoServiceImpl implements NivelJerarquicoService {
         nj.setActivo(0);
         nivelRepository.save(nj);
     }
+
+    @Override
+    public NivelJerarquico obtenerPorId(Long id) {
+        return nivelRepository.findById(id).orElseThrow(() -> new RuntimeException("Nivel no encontrado"));
+    }
 }

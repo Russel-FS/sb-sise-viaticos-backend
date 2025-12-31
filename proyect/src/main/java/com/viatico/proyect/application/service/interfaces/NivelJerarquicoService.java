@@ -10,4 +10,6 @@ public interface NivelJerarquicoService {
     NivelJerarquico guardar(NivelJerarquico nivel, String username);
 
     void eliminar(Long id);
+
+    NivelJerarquico obtenerPorId(Long id);
 }

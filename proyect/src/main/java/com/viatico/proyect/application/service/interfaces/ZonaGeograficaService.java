@@ -10,4 +10,6 @@ public interface ZonaGeograficaService {
     ZonaGeografica guardar(ZonaGeografica zona, String username);
 
     void eliminar(Long id);
+
+    ZonaGeografica obtenerPorId(Long id);
 }

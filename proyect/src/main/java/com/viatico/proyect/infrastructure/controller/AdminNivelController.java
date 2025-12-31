@@ -25,6 +25,12 @@ public class AdminNivelController {
         return "admin/niveles/lista";
     }
 
+    @GetMapping("/{id}")
+    @ResponseBody
+    public NivelJerarquico obtener(@PathVariable Long id) {
+        return nivelService.obtenerPorId(id);
+    }
+
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute NivelJerarquico nivel,
             @AuthenticationPrincipal UsuarioPrincipal user) {
