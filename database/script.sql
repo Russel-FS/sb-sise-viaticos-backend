@@ -288,3 +288,14 @@ CREATE TABLE usuarios_roles (
     CONSTRAINT fk_ur_rol FOREIGN KEY (id_rol) REFERENCES roles (id_rol)
 );
 /
+
+--  okens de recuperación de contraseña
+CREATE TABLE PASSWORD_RESET_TOKENS (
+    id_token NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    token VARCHAR2(255) NOT NULL UNIQUE,
+    id_usuario NUMBER NOT NULL,
+    fecha_expiracion TIMESTAMP NOT NULL,
+    usado NUMBER(1) DEFAULT 0 CHECK (usado IN (0, 1)),
+    fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_token_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
+);
