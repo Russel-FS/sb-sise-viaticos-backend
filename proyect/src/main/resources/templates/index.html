@@ -6,20 +6,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard - ISS Viáticos</title>
+    <title>Resumen - ISS Viáticos</title>
 
-    <!-- External Resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Theme Handling -->
     <script>
       (function () {
         const savedTheme = localStorage.getItem("theme");
@@ -39,7 +37,6 @@
         theme: {
           extend: {
             fontFamily: {
-              serif: ['"Instrument Serif"', "serif"],
               sans: [
                 "Inter",
                 "-apple-system",
@@ -48,33 +45,22 @@
               ],
             },
             colors: {
-              canvas: {
-                light: "#F9F8F6", // Hims-like warm cream
-                dark: "#0F1115", // Deep charcoal
+              aura: {
+                blue: "#0066cc",
+                surface: "#ffffff",
+                bg: "#f5f5f7",
+                text: "#1d1d1f",
+                gray: "#86868b",
+                border: "rgba(0, 0, 0, 0.08)",
               },
-              card: {
-                light: "#FFFFFF",
-                dark: "#1C1E22",
-              },
-              accent: {
-                sage: "#E3ECD2",
-                forest: "#2D3B2D",
-                clay: "#D4A373",
-                sand: "#EFEBE0",
-              },
-              status: {
-                pending: "#E3B505",
-                approved: "#2D3B2D", // Forest green for approved
-                liquidated: "#6B7280",
+              dark: {
+                bg: "#000000",
+                surface: "#1c1c1e",
+                border: "rgba(255, 255, 255, 0.1)",
               },
             },
             borderRadius: {
-              "4xl": "2rem",
-              "5xl": "2.5rem",
-            },
-            boxShadow: {
-              premium: "0 20px 40px -12px rgba(0, 0, 0, 0.05)",
-              glow: "0 0 20px rgba(0,0,0,0.05)",
+              aura: "28px",
             },
           },
         },
@@ -83,368 +69,332 @@
 
     <style>
       body {
-        background-color: #f9f8f6;
-        color: #1a1a1a;
-        font-family: "Inter", sans-serif;
+        background-color: #f5f5f7;
+        color: #1d1d1f;
         -webkit-font-smoothing: antialiased;
-        overflow-x: hidden;
       }
       .dark body {
-        background-color: #0f1115;
-        color: #f1f1f1;
+        background-color: #000000;
+        color: #f5f5f7;
       }
 
-      h1,
-      h2,
-      h3,
-      .serif-font {
-        font-family: "Instrument Serif", serif;
+      .aura-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 28px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          background-color 0.3s ease;
+        backface-visibility: hidden;
+        transform: translateZ(0);
       }
 
-      /* Bento Grid Cards */
-      .bento-card {
-        background: white;
-        border-radius: 2rem;
-        border: 1px solid rgba(0, 0, 0, 0.02);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02),
-          0 2px 4px -1px rgba(0, 0, 0, 0.02);
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-          box-shadow 0.4s ease;
+      .dark .aura-card {
+        background: rgba(28, 28, 30, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
-      .dark .bento-card {
-        background: #1c1e22;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+
+      .aura-card:hover {
+        transform: translateY(-2px) translateZ(0);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);
       }
-      .bento-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.06);
+
+      .stat-pill {
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-size: 12px;
+        font-weight: 600;
       }
 
       /* animaciones */
-      @keyframes fade-in-up {
+      @keyframes fade-in {
         from {
           opacity: 0;
-          transform: translateY(20px);
+          transform: translateY(10px);
         }
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
-      .animate-enter {
-        animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        opacity: 0;
-      }
-      .delay-100 {
-        animation-delay: 100ms;
-      }
-      .delay-200 {
-        animation-delay: 200ms;
-      }
-      .delay-300 {
-        animation-delay: 300ms;
+      .animate-fade {
+        animation: fade-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        opacity: 0; /* Previene el parpadeo inicial */
       }
 
-      /* escrollabar */
+      /* custom scroll */
       ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
+        width: 8px;
       }
       ::-webkit-scrollbar-track {
         background: transparent;
       }
       ::-webkit-scrollbar-thumb {
-        background: #e5e5e5;
+        background: rgba(0, 0, 0, 0.1);
         border-radius: 10px;
+        border: 2px solid transparent;
+        background-clip: content-box;
       }
       .dark ::-webkit-scrollbar-thumb {
-        background: #333;
+        background: rgba(255, 255, 255, 0.1);
       }
     </style>
     <th:block th:replace="~{fragments/nav :: styles}"></th:block>
   </head>
-  <body
-    class="min-h-screen pb-20 selection:bg-accent-sage selection:text-accent-forest"
-  >
+  <body class="min-h-screen pb-20">
     <th:block
       th:replace="~{fragments/nav :: navbar(activeTab='home')}"
     ></th:block>
 
-    <main class="max-w-[1400px] mx-auto px-6 pt-32">
+    <main class="max-w-7xl mx-auto px-6 pt-24 md:pt-32">
       <!-- bienvenido hero -->
-      <header class="mb-16 max-w-4xl animate-enter delay-100">
-        <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-sage/30 text-accent-forest dark:bg-green-900/30 dark:text-green-200 text-xs font-semibold uppercase tracking-wider mb-6"
-        >
-          <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-          Sistema Operativo
-        </div>
+      <header class="mb-12 animate-fade">
+        <p class="text-[17px] font-semibold text-aura-blue mb-2">Dashboard</p>
         <h1
-          class="text-6xl md:text-7xl mb-6 leading-[0.9] text-gray-900 dark:text-gray-100 italic"
+          class="text-[40px] md:text-[48px] font-bold tracking-tight leading-tight"
         >
-          <span class="serif-font not-italic">Bienvenido,</span><br />
+          Hola,
           <span
-            class="text-gray-400 dark:text-gray-500 text-5xl md:text-6xl"
             th:text="${currentUser != null ? currentUser.nombreCompleto.split(' ')[0] : 'Usuario'}"
             >Usuario</span
-          >
+          >.
         </h1>
-        <p class="text-lg text-gray-500 dark:text-gray-400 max-w-xl font-light">
-          Gestión inteligente de viáticos y desplazamientos. Todo lo que
-          necesitas para tu próximo viaje, organizado en un solo lugar.
+        <p class="text-[19px] md:text-[21px] text-aura-gray mt-2 max-w-2xl">
+          Esto es lo que está pasando hoy con tus viáticos y comisiones.
         </p>
       </header>
 
       <!-- grid bento -->
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-20">
-        <!-- Big Card: solicitud nueva -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
+        <!-- solicitud nueva -->
         <div
-          class="col-span-1 md:col-span-8 lg:col-span-7 row-span-2 bento-card p-10 relative overflow-hidden group animate-enter delay-200"
+          class="col-span-1 md:col-span-8 aura-card p-10 flex flex-col justify-between relative overflow-hidden group animate-fade"
+          style="animation-delay: 0.1s"
         >
-          <div
-            class="absolute top-0 right-0 w-64 h-64 bg-accent-sage/20 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-accent-sage/30"
-          ></div>
-
-          <div class="relative z-10 h-full flex flex-col justify-between">
-            <div>
-              <h3 class="text-3xl font-medium mb-2 dark:text-white">
-                Nueva Solicitud
-              </h3>
-              <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-sm">
-                Inicia un nuevo trámite de comisión. Calcularemos los viáticos
-                automáticamente según el destino.
-              </p>
-            </div>
-
-            <div class="flex items-center gap-4">
-              <a
-                href="/solicitudes/nueva"
-                class="inline-flex items-center gap-3 bg-gray-900 dark:bg-white text-white dark:text-black px-8 py-4 rounded-full font-medium hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-200 dark:shadow-none"
-              >
-                <span class="serif-font italic text-lg pr-1">Iniciar</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </a>
-            </div>
+          <div class="relative z-10">
+            <h3 class="text-[32px] font-bold mb-4">Nueva Solicitud</h3>
+            <p
+              class="text-[17px] text-aura-gray max-w-sm mb-10 leading-relaxed"
+            >
+              Inicia una comisión de servicio. Calcularemos los viáticos
+              automáticamente según el destino y tu nivel.
+            </p>
+            <a
+              href="/solicitudes/nueva"
+              class="inline-flex items-center gap-2 bg-aura-blue text-white px-8 py-4 rounded-[18px] font-semibold text-[17px] hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/20"
+            >
+              Comenzar ahora
+              <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </a>
           </div>
 
-          <!-- icono avion -->
+          <!-- background element -->
+          <div
+            class="absolute -right-10 -bottom-10 w-64 h-64 bg-aura-blue/5 rounded-full blur-3xl group-hover:bg-aura-blue/10 transition-colors"
+          ></div>
           <i
             data-lucide="plane"
-            class="absolute bottom-[-20px] right-[-20px] w-64 h-64 text-gray-50 dark:text-white/5 rotate-[-15deg] group-hover:rotate-0 transition-transform duration-700"
+            class="absolute right-8 bottom-8 w-32 h-32 text-aura-blue/5 rotate-[-15deg] group-hover:rotate-0 transition-transform duration-700"
           ></i>
         </div>
 
-        <!-- Stat Card 1: Pendientes -->
-        <div
-          class="col-span-1 md:col-span-4 lg:col-span-5 bento-card p-8 flex items-center justify-between animate-enter delay-200 bg-[#FFFBEB] dark:bg-yellow-900/10 border-none"
-        >
-          <div>
-            <p
-              class="text-xs font-bold uppercase tracking-widest text-yellow-600/70 mb-1"
-            >
-              En Proceso
-            </p>
+        <!-- Stat Area: Stacked Cards -->
+        <div class="col-span-1 md:col-span-4 flex flex-col gap-6">
+          <!-- Stat Card 1: Pendientes -->
+          <div
+            class="aura-card p-8 flex items-center justify-between animate-fade"
+            style="animation-delay: 0.2s"
+          >
+            <div>
+              <p
+                class="text-[13px] font-bold uppercase tracking-wider text-orange-500 mb-1"
+              >
+                En revisión
+              </p>
+              <div
+                class="text-[44px] font-bold leading-none"
+                th:text="${totalPendientes}"
+              >
+                0
+              </div>
+            </div>
             <div
-              class="font-serif text-5xl text-yellow-600 dark:text-yellow-400"
-              th:text="${totalPendientes}"
+              class="w-14 h-14 rounded-[22px] bg-orange-500/10 flex items-center justify-center text-orange-500"
             >
-              0
+              <i data-lucide="timer" class="w-7 h-7"></i>
             </div>
           </div>
-          <div
-            class="w-12 h-12 rounded-full bg-yellow-600/10 flex items-center justify-center text-yellow-600"
-          >
-            <i data-lucide="hourglass" class="w-6 h-6"></i>
-          </div>
-        </div>
 
-        <!-- Stat Card 2: Aprobadas -->
-        <div
-          class="col-span-1 md:col-span-4 lg:col-span-5 bento-card p-8 flex items-center justify-between animate-enter delay-300 bg-[#F0FDF4] dark:bg-green-900/10 border-none"
-        >
-          <div>
-            <p
-              class="text-xs font-bold uppercase tracking-widest text-green-600/70 mb-1"
-            >
-              Aprobadas
-            </p>
-            <div
-              class="font-serif text-5xl text-green-700 dark:text-green-400"
-              th:text="${totalAprobados}"
-            >
-              0
-            </div>
-          </div>
+          <!-- Stat Card 2: Aprobadas -->
           <div
-            class="w-12 h-12 rounded-full bg-green-600/10 flex items-center justify-center text-green-600"
+            class="aura-card p-8 flex items-center justify-between animate-fade"
+            style="animation-delay: 0.3s"
           >
-            <i data-lucide="check-circle" class="w-6 h-6"></i>
+            <div>
+              <p
+                class="text-[13px] font-bold uppercase tracking-wider text-green-500 mb-1"
+              >
+                Aprobadas
+              </p>
+              <div
+                class="text-[44px] font-bold leading-none"
+                th:text="${totalAprobados}"
+              >
+                0
+              </div>
+            </div>
+            <div
+              class="w-14 h-14 rounded-[22px] bg-green-500/10 flex items-center justify-center text-green-500"
+            >
+              <i data-lucide="check-circle-2" class="w-7 h-7"></i>
+            </div>
           </div>
         </div>
 
         <!--  Chart Area -->
         <div
-          class="col-span-1 md:col-span-4 lg:col-span-4 row-span-2 bento-card p-6 flex flex-col animate-enter delay-300"
+          class="col-span-1 md:col-span-5 aura-card p-8 animate-fade"
+          style="animation-delay: 0.4s"
         >
-          <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-serif dark:text-white">Estado Global</h3>
-            <i data-lucide="pie-chart" class="w-4 h-4 text-gray-400"></i>
+          <div class="flex items-center justify-between mb-8">
+            <h3 class="text-[21px] font-bold">Estado Global</h3>
+            <div class="stat-pill bg-aura-blue/10 text-aura-blue">
+              Histórico
+            </div>
           </div>
 
-          <div class="relative flex-1 flex items-center justify-center px-4">
+          <div class="relative flex items-center justify-center h-[240px]">
             <canvas id="statusChart"></canvas>
-            <!-- texto centro -->
             <div
-              class="absolute inset-0 flex items-center justify-center pointer-events-none"
+              class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
             >
-              <div class="text-center mt-2">
-                <span
-                  class="block text-xs text-gray-400 font-medium tracking-wide"
-                  >TOTAL</span
-                >
-                <span
-                  class="serif-font text-2xl text-gray-900 dark:text-white"
-                  th:text="${totalPendientes + totalAprobados + totalLiquidados}"
-                  >0</span
-                >
-              </div>
+              <span
+                class="text-[32px] font-bold leading-none"
+                th:text="${totalPendientes + totalAprobados + totalLiquidados}"
+                >0</span
+              >
+              <span
+                class="text-[13px] text-aura-gray font-medium uppercase tracking-widest mt-1"
+                >Total</span
+              >
             </div>
           </div>
-          <div
-            class="mt-6 flex justify-center gap-4 text-[10px] uppercase font-bold tracking-widest text-gray-400"
-          >
-            <div class="flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-yellow-400"></span>Pend
+
+          <div class="mt-8 flex flex-wrap justify-center gap-6">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-orange-500"></span>
+              <span class="text-[13px] font-medium">Pendientes</span>
             </div>
-            <div class="flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-green-500"></span>Apr
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-green-500"></span>
+              <span class="text-[13px] font-medium">Aprobadas</span>
             </div>
-            <div class="flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-blue-500"></span>Liq
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+              <span class="text-[13px] font-medium">Liquidadas</span>
             </div>
           </div>
         </div>
 
         <!-- lista de actividad reciente  -->
         <div
-          class="col-span-1 md:col-span-8 lg:col-span-8 animate-enter delay-300"
+          class="col-span-1 md:col-span-7 aura-card p-8 animate-fade"
+          style="animation-delay: 0.5s"
         >
-          <div class="bento-card p-8 min-h-[400px]">
-            <div class="flex items-center justify-between mb-8">
-              <div>
-                <h3 class="text-2xl font-serif text-gray-900 dark:text-white">
-                  Recientes
-                </h3>
-                <p class="text-sm text-gray-500">
-                  Tus últimos movimientos y solicitudes.
-                </p>
-              </div>
-              <a
-                href="/solicitudes"
-                class="w-10 h-10 rounded-full border border-gray-100 dark:border-white/10 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+          <div class="flex items-center justify-between mb-8">
+            <div>
+              <h3 class="text-[21px] font-bold">Recientes</h3>
+              <p class="text-[15px] text-aura-gray mt-1">
+                Tus últimos movimientos.
+              </p>
+            </div>
+            <a
+              href="/solicitudes"
+              class="text-aura-blue hover:underline text-[15px] font-semibold"
+              >Ver todas</a
+            >
+          </div>
+
+          <div class="space-y-2">
+            <!-- Empty State -->
+            <div
+              th:if="${#lists.isEmpty(solicitudes)}"
+              class="flex flex-col items-center justify-center py-12 text-center"
+            >
+              <div
+                class="w-16 h-16 bg-aura-bg/50 dark:bg-dark-border rounded-full flex items-center justify-center mb-4"
               >
-                <i
-                  data-lucide="arrow-up-right"
-                  class="w-4 h-4 text-gray-600 dark:text-gray-300"
-                ></i>
-              </a>
+                <i data-lucide="inbox" class="w-8 h-8 text-aura-gray"></i>
+              </div>
+              <p class="text-aura-gray text-[15px]">Aún no tienes registros.</p>
             </div>
 
-            <div class="space-y-3">
-              <!-- Empty State -->
-              <div
-                th:if="${#lists.isEmpty(solicitudes)}"
-                class="flex flex-col items-center justify-center py-12 text-center"
-              >
+            <!-- Item -->
+            <div
+              th:each="sol : ${solicitudes}"
+              th:data-id="${sol.id}"
+              onclick="window.location.href='/solicitudes/' + this.dataset.id"
+              class="group flex items-center justify-between p-4 rounded-[20px] hover:bg-aura-bg/50 dark:hover:bg-white/5 transition-all cursor-pointer border border-transparent hover:border-aura-border"
+            >
+              <div class="flex items-center gap-4">
                 <div
-                  class="w-16 h-16 bg-gray-50 dark:bg-white/5 rounded-full flex items-center justify-center mb-4"
+                  class="w-12 h-12 rounded-[16px] flex items-center justify-center shadow-sm"
+                  th:classappend="${sol.estado.name() == 'PENDIENTE' ? 'bg-orange-500/10 text-orange-500' : 
+                                      (sol.estado.name() == 'APROBADO' ? 'bg-green-500/10 text-green-500' : 
+                                      (sol.estado.name() == 'LIQUIDADO' ? 'bg-blue-500/10 text-blue-500' : 'bg-aura-gray/10 text-aura-gray'))}"
                 >
-                  <i data-lucide="wind" class="w-6 h-6 text-gray-400"></i>
+                  <i
+                    th:if="${sol.estado.name() == 'PENDIENTE'}"
+                    data-lucide="clock"
+                    class="w-6 h-6"
+                  ></i>
+                  <i
+                    th:if="${sol.estado.name() == 'APROBADO'}"
+                    data-lucide="check"
+                    class="w-6 h-6"
+                  ></i>
+                  <i
+                    th:if="${sol.estado.name() == 'LIQUIDADO'}"
+                    data-lucide="shield-check"
+                    class="w-6 h-6"
+                  ></i>
+                  <i
+                    th:if="${sol.estado.name() == 'RECHAZADO'}"
+                    data-lucide="alert-circle"
+                    class="w-6 h-6"
+                  ></i>
                 </div>
-                <p class="text-gray-500 text-sm">Todo tranquilo por aquí.</p>
+                <div>
+                  <h4
+                    class="font-bold text-[17px]"
+                    th:text="${sol.motivoViaje}"
+                  >
+                    Motivo
+                  </h4>
+                  <p
+                    class="text-[13px] text-aura-gray font-medium"
+                    th:text="${sol.fechaInicio}"
+                  >
+                    Fecha
+                  </p>
+                </div>
               </div>
-
-              <!-- lista de solicitudes -->
-              <div
-                th:each="sol : ${solicitudes}"
-                class="group flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 border border-transparent hover:border-gray-100 dark:hover:border-white/5 transition-all cursor-pointer"
-                th:data-id="${sol.id}"
-                onclick="window.location.href='/solicitudes/' + this.dataset.id"
-              >
-                <div class="flex items-center gap-5">
-                  <div
-                    class="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm"
-                    th:classappend="${sol.estado.name() == 'PENDIENTE' ? 'bg-[#FFF9E6] text-[#FFB020]' :  
-                                            (sol.estado.name() == 'APROBADO' ? 'bg-[#E6F4EA] text-[#1E8E3E]' : 
-                                            (sol.estado.name() == 'LIQUIDADO' ? 'bg-[#E8F0FE] text-[#1967D2]' : 'bg-gray-100 text-gray-500'))}"
-                  >
-                    <i
-                      th:if="${sol.estado.name() == 'PENDIENTE'}"
-                      data-lucide="clock"
-                      class="w-5 h-5"
-                    ></i>
-                    <i
-                      th:if="${sol.estado.name() == 'APROBADO'}"
-                      data-lucide="check"
-                      class="w-5 h-5"
-                    ></i>
-                    <i
-                      th:if="${sol.estado.name() == 'LIQUIDADO'}"
-                      data-lucide="check-circle-2"
-                      class="w-5 h-5"
-                    ></i>
-                    <i
-                      th:if="${sol.estado.name() == 'RECHAZADO'}"
-                      data-lucide="x"
-                      class="w-5 h-5"
-                    ></i>
-                    <i
-                      th:if="${sol.estado.name() == 'CANCELADO'}"
-                      data-lucide="x"
-                      class="w-5 h-5"
-                    ></i>
-                    <i
-                      th:if="${sol.estado.name() == 'RENDIDO'}"
-                      data-lucide="check-circle-2"
-                      class="w-5 h-5"
-                    ></i>
-                  </div>
-
-                  <div>
-                    <h4
-                      class="font-medium text-gray-900 dark:text-white"
-                      th:text="${sol.motivoViaje}"
-                    >
-                      Viaje a Lima
-                    </h4>
-                    <div class="flex items-center gap-2 mt-0.5">
-                      <i
-                        data-lucide="calendar"
-                        class="w-3 h-3 text-gray-400"
-                      ></i>
-                      <span
-                        class="text-xs text-gray-500 font-medium"
-                        th:text="${sol.fechaInicio}"
-                        >01/01/2024</span
-                      >
-                    </div>
-                  </div>
+              <div class="text-right">
+                <div
+                  class="font-bold text-[17px]"
+                  th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 0)}"
+                >
+                  S/ 0
                 </div>
-
-                <div class="text-right">
-                  <span
-                    class="block text-sm font-bold text-gray-900 dark:text-white"
-                    th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 0)}"
-                    >S/ 0</span
-                  >
-                  <span
-                    class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full inline-block mt-1"
-                    th:classappend="${sol.estado.name() == 'PENDIENTE' ? 'bg-yellow-100 text-yellow-700' : 
-                                            (sol.estado.name() == 'APROBADO' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600')}"
-                    th:text="${sol.estado}"
-                  >
-                    ESTADO
-                  </span>
+                <div
+                  class="text-[11px] font-bold uppercase tracking-wider mt-1 px-2 py-0.5 rounded-full inline-block"
+                  th:classappend="${sol.estado.name() == 'PENDIENTE' ? 'text-orange-500' : 
+                                      (sol.estado.name() == 'APROBADO' ? 'text-green-500' : 'text-aura-gray')}"
+                  th:text="${sol.estado}"
+                >
+                  ESTADO
                 </div>
               </div>
             </div>
@@ -453,83 +403,70 @@
 
         <!-- Widgets -->
         <div
-          class="col-span-1 md:col-span-12 lg:col-span-12 mt-4 animate-enter delay-300"
+          class="col-span-1 md:col-span-12 mt-4 animate-fade"
+          style="animation-delay: 0.6s"
         >
-          <h3 class="text-xl font-serif mb-6 px-2 dark:text-white">
-            Descubrir
-          </h3>
+          <h3 class="text-[24px] font-bold mb-6">Explorar</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Feature 1 -->
             <a
-              href="/politicas"
-              class="bento-card p-6 flex items-start gap-4 group hover:bg-[#F4F2ED] dark:hover:bg-white/5"
+              href="/politicas/privacidad"
+              class="aura-card p-6 flex items-start gap-4 group"
             >
               <div
-                class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center shrink-0"
+                class="w-12 h-12 rounded-[18px] bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0"
               >
-                <i data-lucide="book-open" class="w-5 h-5"></i>
+                <i data-lucide="file-text" class="w-6 h-6"></i>
               </div>
               <div>
                 <h4
-                  class="font-bold text-gray-900 dark:text-white group-hover:underline decoration-orange-300/50 underline-offset-4"
+                  class="font-bold text-[17px] group-hover:text-aura-blue transition-colors"
                 >
-                  Políticas de Viáticos 2024
+                  Normativa Institucional
                 </h4>
-                <p class="text-xs text-gray-500 mt-2 leading-relaxed">
-                  Conoce los nuevos límites y categorías de rendición aceptados
-                  esta temporada.
+                <p class="text-[15px] text-aura-gray mt-1 leading-relaxed">
+                  Consulta las reglas de rendición y viáticos actualizadas para
+                  2025.
                 </p>
               </div>
             </a>
 
             <!-- Feature 2 -->
-            <div
-              class="bento-card p-6 flex items-start gap-4 relative overflow-hidden"
-            >
+            <div class="aura-card p-6 flex items-start gap-4">
               <div
-                class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 z-10"
+                class="w-12 h-12 rounded-[18px] bg-purple-500/10 text-purple-500 flex items-center justify-center shrink-0"
               >
-                <i data-lucide="map" class="w-5 h-5"></i>
+                <i data-lucide="map-pin" class="w-6 h-6"></i>
               </div>
-              <div class="z-10">
-                <h4 class="font-bold text-gray-900 dark:text-white">
-                  Mapa de Cobertura
-                </h4>
-                <p class="text-xs text-gray-500 mt-2 leading-relaxed">
-                  Visualiza las zonas autorizadas para comisiones sin aprobación
-                  especial.
+              <div>
+                <h4 class="font-bold text-[17px]">Zonas y Destinos</h4>
+                <p class="text-[15px] text-aura-gray mt-1 leading-relaxed">
+                  Explora las categorías geográficas y sus respectivos topes
+                  financieros.
                 </p>
               </div>
-              <svg
-                class="absolute right-[-20px] bottom-[-20px] opacity-10 w-32 h-32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1"
-              >
-                <path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7z"></path>
-              </svg>
             </div>
 
             <!-- Feature 3 -->
             <div
-              class="bento-card p-6 flex items-start gap-4 cursor-help"
-              title="Próximamente"
+              class="aura-card p-6 flex items-start gap-4 relative overflow-hidden group"
             >
               <div
-                class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0"
+                class="w-12 h-12 rounded-[18px] bg-aura-blue/10 text-aura-blue flex items-center justify-center shrink-0"
               >
-                <i data-lucide="sparkles" class="w-5 h-5"></i>
+                <i data-lucide="layout-grid" class="w-6 h-6"></i>
               </div>
-              <div>
-                <h4 class="font-bold text-gray-900 dark:text-white">
-                  Asistente Virtual
-                </h4>
-                <p class="text-xs text-gray-500 mt-2 leading-relaxed">
-                  ¿Dudas con tu rendición? Nuestro asistente AI estará
-                  disponible pronto.
+              <div class="z-10">
+                <h4 class="font-bold text-[17px]">Manual de Usuario</h4>
+                <p class="text-[15px] text-aura-gray mt-1 leading-relaxed">
+                  Aprende a usar todas las funciones del sistema de manera
+                  eficiente.
                 </p>
               </div>
+              <i
+                data-lucide="sparkles"
+                class="absolute -right-4 -bottom-4 w-24 h-24 text-aura-blue/5 rotate-[-12deg] group-hover:rotate-0 transition-transform duration-700"
+              ></i>
             </div>
           </div>
         </div>
@@ -537,18 +474,23 @@
     </main>
 
     <!-- Footer -->
-    <footer class="py-12 text-center animate-enter delay-300">
+    <footer
+      class="py-20 text-center animate-fade"
+      style="animation-delay: 0.7s"
+    >
       <div
-        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 shadow-sm"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-aura-border bg-aura-surface/50 backdrop-blur-sm"
       >
-        <div class="w-2 h-2 rounded-full bg-green-500"></div>
         <span
-          class="text-[10px] font-bold uppercase tracking-widest text-gray-400"
-          >Sistema Conectado</span
+          class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"
+        ></span>
+        <span
+          class="text-[11px] font-bold uppercase tracking-widest text-aura-gray"
+          >Sistema Activo</span
         >
       </div>
-      <p class="mt-6 text-xs text-gray-400 font-medium">
-        © 2024 ISS Viáticos. Designed for Excellence.
+      <p class="mt-8 text-[13px] text-aura-gray font-medium">
+        © 2025 Ingeniería y Servicios del Sur S.A.C.
       </p>
     </footer>
 
@@ -561,6 +503,9 @@
         const labels = /*[[${chartLabels}]]*/ [];
         const data = /*[[${chartData}]]*/ [];
 
+        const isDark = document.documentElement.classList.contains("dark");
+        const colors = ["#f97316", "#22c55e", "#3b82f6", "#8b5cf6"];
+
         new Chart(ctx, {
           type: "doughnut",
           data: {
@@ -568,24 +513,30 @@
             datasets: [
               {
                 data: data,
-                backgroundColor: ["#E3B505", "#2D3B2D", "#6B7280", "#3b82f6"],
+                backgroundColor: colors,
                 borderWidth: 0,
-                hoverOffset: 4,
-                borderRadius: 20,
+                hoverOffset: 12,
+                borderRadius: 16,
+                spacing: 4,
               },
             ],
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: "85%",
+            cutout: "82%",
             plugins: {
               legend: { display: false },
               tooltip: {
-                backgroundColor: "rgba(0,0,0,0.8)",
-                padding: 12,
-                cornerRadius: 8,
-                titleFont: { family: "Inter", size: 10 },
+                backgroundColor: isDark ? "#1c1c1e" : "#ffffff",
+                titleColor: isDark ? "#ffffff" : "#000000",
+                bodyColor: isDark ? "#ffffff" : "#000000",
+                padding: 16,
+                cornerRadius: 16,
+                displayColors: true,
+                boxPadding: 6,
+                borderColor: "rgba(0,0,0,0.1)",
+                borderWidth: 1,
                 bodyFont: { family: "Inter", size: 14, weight: "bold" },
               },
             },
