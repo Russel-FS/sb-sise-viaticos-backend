@@ -9,5 +9,7 @@ public interface TarifarioService {
 
     Tarifario guardar(Tarifario tarifario, String username);
 
+    Tarifario obtenerPorId(Long id);
+
     void eliminar(Long id);
 }

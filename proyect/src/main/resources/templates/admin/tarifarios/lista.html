@@ -263,7 +263,7 @@
         </div>
 
         <button
-          onclick="document.getElementById('modalNuevo').classList.remove('hidden')"
+          onclick="abrirModalNuevo()"
           class="group relative px-6 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full text-sm font-bold overflow-hidden transition-all hover:shadow-lg active:scale-95 flex items-center gap-2"
         >
           <i data-lucide="plus" class="w-4 h-4"></i>
@@ -359,7 +359,16 @@
                     >
                   </div>
                 </td>
-                <td class="px-8 py-6 text-right">
+                <td
+                  class="px-8 py-6 text-right flex items-center justify-end gap-2"
+                >
+                  <button
+                    th:onclick="'abrirModalEditar(' + ${tar.id} + ')'"
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+                    title="Editar"
+                  >
+                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                  </button>
                   <a
                     th:href="@{'/admin/tarifarios/eliminar/' + ${tar.id}}"
                     onclick="return confirm('¿Desactivar esta tarifa?')"
@@ -378,7 +387,7 @@
               No hay tarifas configuradas.
             </p>
             <button
-              onclick="document.getElementById('modalNuevo').classList.remove('hidden')"
+              onclick="abrirModalNuevo()"
               class="text-xs font-bold text-accent-forest dark:text-accent-sage hover:underline"
             >
               Crear la primera
@@ -408,10 +417,12 @@
         </p>
 
         <form
+          id="formTarifa"
           th:action="@{/admin/tarifarios/guardar}"
           method="post"
           class="space-y-6"
         >
+          <input type="hidden" name="id" id="tarifaId" />
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label
@@ -482,6 +493,7 @@
               type="number"
               step="0.01"
               name="monto"
+              id="monto"
               required
               placeholder="0.00"
               class="w-full px-4 py-4 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-2xl font-bold tracking-tight focus:outline-none focus:ring-2 focus:ring-accent-forest/20 dark:focus:ring-white/20 transition-all dark:text-white"
@@ -497,7 +509,7 @@
             </button>
             <button
               type="button"
-              onclick="document.getElementById('modalNuevo').classList.add('hidden')"
+              onclick="cerrarModal()"
               class="w-full py-3.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 font-bold rounded-xl hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
             >
               Cancelar
@@ -509,6 +521,39 @@
 
     <script th:inline="javascript">
       lucide.createIcons();
+
+      function abrirModalNuevo() {
+        document.getElementById("modalNuevo").classList.remove("hidden");
+        document.getElementById("tarifaId").value = "";
+        document.getElementById("formTarifa").reset();
+        document.querySelector("#modalNuevo h3").innerText = "Nueva Tarifa";
+      }
+
+      function cerrarModal() {
+        document.getElementById("modalNuevo").classList.add("hidden");
+      }
+
+      async function abrirModalEditar(id) {
+        try {
+          const response = await fetch(`/admin/tarifarios/${id}`);
+          const data = await response.json();
+
+          document.getElementById("tarifaId").value = data.id;
+          document.querySelector('select[name="zonaGeografica.id"]').value =
+            data.zonaGeografica.id;
+          document.querySelector('select[name="nivelJerarquico.id"]').value =
+            data.nivelJerarquico.id;
+          document.querySelector('select[name="tipoGasto.id"]').value =
+            data.tipoGasto.id;
+          document.getElementById("monto").value = data.monto;
+
+          document.querySelector("#modalNuevo h3").innerText = "Editar Tarifa";
+          document.getElementById("modalNuevo").classList.remove("hidden");
+        } catch (error) {
+          console.error("Error al cargar datos:", error);
+          alert("Error al cargar los datos de la tarifa.");
+        }
+      }
     </script>
     <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
   </body>

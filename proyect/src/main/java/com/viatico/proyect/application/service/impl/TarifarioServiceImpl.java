@@ -36,6 +36,11 @@ public class TarifarioServiceImpl implements TarifarioService {
     }
 
     @Override
+    public Tarifario obtenerPorId(Long id) {
+        return tarifarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Tarifa no encontrada"));
+    }
+
+    @Override
     @Transactional
     public void eliminar(Long id) {
         Tarifario t = tarifarioRepository.findById(id).orElseThrow();

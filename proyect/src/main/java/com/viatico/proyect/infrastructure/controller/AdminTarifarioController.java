@@ -41,6 +41,12 @@ public class AdminTarifarioController {
         return "redirect:/admin/tarifarios?success";
     }
 
+    @GetMapping("/{id}")
+    @ResponseBody
+    public Tarifario obtener(@PathVariable Long id) {
+        return tarifarioService.obtenerPorId(id);
+    }
+
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id) {
         tarifarioService.eliminar(id);
