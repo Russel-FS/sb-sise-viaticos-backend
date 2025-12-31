@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Detalle de Solicitud - ISS Viáticos</title>
 
-    <!-- recursos externos -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,7 +34,6 @@
         theme: {
           extend: {
             fontFamily: {
-              serif: ['"Instrument Serif"', "serif"],
               sans: [
                 "Inter",
                 "-apple-system",
@@ -44,20 +42,22 @@
               ],
             },
             colors: {
-              canvas: {
-                light: "#F9F8F6",
-                dark: "#0F1115",
+              aura: {
+                blue: "#0066cc",
+                surface: "#ffffff",
+                bg: "#f5f5f7",
+                text: "#1d1d1f",
+                gray: "#86868b",
+                border: "rgba(0, 0, 0, 0.08)",
               },
-              card: {
-                light: "#FFFFFF",
-                dark: "#1C1E22",
+              dark: {
+                bg: "#000000",
+                surface: "#1c1c1e",
+                border: "rgba(255, 255, 255, 0.1)",
               },
-              accent: {
-                sage: "#E3ECD2",
-                forest: "#2D3B2D",
-                clay: "#D4A373",
-                sand: "#EFEBE0",
-              },
+            },
+            borderRadius: {
+              aura: "28px",
             },
             boxShadow: {
               premium: "0 20px 40px -12px rgba(0, 0, 0, 0.05)",
@@ -69,34 +69,28 @@
 
     <style>
       body {
-        background-color: #f9f8f6;
-        color: #1a1a1a;
-        font-family: "Inter", sans-serif;
+        background-color: #f5f5f7;
+        color: #1d1d1f;
         -webkit-font-smoothing: antialiased;
-        overflow-x: hidden;
       }
       .dark body {
-        background-color: #0f1115;
-        color: #f1f1f1;
+        background-color: #000000;
+        color: #f5f5f7;
       }
 
-      h1,
-      h2,
-      h3,
-      .serif-font {
-        font-family: "Instrument Serif", serif;
+      .aura-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 28px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      .bento-card {
-        background: white;
-        border-radius: 2rem;
-        border: 1px solid rgba(0, 0, 0, 0.02);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02),
-          0 2px 4px -1px rgba(0, 0, 0, 0.02);
-      }
-      .dark .bento-card {
-        background: #1c1e22;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+      .dark .aura-card {
+        background: rgba(28, 28, 30, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       @keyframes fade-in-up {
@@ -206,7 +200,7 @@
           </div>
 
           <h1
-            class="text-4xl md:text-5xl font-serif text-gray-900 dark:text-white leading-tight"
+            class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight"
             th:text="${sol.motivoViaje}"
           >
             Motivo del Viaje
@@ -265,7 +259,7 @@
         <!-- Columna izquierda: Detalles -->
         <div class="lg:col-span-2 space-y-8">
           <!-- Información del viaje -->
-          <div class="bento-card p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="aura-card p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <p
                 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2"
@@ -325,14 +319,14 @@
           </div>
 
           <!-- Itinerario -->
-          <div class="bento-card p-8">
+          <div class="aura-card p-8">
             <div class="flex items-center gap-3 mb-6">
               <div
                 class="w-8 h-8 rounded-full bg-accent-sage/20 flex items-center justify-center text-accent-forest"
               >
                 <i data-lucide="map" class="w-4 h-4"></i>
               </div>
-              <h2 class="font-serif text-xl text-gray-900 dark:text-white">
+              <h2 class="font-bold text-xl text-gray-900 dark:text-white">
                 Ruta de Viaje
               </h2>
             </div>
@@ -374,7 +368,7 @@
           <!-- Alerta de rechazo -->
           <div
             th:if="${sol.estado.name() == 'RECHAZADO' || sol.estado.name() == 'OBSERVADO'}"
-            class="bento-card p-6 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 flex gap-4"
+            class="aura-card p-6 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 flex gap-4"
           >
             <i
               data-lucide="alert-circle"
@@ -397,20 +391,15 @@
         <!-- Columna derecha: Presupuesto -->
         <div class="lg:col-span-1 space-y-6">
           <div
-            class="bento-card p-8 bg-black dark:bg-[#1C1E22] text-white relative overflow-hidden group"
+            class="aura-card p-8 bg-[#0066cc] dark:bg-[#1C1E22] text-white relative overflow-hidden group"
           >
-            <!-- Orb abstracto -->
-            <div
-              class="absolute -top-10 -right-10 w-40 h-40 bg-accent-clay/30 rounded-full blur-3xl group-hover:bg-accent-clay/40 transition-colors"
-            ></div>
-
             <p
-              class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4 relative z-10"
+              class="text-[10px] font-bold text-gray-50 uppercase tracking-widest mb-4 relative z-10"
             >
               Presupuesto
             </p>
             <h3
-              class="text-5xl font-serif mb-8 relative z-10"
+              class="text-5xl font-bold mb-8 relative z-10"
               th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 2, 'POINT')}"
             >
               S/ 0.00
@@ -448,9 +437,9 @@
           <!-- Resultado de cierre   -->
           <div
             th:if="${sol.estado.name() == 'LIQUIDADO' && liq != null}"
-            class="bento-card p-6 animate-in slide-in-from-bottom-4"
+            class="aura-card p-6 animate-in slide-in-from-bottom-4"
           >
-            <h4 class="font-serif text-lg mb-4 text-gray-900 dark:text-white">
+            <h4 class="font-bold text-lg mb-4 text-gray-900 dark:text-white">
               Resultado Cierre
             </h4>
 
@@ -483,7 +472,7 @@
                 Devolución
               </p>
               <p
-                class="text-2xl font-serif text-red-700 dark:text-red-400"
+                class="text-2xl font-bold text-red-700 dark:text-red-400"
                 th:text="${'S/ ' + #numbers.formatDecimal(liq.saldoAfavorEmpresa, 1, 2)}"
               >
                 0.00
@@ -500,7 +489,7 @@
                 Reembolso
               </p>
               <p
-                class="text-2xl font-serif text-green-700 dark:text-green-400"
+                class="text-2xl font-bold text-green-700 dark:text-green-400"
                 th:text="${'S/ ' + #numbers.formatDecimal(liq.saldoAfavorEmpleado, 1, 2)}"
               >
                 0.00
