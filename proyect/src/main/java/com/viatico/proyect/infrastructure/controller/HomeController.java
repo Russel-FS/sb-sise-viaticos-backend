@@ -81,8 +81,13 @@ public class HomeController {
         return "login";
     }
 
-    @GetMapping("/politicas")
-    public String politicas() {
-        return "politicas";
+    @GetMapping("/politicas/privacidad")
+    public String privacidad() {
+        return "politicas/privacidad";
+    }
+
+    @GetMapping("/politicas/condiciones")
+    public String condiciones() {
+        return "politicas/condiciones";
     }
 }
