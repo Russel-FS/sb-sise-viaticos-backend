@@ -290,24 +290,93 @@
                 </select>
               </div>
             </div>
-            <div class="space-y-2">
-              <label
-                class="block text-sm font-medium text-gray-900 dark:text-gray-300"
-                >Rol de Usuario</label
-              >
-              <div class="relative">
-                <select
-                  name="rolId"
-                  required
-                  class="input-premium cursor-pointer"
+            <div class="col-span-1 md:col-span-2 space-y-4">
+              <div class="flex items-center justify-between px-1">
+                <label
+                  class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest"
                 >
-                  <option value="">Seleccionar rol...</option>
-                  <option
-                    th:each="r : ${roles}"
-                    th:value="${r.id}"
-                    th:text="${r.nombre}"
-                  ></option>
-                </select>
+                  Roles y Permisos de Acceso
+                </label>
+                <span
+                  class="text-[10px] text-gray-400 font-medium bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded-full uppercase tracking-tighter"
+                >
+                  Múltiples Roles Permitidos
+                </span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <th:block th:each="r : ${roles}">
+                  <label class="relative cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      name="rolIds"
+                      class="peer hidden"
+                      th:value="${r.id}"
+                      th:checked="${rolIds != null && rolIds.contains(r.id)}"
+                    />
+                    <div
+                      class="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 transition-all duration-200 hover:border-blue-300 dark:hover:border-white/30 hover:shadow-md peer-checked:border-blue-500 dark:peer-checked:border-white peer-checked:bg-blue-50/30 dark:peer-checked:bg-white/5 peer-checked:ring-1 peer-checked:ring-blue-500 dark:peer-checked:ring-white/50 [&_.chk-circle]:peer-checked:bg-blue-500 [&_.chk-circle]:peer-checked:border-blue-500 [&_.chk-icon]:peer-checked:scale-100"
+                    >
+                      <div
+                        class="w-10 h-10 rounded-lg bg-gray-50 dark:bg-white/5 flex items-center justify-center text-gray-400 transition-colors duration-200 peer-checked:bg-blue-500 dark:peer-checked:bg-white peer-checked:text-white dark:peer-checked:text-slate-900"
+                      >
+                        <span
+                          th:switch="${r.codigo}"
+                          class="w-5 h-5 flex items-center justify-center"
+                        >
+                          <i
+                            th:case="'ADMIN'"
+                            data-lucide="shield"
+                            class="w-full h-full"
+                          ></i>
+                          <i
+                            th:case="'SOLICITANTE'"
+                            data-lucide="pen-tool"
+                            class="w-full h-full"
+                          ></i>
+                          <i
+                            th:case="'APROBADOR'"
+                            data-lucide="user-check"
+                            class="w-full h-full"
+                          ></i>
+                          <i
+                            th:case="'CONTABILIDAD'"
+                            data-lucide="bar-chart-3"
+                            class="w-full h-full"
+                          ></i>
+                          <i
+                            th:case="'TESORERIA'"
+                            data-lucide="landmark"
+                            class="w-full h-full"
+                          ></i>
+                          <i
+                            th:case="*"
+                            data-lucide="award"
+                            class="w-full h-full"
+                          ></i>
+                        </span>
+                      </div>
+
+                      <div class="flex-1 min-w-0">
+                        <p
+                          class="text-sm font-bold text-gray-900 dark:text-white truncate"
+                          th:text="${r.nombre}"
+                        >
+                          Nombre de Rol
+                        </p>
+                      </div>
+
+                      <div
+                        class="chk-circle w-5 h-5 rounded-full border border-gray-300 dark:border-white/20 flex items-center justify-center transition-all duration-200"
+                      >
+                        <i
+                          data-lucide="check"
+                          class="chk-icon w-3 h-3 text-white transform scale-0 transition-transform duration-200"
+                        ></i>
+                      </div>
+                    </div>
+                  </label>
+                </th:block>
               </div>
             </div>
           </div>
