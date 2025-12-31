@@ -123,7 +123,7 @@
           notificado automáticamente.
         </p>
 
-        <div th:if="${error or message}" class="mb-8 text-left">
+        <div th:if="${error != null or message != null}" class="mb-8 text-left">
           <div
             class="bg-gray-50 dark:bg-black/30 rounded-xl border border-gray-200 dark:border-white/5 p-4 font-mono text-xs text-gray-600 dark:text-gray-400 overflow-x-auto max-w-lg mx-auto shadow-inner"
           >

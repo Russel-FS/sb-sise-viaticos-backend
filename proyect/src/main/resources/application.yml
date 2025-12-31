@@ -11,12 +11,36 @@ spring:
       max-request-size: 20MB
       resolve-lazily: true
 
+  # Configuración de Correo Resend SMTP
+  mail:
+    host: smtp.resend.com
+    port: 465
+    username: resend
+    password: ${RESEND_API_KEY:re_RFKeNnYw_JjcryLuTfYfDd8x3oFgWHcU5}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false
+            required: false
+          ssl:
+            enable: true
+        debug: true
+    default-encoding: UTF-8
+
   # Base de Datos Oracle
   datasource:
     url: jdbc:oracle:thin:@localhost:1521:xe
     username: C##viaticos_user
     password: admin123
     driver-class-name: oracle.jdbc.OracleDriver
+
+# Configuración personalizada de la aplicación
+app:
+  url: http://localhost:8080
+  mail:
+    from: onboarding@resend.dev
 
   # Configuración JPA / Hibernate
   jpa:
