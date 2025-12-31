@@ -5,7 +5,6 @@
 >
   <head>
     <style th:fragment="styles">
-      /* Premium Glass Nav */
       .nav-island {
         background: rgba(255, 255, 255, 0.6);
         backdrop-filter: blur(12px);
@@ -36,7 +35,7 @@
           ISS V
         </a>
 
-        <!-- Desktop Menu -->
+        <!-- pc Menu -->
         <div
           class="hidden md:flex items-center gap-1 bg-gray-100/50 dark:bg-white/5 rounded-full p-1"
         >
@@ -75,7 +74,6 @@
           </th:block>
         </div>
 
-        <!-- Right Side: Theme + Logout + Mobile Toggle -->
         <div class="flex items-center gap-4">
           <div
             class="hidden md:flex items-center gap-3 pl-4 border-l border-gray-200 dark:border-white/10"
@@ -104,7 +102,7 @@
             </form>
           </div>
 
-          <!-- Mobile Toggle Button -->
+          <!-- botton menu mobile -->
           <button
             onclick="toggleMobileMenu()"
             class="md:hidden w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white"
@@ -114,7 +112,7 @@
         </div>
       </nav>
 
-      <!-- Mobile Menu Overlay -->
+      <!-- Mobile Menu -->
       <div
         id="mobileMenu"
         class="fixed inset-0 z-[60] bg-white/95 dark:bg-[#0F1115]/95 backdrop-blur-xl transform transition-transform duration-300 translate-x-full md:hidden flex flex-col pt-24 px-6 pointer-events-auto"
