@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -458,6 +458,13 @@
                   </td>
                   <td class="px-8 py-6">
                     <div class="flex items-center justify-center gap-2">
+                      <a
+                        th:href="@{/admin/aprobaciones/detalle/{id}(id=${sol.id})}"
+                        class="w-9 h-9 rounded-full flex items-center justify-center border border-gray-200 dark:border-white/10 text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white transition-all"
+                        title="Ver Detalle"
+                      >
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                      </a>
                       <button
                         type="button"
                         th:data-id="${sol.id}"
@@ -608,7 +615,7 @@
     <!-- Modal Aprobar -->
     <div
       id="modalAprobar"
-      class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6"
+      class="hidden fixed inset-0 z-[100] items-center justify-center p-6"
     >
       <div
         class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
@@ -661,7 +668,7 @@
     <!-- Modal Rechazar -->
     <div
       id="modalRechazar"
-      class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6"
+      class="hidden fixed inset-0 z-[100] items-center justify-center p-6"
     >
       <div
         class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
@@ -737,7 +744,9 @@
         document.getElementById("nombreAprobar").innerText = nombre;
         document.getElementById("formAprobar").action =
           "/admin/aprobaciones/aprobar/" + id;
-        document.getElementById("modalAprobar").classList.remove("hidden");
+        const modal = document.getElementById("modalAprobar");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
       }
 
       function btnAbrirModalRechazar(btn) {
@@ -746,11 +755,15 @@
         document.getElementById("nombreRechazar").innerText = nombre;
         document.getElementById("formRechazar").action =
           "/admin/aprobaciones/rechazar/" + id;
-        document.getElementById("modalRechazar").classList.remove("hidden");
+        const modal = document.getElementById("modalRechazar");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
       }
 
       function cerrarModal(id) {
-        document.getElementById(id).classList.add("hidden");
+        const modal = document.getElementById(id);
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
       }
 
       function cambiarTab(tab) {

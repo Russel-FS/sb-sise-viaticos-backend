@@ -27,6 +27,12 @@ public class AdminAprobacionController {
         return "admin/aprobaciones/lista";
     }
 
+    @GetMapping("/detalle/{id}")
+    public String verDetalle(@PathVariable Long id, Model model) {
+        model.addAttribute("solicitud", solicitudService.obtenerPorId(id));
+        return "admin/aprobaciones/detalle";
+    }
+
     @PostMapping("/aprobar/{id}")
     public String aprobar(@PathVariable Long id, @AuthenticationPrincipal UsuarioPrincipal user) {
         solicitudService.aprobar(id, user.getUsername());
