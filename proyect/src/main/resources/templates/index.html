@@ -457,7 +457,7 @@
                 <div class="flex items-center gap-5">
                   <div
                     class="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm"
-                    th:classappend="${sol.estado.name() == 'PENDIENTE' ? 'bg-[#FFF9E6] text-[#FFB020]' : 
+                    th:classappend="${sol.estado.name() == 'PENDIENTE' ? 'bg-[#FFF9E6] text-[#FFB020]' :  
                                             (sol.estado.name() == 'APROBADO' ? 'bg-[#E6F4EA] text-[#1E8E3E]' : 
                                             (sol.estado.name() == 'LIQUIDADO' ? 'bg-[#E8F0FE] text-[#1967D2]' : 'bg-gray-100 text-gray-500'))}"
                   >
@@ -479,6 +479,16 @@
                     <i
                       th:if="${sol.estado.name() == 'RECHAZADO'}"
                       data-lucide="x"
+                      class="w-5 h-5"
+                    ></i>
+                    <i
+                      th:if="${sol.estado.name() == 'CANCELADO'}"
+                      data-lucide="x"
+                      class="w-5 h-5"
+                    ></i>
+                    <i
+                      th:if="${sol.estado.name() == 'RENDIDO'}"
+                      data-lucide="check-circle-2"
                       class="w-5 h-5"
                     ></i>
                   </div>
