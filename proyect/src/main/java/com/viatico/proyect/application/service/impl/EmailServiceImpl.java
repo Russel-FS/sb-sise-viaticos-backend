@@ -40,40 +40,29 @@ public class EmailServiceImpl implements EmailService {
                     "<head>" +
                     "  <meta charset='UTF-8'>" +
                     "  <style>" +
-                    "    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f7; color: #1d1d1f; }"
+                    "    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #ffffff; color: #1d1d1f; }"
                     +
-                    "    .container { max-width: 600px; margin: 40px auto; padding: 40px; background-color: #ffffff; border-radius: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }"
+                    "    .container { max-width: 600px; margin: 60px auto; padding: 0 20px; text-align: center; }" +
+                    "    .title { font-size: 32px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 16px; color: #000000; }"
                     +
-                    "    .header { text-align: center; margin-bottom: 32px; }" +
-                    "    .logo-text { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; color: #000000; }" +
-                    "    .content { line-height: 1.6; font-size: 16px; }" +
-                    "    .title { font-size: 28px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 16px; text-align: center; }"
+                    "    .text { font-size: 19px; line-height: 1.5; color: #86868b; margin-bottom: 40px; }" +
+                    "    .button { background-color: #0066cc; color: #ffffff !important; padding: 14px 32px; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 17px; display: inline-block; }"
                     +
-                    "    .text { color: #515154; margin-bottom: 32px; text-align: center; }" +
-                    "    .button-container { text-align: center; margin: 40px 0; }" +
-                    "    .button { background-color: #0071e3; color: #ffffff !important; padding: 12px 32px; text-decoration: none; border-radius: 980px; font-weight: 600; font-size: 14px; transition: background-color 0.2s; display: inline-block; }"
+                    "    .footer { margin-top: 80px; padding-top: 20px; border-top: 1px solid #d2d2d7; font-size: 12px; color: #86868b; }"
                     +
-                    "    .footer { margin-top: 48px; border-top: 1px solid #d2d2d7; padding-top: 24px; font-size: 12px; color: #86868b; text-align: center; }"
-                    +
-                    "    .expiry { color: #ff3b30; font-weight: 500; }" +
                     "  </style>" +
                     "</head>" +
                     "<body>" +
                     "  <div class='container'>" +
-                    "    <div class='header'><span class='logo-text'>ISS Viáticos</span></div>" +
-                    "    <div class='content'>" +
-                    "      <h1 class='title'>Restablecer Contraseña</h1>" +
-                    "      <p class='text'>Has solicitado restablecer la contraseña de tu cuenta. Haz clic en el siguiente enlace para continuar:</p>"
+                    "    <h1 class='title'>Restablecer contraseña.</h1>" +
+                    "    <p class='text'>Para volver a tener acceso a tu cuenta de ISS Viáticos, haz clic en el siguiente botón.</p>"
                     +
-                    "      <div class='button-container'>" +
-                    "        <a href='" + resetUrl + "' class='button'>Restablecer ahora</a>" +
-                    "      </div>" +
-                    "      <p class='text' style='font-size: 14px;'>Este enlace <span class='expiry'>expirará en 30 minutos</span> por motivos de seguridad.</p>"
-                    +
+                    "    <div style='margin: 40px 0;'>" +
+                    "      <a href='" + resetUrl + "' class='button'>Continuar</a>" +
                     "    </div>" +
+                    "    <p class='text' style='font-size: 14px;'>Este enlace expirará en 30 minutos.</p>" +
                     "    <div class='footer'>" +
-                    "      <p>Si no solicitaste este cambio, puedes ignorar este correo de forma segura.</p>" +
-                    "      <p>&copy; 2025 ISS Viáticos. Todos los derechos reservados.</p>" +
+                    "      <p>Copyright © 2025 ISS Viáticos. Todos los derechos reservados.</p>" +
                     "    </div>" +
                     "  </div>" +
                     "</body>" +
