@@ -161,50 +161,66 @@
                     </p>
                   </div>
 
+                  <!-- Desglose de Gastos/Tarifario   -->
                   <div
-                    class="mt-2 overflow-hidden rounded-xl border border-gray-100 dark:border-white/5"
+                    class="mt-4 bg-white dark:bg-white/5 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden"
                   >
-                    <table class="w-full text-left text-xs">
-                      <thead
-                        class="bg-gray-50 dark:bg-white/5 text-gray-400 uppercase tracking-tighter font-bold"
+                    <div
+                      class="px-4 py-3 bg-gray-50/50 dark:bg-white/5 border-b border-gray-100 dark:border-white/5 flex items-center justify-between"
+                    >
+                      <span
+                        class="text-xs font-bold text-gray-500 uppercase tracking-widest"
+                        >Desglose de Tarifas</span
                       >
-                        <tr>
-                          <th class="px-4 py-2">Concepto</th>
-                          <th class="px-4 py-2 text-right">Monto Diario</th>
-                          <th class="px-4 py-2 text-right">
-                            Total (<span th:text="${itinerario.noches}">0</span>
-                            d)
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody
-                        class="divide-y divide-gray-100 dark:divide-white/5"
+                      <span
+                        class="text-[10px] px-2 py-0.5 rounded-full bg-accent-sage/20 text-accent-forest dark:text-accent-sage font-medium"
+                        >Por día</span
                       >
-                        <tr
-                          th:each="tarifa : ${itinerario.tarifas}"
-                          class="text-gray-600 dark:text-gray-300"
-                        >
-                          <td
-                            class="px-4 py-2"
-                            th:text="${tarifa.tipoGasto.nombre}"
+                    </div>
+
+                    <div class="divide-y divide-gray-100 dark:divide-white/5">
+                      <div
+                        th:each="tarifa : ${itinerario.tarifas}"
+                        class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group"
+                      >
+                        <div class="flex items-center gap-3">
+                          <div
+                            class="w-8 h-8 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-400 group-hover:bg-accent-sage/20 group-hover:text-accent-forest transition-colors"
                           >
-                            Concepto
-                          </td>
-                          <td
-                            class="px-4 py-2 text-right font-mono"
-                            th:text="${'S/ ' + #numbers.formatDecimal(tarifa.montoDiario, 1, 'COMMA', 2, 'POINT')}"
-                          >
-                            0.00
-                          </td>
-                          <td
-                            class="px-4 py-2 text-right font-bold text-gray-900 dark:text-white font-mono"
+                            <i data-lucide="receipt" class="w-4 h-4"></i>
+                          </div>
+                          <div>
+                            <p
+                              class="text-sm font-semibold text-gray-900 dark:text-white"
+                              th:text="${tarifa.tipoGasto.nombre}"
+                            >
+                              Concepto
+                            </p>
+                            <p
+                              class="text-xs text-gray-400"
+                              th:text="${'S/ ' + #numbers.formatDecimal(tarifa.montoDiario, 1, 'COMMA', 2, 'POINT') + ' / día'}"
+                            >
+                              0.00
+                            </p>
+                          </div>
+                        </div>
+
+                        <div class="text-right">
+                          <p
+                            class="text-sm font-mono font-bold text-gray-900 dark:text-white"
                             th:text="${'S/ ' + #numbers.formatDecimal(tarifa.montoDiario * itinerario.noches, 1, 'COMMA', 2, 'POINT')}"
                           >
                             0.00
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                          </p>
+                          <p
+                            class="text-[10px] text-gray-400 font-medium tracking-wide uppercase"
+                          >
+                            Total (<span th:text="${itinerario.noches}">0</span>
+                            noches)
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="text-right">
@@ -252,32 +268,61 @@
         </div>
 
         <!-- Resumen Financiero -->
-        <div class="bento-card p-6 bg-accent-forest text-white">
-          <h3 class="text-xl font-serif mb-6 opacity-90">Presupuesto</h3>
+        <div
+          class="bento-card p-6 bg-accent-forest text-white overflow-hidden relative"
+        >
+          <!-- Decoración de fondo -->
+          <div
+            class="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"
+          ></div>
 
-          <div class="space-y-4 mb-8">
-            <!-- Desglose no disponible en la entidad actual -->
-            <div class="flex justify-between items-end">
-              <span class="text-sm opacity-70">Estado</span>
-              <span class="font-mono" th:text="${solicitud.estado}"
-                >ESTADO</span
-              >
+          <div class="relative z-10">
+            <h3
+              class="text-xl font-serif mb-6 opacity-90 flex items-center gap-2"
+            >
+              <i data-lucide="wallet" class="w-5 h-5 opacity-70"></i>
+              Presupuesto
+            </h3>
+
+            <div class="space-y-4 mb-8">
+              <div class="flex justify-between items-center">
+                <span
+                  class="text-xs opacity-60 uppercase tracking-widest font-bold"
+                  >Estado</span
+                >
+                <span
+                  class="px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold tracking-tighter uppercase"
+                  th:text="${solicitud.estado}"
+                  >ESTADO</span
+                >
+              </div>
+
+              <div class="my-4 border-t border-white/10"></div>
+
+              <div class="flex flex-col gap-1">
+                <span
+                  class="text-xs opacity-60 uppercase tracking-widest font-bold"
+                  >Total Estimado</span
+                >
+                <div class="flex items-end gap-2">
+                  <span
+                    class="text-3xl font-mono font-bold tracking-tight"
+                    th:text="${'S/ ' + #numbers.formatDecimal(solicitud.montoTotal, 1, 'COMMA', 2, 'POINT')}"
+                    >0.00</span
+                  >
+                  <span class="text-xs opacity-50 mb-1">PEN</span>
+                </div>
+              </div>
             </div>
-            <div class="my-4 border-t border-white/20"></div>
-            <div class="flex justify-between items-end text-lg font-bold">
-              <span>Total Estimado</span>
-              <span
-                class="font-mono text-2xl"
-                th:text="${'S/ ' + #numbers.formatDecimal(solicitud.montoTotal, 1, 'COMMA', 2, 'POINT')}"
-                >0.00</span
-              >
+
+            <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
+              <p class="text-[10px] opacity-70 leading-relaxed italic">
+                <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
+                Los montos son calculados automáticamente según las tarifas
+                vigentes por cargo y zona geográfica asignada.
+              </p>
             </div>
           </div>
-
-          <p class="text-xs opacity-60 italic leading-relaxed">
-            * Los montos son calculados automáticamente según las tarifas
-            vigentes por cargo y zona geográfica.
-          </p>
         </div>
       </div>
 
