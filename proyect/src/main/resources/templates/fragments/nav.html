@@ -46,32 +46,34 @@
             >Solicitudes</a
           >
 
-          <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
-            <a
-              href="/admin/aprobaciones"
-              th:classappend="${activeTab == 'aprobaciones' ? 'bg-white dark:bg-white/10 shadow-sm text-gray-900 dark:text-white' : 'hover:bg-white dark:hover:bg-white/10 hover:shadow-sm transition-all text-gray-700 dark:text-gray-300'}"
-              class="px-4 py-1.5 rounded-full text-xs font-medium"
-              >Aprobar</a
-            >
-            <a
-              href="/admin/validaciones"
-              th:classappend="${activeTab == 'validaciones' ? 'bg-white dark:bg-white/10 shadow-sm text-gray-900 dark:text-white' : 'hover:bg-white dark:hover:bg-white/10 hover:shadow-sm transition-all text-gray-700 dark:text-gray-300'}"
-              class="px-4 py-1.5 rounded-full text-xs font-medium"
-              >Validar</a
-            >
-            <a
-              href="/admin/empleados"
-              th:classappend="${activeTab == 'empleados' ? 'bg-white dark:bg-white/10 shadow-sm text-gray-900 dark:text-white' : 'hover:bg-white dark:hover:bg-white/10 hover:shadow-sm transition-all text-gray-700 dark:text-gray-300'}"
-              class="px-4 py-1.5 rounded-full text-xs font-medium"
-              >Empleados</a
-            >
-            <a
-              href="/admin/tarifarios"
-              th:classappend="${activeTab == 'config' ? 'bg-white dark:bg-white/10 shadow-sm text-gray-900 dark:text-white' : 'hover:bg-white dark:hover:bg-white/10 hover:shadow-sm transition-all text-gray-700 dark:text-gray-300'}"
-              class="px-4 py-1.5 rounded-full text-xs font-medium"
-              >Config</a
-            >
-          </th:block>
+          <a
+            sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_APROBADOR')"
+            href="/admin/aprobaciones"
+            th:classappend="${activeTab == 'aprobaciones' ? 'bg-white dark:bg-white/10 shadow-sm text-gray-900 dark:text-white' : 'hover:bg-white dark:hover:bg-white/10 hover:shadow-sm transition-all text-gray-700 dark:text-gray-300'}"
+            class="px-4 py-1.5 rounded-full text-xs font-medium"
+            >Aprobar</a
+          >
+          <a
+            sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONTABILIDAD')"
+            href="/admin/validaciones"
+            th:classappend="${activeTab == 'validaciones' ? 'bg-white dark:bg-white/10 shadow-sm text-gray-900 dark:text-white' : 'hover:bg-white dark:hover:bg-white/10 hover:shadow-sm transition-all text-gray-700 dark:text-gray-300'}"
+            class="px-4 py-1.5 rounded-full text-xs font-medium"
+            >Validar</a
+          >
+          <a
+            sec:authorize="hasAuthority('ROLE_ADMIN')"
+            href="/admin/empleados"
+            th:classappend="${activeTab == 'empleados' ? 'bg-white dark:bg-white/10 shadow-sm text-gray-900 dark:text-white' : 'hover:bg-white dark:hover:bg-white/10 hover:shadow-sm transition-all text-gray-700 dark:text-gray-300'}"
+            class="px-4 py-1.5 rounded-full text-xs font-medium"
+            >Empleados</a
+          >
+          <a
+            sec:authorize="hasAuthority('ROLE_ADMIN')"
+            href="/admin/tarifarios"
+            th:classappend="${activeTab == 'config' ? 'bg-white dark:bg-white/10 shadow-sm text-gray-900 dark:text-white' : 'hover:bg-white dark:hover:bg-white/10 hover:shadow-sm transition-all text-gray-700 dark:text-gray-300'}"
+            class="px-4 py-1.5 rounded-full text-xs font-medium"
+            >Config</a
+          >
         </div>
 
         <div class="flex items-center gap-4">
@@ -144,28 +146,30 @@
             >Solicitudes</a
           >
 
-          <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
-            <a
-              href="/admin/aprobaciones"
-              class="text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-              >Aprobaciones</a
-            >
-            <a
-              href="/admin/validaciones"
-              class="text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-              >Validaciones</a
-            >
-            <a
-              href="/admin/empleados"
-              class="text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-              >Empleados</a
-            >
-            <a
-              href="/admin/tarifarios"
-              class="text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-              >Configuración</a
-            >
-          </th:block>
+          <a
+            sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_APROBADOR')"
+            href="/admin/aprobaciones"
+            class="text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            >Aprobaciones</a
+          >
+          <a
+            sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONTABILIDAD')"
+            href="/admin/validaciones"
+            class="text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            >Validaciones</a
+          >
+          <a
+            sec:authorize="hasAuthority('ROLE_ADMIN')"
+            href="/admin/empleados"
+            class="text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            >Empleados</a
+          >
+          <a
+            sec:authorize="hasAuthority('ROLE_ADMIN')"
+            href="/admin/tarifarios"
+            class="text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            >Configuración</a
+          >
 
           <div class="w-full h-px bg-gray-200 dark:bg-white/10 my-2"></div>
 

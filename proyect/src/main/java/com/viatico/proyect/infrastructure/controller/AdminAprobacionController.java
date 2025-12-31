@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin/aprobaciones")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'APROBADOR')")
 @RequiredArgsConstructor
 public class AdminAprobacionController {
 

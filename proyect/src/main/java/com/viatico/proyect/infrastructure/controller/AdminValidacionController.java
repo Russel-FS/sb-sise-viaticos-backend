@@ -16,7 +16,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/validaciones")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'CONTABILIDAD')")
 @RequiredArgsConstructor
 public class AdminValidacionController {
 
