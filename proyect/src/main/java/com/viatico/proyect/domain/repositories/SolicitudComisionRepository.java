@@ -3,6 +3,7 @@ package com.viatico.proyect.domain.repositories;
 import com.viatico.proyect.domain.entity.SolicitudComision;
 import com.viatico.proyect.domain.enums.EstadoSolicitud;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,4 +36,6 @@ public interface SolicitudComisionRepository {
 
     Long registrarSolicitudFull(Long empleadoId, String motivo, java.time.LocalDate fechaInicio,
             List<Long> idZonas, List<String> ciudades, List<Integer> noches, String userCrea);
+
+    BigDecimal estimarMonto(Long idNivel, List<Long> idZonas, List<String> ciudades, List<Integer> noches);
 }

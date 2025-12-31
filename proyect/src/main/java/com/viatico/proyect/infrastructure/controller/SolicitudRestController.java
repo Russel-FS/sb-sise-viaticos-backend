@@ -2,11 +2,8 @@ package com.viatico.proyect.infrastructure.controller;
 
 import com.viatico.proyect.config.UsuarioPrincipal;
 import com.viatico.proyect.domain.entity.Empleado;
-import com.viatico.proyect.domain.entity.Tarifario;
-import com.viatico.proyect.domain.entity.ZonaGeografica;
 import com.viatico.proyect.domain.repositories.EmpleadoRepository;
-import com.viatico.proyect.domain.repositories.TarifarioRepository;
-import com.viatico.proyect.domain.repositories.ZonaGeograficaRepository;
+import com.viatico.proyect.domain.repositories.SolicitudComisionRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +23,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SolicitudRestController {
 
-        private final TarifarioRepository tarifarioRepository;
+        private final SolicitudComisionRepository solicitudRepository;
         private final EmpleadoRepository empleadoRepository;
-        private final ZonaGeograficaRepository zonaRepository;
 
         @GetMapping("/estimar")
         public ResponseEntity<Map<String, Object>> estimarViaticos(
@@ -45,41 +41,13 @@ public class SolicitudRestController {
                         Empleado empleado = empleadoRepository.obtenerPorId(user.getIdEmpleado())
                                         .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
 
-                        BigDecimal montoTotal = BigDecimal.ZERO;
-                        int totalDias = 0;
+                        BigDecimal montoTotal = solicitudRepository.estimarMonto(
+                                        empleado.getNivel().getId(),
+                                        idZonas,
+                                        null,
+                                        noches);
 
-                        for (int i = 0; i < idZonas.size(); i++) {
-                                Long idZona = idZonas.get(i);
-                                Integer n = (noches != null && noches.size() > i) ? noches.get(i) : 0;
-
-                                ZonaGeografica zona = zonaRepository.findById(idZona)
-                                                .orElseThrow(() -> new RuntimeException("Zona no encontrada"));
-
-                                List<Tarifario> tarifarios = tarifarioRepository
-                                                .findAllByNivelJerarquicoAndZonaGeografica(
-                                                                empleado.getNivel(), zona);
-
-                                List<Tarifario> activos = tarifarios.stream()
-                                                .filter(t -> t.getActivo() != null && t.getActivo() == 1)
-                                                .toList();
-
-                                BigDecimal montoVariableDiario = activos.stream()
-                                                .filter(t -> t.getTipoGasto().isEsAsignablePorDia())
-                                                .map(Tarifario::getMonto)
-                                                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-                                BigDecimal montoFijoTramo = activos.stream()
-                                                .filter(t -> !t.getTipoGasto().isEsAsignablePorDia())
-                                                .map(Tarifario::getMonto)
-                                                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-                                int diasTramo = (i == idZonas.size() - 1) ? n + 1 : n;
-
-                                montoTotal = montoTotal.add(montoVariableDiario.multiply(new BigDecimal(diasTramo)));
-                                montoTotal = montoTotal.add(montoFijoTramo);
-
-                                totalDias += diasTramo;
-                        }
+                        int totalDias = noches.stream().reduce(0, Integer::sum) + 1;
 
                         Map<String, Object> response = new HashMap<>();
                         response.put("dias", totalDias);
@@ -88,7 +56,9 @@ public class SolicitudRestController {
 
                         return ResponseEntity.ok(response);
                 } catch (Exception e) {
-                        return ResponseEntity.badRequest().body(Map.of("error", "Datos inválidos"));
+                        e.printStackTrace();
+                        return ResponseEntity.badRequest().body(
+                                        Map.of("error", e.getMessage() != null ? e.getMessage() : "Error desconocido"));
                 }
         }
 }

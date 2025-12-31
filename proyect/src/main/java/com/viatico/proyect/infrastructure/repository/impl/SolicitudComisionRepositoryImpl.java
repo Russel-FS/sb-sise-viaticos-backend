@@ -11,6 +11,7 @@ import com.viatico.proyect.domain.repositories.SolicitudComisionRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -337,6 +338,32 @@ public class SolicitudComisionRepositoryImpl implements SolicitudComisionReposit
 
                 cs.execute();
                 return cs.getLong(6);
+            }
+        });
+    }
+
+    @Override
+    public BigDecimal estimarMonto(Long idNivel, List<Long> idZonas, List<String> ciudades,
+            List<Integer> noches) {
+        return jdbcTemplate.execute((Connection conn) -> {
+            OracleConnection oracleConn = conn.unwrap(OracleConnection.class);
+            try (CallableStatement cs = oracleConn.prepareCall("{? = call PKG_SOLICITUDES.FNC_ESTIMAR_MONTO(?, ?)}")) {
+                cs.registerOutParameter(1, Types.NUMERIC);
+                cs.setLong(2, idNivel);
+
+                Object[] structArray = new Object[idZonas.size()];
+                for (int i = 0; i < idZonas.size(); i++) {
+                    structArray[i] = oracleConn.createStruct("T_ESTIMACION_REC", new Object[] {
+                            idZonas.get(i),
+                            noches.get(i)
+                    });
+                }
+
+                Array oracleArray = oracleConn.createOracleArray("T_ESTIMACION_TAB", structArray);
+                cs.setArray(3, oracleArray);
+
+                cs.execute();
+                return cs.getBigDecimal(1);
             }
         });
     }
