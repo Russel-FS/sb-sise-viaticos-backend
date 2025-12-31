@@ -29,9 +29,7 @@ public class PerfilController {
         model.addAttribute("empleado", empleado);
         model.addAttribute("currentUser", user);
 
-        boolean isAdmin = user.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("currentUser", user);
 
         return "perfil";
     }

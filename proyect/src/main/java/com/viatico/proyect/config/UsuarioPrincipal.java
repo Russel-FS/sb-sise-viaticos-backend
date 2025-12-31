@@ -5,9 +5,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.viatico.proyect.domain.entity.Rol;
 import com.viatico.proyect.domain.entity.Usuario;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
@@ -19,6 +21,7 @@ public class UsuarioPrincipal implements UserDetails {
     private final Long idEmpleado;
     private final String nombreCompleto;
     private final Collection<? extends GrantedAuthority> authorities;
+    private final List<String> roleNames;
     private final boolean activo;
 
     public UsuarioPrincipal(Usuario usuario) {
@@ -30,6 +33,9 @@ public class UsuarioPrincipal implements UserDetails {
 
         this.authorities = usuario.getRoles().stream()
                 .map(rol -> new SimpleGrantedAuthority(rol.getCodigo()))
+                .collect(Collectors.toList());
+        this.roleNames = usuario.getRoles().stream()
+                .map(Rol::getNombre)
                 .collect(Collectors.toList());
         this.activo = usuario.getActivo() == 1;
     }
