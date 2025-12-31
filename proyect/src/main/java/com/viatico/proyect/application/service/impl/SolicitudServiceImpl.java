@@ -5,6 +5,7 @@ import com.viatico.proyect.config.UsuarioPrincipal;
 import com.viatico.proyect.domain.entity.*;
 import com.viatico.proyect.domain.enums.EstadoSolicitud;
 import com.viatico.proyect.domain.repositories.SolicitudComisionRepository;
+import com.viatico.proyect.domain.repositories.TarifarioRepository;
 import com.viatico.proyect.domain.repositories.ZonaGeograficaRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
         private final ZonaGeograficaRepository zonaRepository;
         private final SolicitudComisionRepository solicitudRepository;
+        private final TarifarioRepository tarifarioRepository;
 
         @Override
         public List<ZonaGeografica> listarZonas() {
@@ -103,8 +105,19 @@ public class SolicitudServiceImpl implements SolicitudService {
 
         @Override
         public SolicitudComision obtenerPorId(Long id) {
-                return solicitudRepository.findById(id)
+                SolicitudComision solicitud = solicitudRepository.findById(id)
                                 .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+
+                if (solicitud.getEmpleado() != null && solicitud.getEmpleado().getNivel() != null) {
+                        for (ItinerarioViaje iti : solicitud.getItinerarios()) {
+                                List<Tarifario> tarifas = tarifarioRepository.findAllByNivelJerarquicoAndZonaGeografica(
+                                                solicitud.getEmpleado().getNivel(),
+                                                iti.getZonaDestino());
+                                iti.setTarifas(tarifas);
+                        }
+                }
+
+                return solicitud;
         }
 
         @Override
