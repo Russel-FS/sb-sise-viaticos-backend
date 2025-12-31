@@ -106,14 +106,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_SOLICITUDES AS
         FOR i IN 1 .. p_itinerario.COUNT LOOP
             v_total_noches := v_total_noches + p_itinerario(i).noches;
             
-            -- Suma del tarifario diario para la zona y nivel del empleado
-            SELECT SUM(monto)
-            INTO v_monto_diario_zona
-            FROM tarifario_viaticos
-            WHERE id_zona = p_itinerario(i).id_zona
-              AND id_nivel = v_id_nivel
-              AND activo = 1;
-
             -- Lógica de días a calcular si es el último tramo se suma el día de retorno
             IF i = p_itinerario.COUNT THEN
                 v_dias_tramo := p_itinerario(i).noches + 1;
@@ -121,7 +113,29 @@ CREATE OR REPLACE PACKAGE BODY PKG_SOLICITUDES AS
                 v_dias_tramo := p_itinerario(i).noches;
             END IF;
 
-            v_monto_total := v_monto_total + (NVL(v_monto_diario_zona, 0) * v_dias_tramo);
+            -- Suma de costos VARIABLES  
+            SELECT NVL(SUM(t.monto), 0)
+            INTO v_monto_diario_zona
+            FROM tarifario_viaticos t
+            JOIN tipos_gasto g ON t.id_tipo_gasto = g.id_tipo_gasto
+            WHERE t.id_zona = p_itinerario(i).id_zona
+              AND t.id_nivel = v_id_nivel
+              AND t.activo = 1
+              AND g.es_asignable_por_dia = 1;
+
+            v_monto_total := v_monto_total + (v_monto_diario_zona * v_dias_tramo);
+
+            -- Suma de costos FIJOS 
+            SELECT NVL(SUM(t.monto), 0)
+            INTO v_monto_diario_zona -- Reutilizamos variable para el tramo fijo
+            FROM tarifario_viaticos t
+            JOIN tipos_gasto g ON t.id_tipo_gasto = g.id_tipo_gasto
+            WHERE t.id_zona = p_itinerario(i).id_zona
+              AND t.id_nivel = v_id_nivel
+              AND t.activo = 1
+              AND g.es_asignable_por_dia = 0;
+
+            v_monto_total := v_monto_total + v_monto_diario_zona;
         END LOOP;
 
         v_fecha_fin := p_fecha_inicio + v_total_noches;

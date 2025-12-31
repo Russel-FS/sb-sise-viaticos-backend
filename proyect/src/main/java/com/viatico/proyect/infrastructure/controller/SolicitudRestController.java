@@ -59,12 +59,25 @@ public class SolicitudRestController {
                                                 .findAllByNivelJerarquicoAndZonaGeografica(
                                                                 empleado.getNivel(), zona);
 
-                                BigDecimal montoDiarioTotal = tarifarios.stream()
+                                List<Tarifario> activos = tarifarios.stream()
+                                                .filter(t -> t.getActivo() != null && t.getActivo() == 1)
+                                                .toList();
+
+                                BigDecimal montoVariableDiario = activos.stream()
+                                                .filter(t -> t.getTipoGasto().isEsAsignablePorDia())
+                                                .map(Tarifario::getMonto)
+                                                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                                BigDecimal montoFijoTramo = activos.stream()
+                                                .filter(t -> !t.getTipoGasto().isEsAsignablePorDia())
                                                 .map(Tarifario::getMonto)
                                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                                 int diasTramo = (i == idZonas.size() - 1) ? n + 1 : n;
-                                montoTotal = montoTotal.add(montoDiarioTotal.multiply(new BigDecimal(diasTramo)));
+
+                                montoTotal = montoTotal.add(montoVariableDiario.multiply(new BigDecimal(diasTramo)));
+                                montoTotal = montoTotal.add(montoFijoTramo);
+
                                 totalDias += diasTramo;
                         }
 
