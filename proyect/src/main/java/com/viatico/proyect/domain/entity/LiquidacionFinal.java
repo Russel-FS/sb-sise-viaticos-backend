@@ -21,7 +21,8 @@ public class LiquidacionFinal {
     private BigDecimal saldoAfavorEmpresa = BigDecimal.ZERO;
     private BigDecimal saldoAfavorEmpleado = BigDecimal.ZERO;
     private LocalDateTime fechaCierre = LocalDateTime.now();
-    private EstadoLiquidacion estadoCierre = EstadoLiquidacion.PENDIENTE;
+    private EstadoLiquidacion estadoCierre = EstadoLiquidacion.EQUILIBRADA;
+    private String mensajeLiquidacion;
     private String userCrea;
     private LocalDateTime fechaCrea = LocalDateTime.now();
     private String userMod;

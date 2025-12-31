@@ -25,7 +25,7 @@ public class LiquidacionFinalRepositoryImpl implements LiquidacionFinalRepositor
     @Override
     public LiquidacionFinal save(LiquidacionFinal l) {
         return jdbcTemplate.execute((Connection con) -> {
-            String sql = "{call PKG_LIQUIDACIONES.PRC_GUARDAR_LIQUIDACION(?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+            String sql = "{call PKG_LIQUIDACIONES.PRC_GUARDAR_LIQUIDACION(?, ?, ?, ?, ?, ?)}";
             try (CallableStatement stmt = con.prepareCall(sql)) {
                 if (l.getId() == null) {
                     stmt.setNull(1, Types.NUMERIC);
@@ -36,11 +36,8 @@ public class LiquidacionFinalRepositoryImpl implements LiquidacionFinalRepositor
                 stmt.setLong(2, l.getSolicitud().getId());
                 stmt.setBigDecimal(3, l.getMontoAsignado());
                 stmt.setBigDecimal(4, l.getMontoRendidoValidado());
-                stmt.setBigDecimal(5, l.getSaldoAfavorEmpresa());
-                stmt.setBigDecimal(6, l.getSaldoAfavorEmpleado());
-                stmt.setDate(7, l.getFechaCierre() != null ? Date.valueOf(l.getFechaCierre().toLocalDate()) : null);
-                stmt.setString(8, l.getEstadoCierre().name());
-                stmt.setString(9, l.getUserCrea());
+                stmt.setDate(5, l.getFechaCierre() != null ? Date.valueOf(l.getFechaCierre().toLocalDate()) : null);
+                stmt.setString(6, l.getUserCrea());
 
                 stmt.execute();
 
@@ -148,6 +145,7 @@ public class LiquidacionFinalRepositoryImpl implements LiquidacionFinalRepositor
             l.setFechaCierre(tsCierre.toLocalDateTime());
 
         l.setEstadoCierre(com.viatico.proyect.domain.enums.EstadoLiquidacion.valueOf(rs.getString("estado_cierre")));
+        l.setMensajeLiquidacion(rs.getString("mensaje_liquidacion"));
         l.setUserCrea(rs.getString("user_crea"));
 
         Timestamp tsCrea = rs.getTimestamp("fecha_crea");

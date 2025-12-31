@@ -12,7 +12,6 @@ import com.viatico.proyect.domain.repositories.SolicitudComisionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -38,26 +37,8 @@ public class LiquidacionServiceImpl implements LiquidacionService {
         liq.setSolicitud(sol);
         liq.setMontoAsignado(sol.getMontoTotal());
         liq.setMontoRendidoValidado(ren.getTotalAceptado());
-
-        // Cálculo de saldos
-        BigDecimal diferencia = sol.getMontoTotal().subtract(ren.getTotalAceptado());
-
-        if (diferencia.compareTo(BigDecimal.ZERO) > 0) {
-            // Sobró dinero -> A favor de la Empresa
-            liq.setSaldoAfavorEmpresa(diferencia);
-            liq.setSaldoAfavorEmpleado(BigDecimal.ZERO);
-        } else if (diferencia.compareTo(BigDecimal.ZERO) < 0) {
-            // Faltó dinero -> A favor del Empleado reembolso
-            liq.setSaldoAfavorEmpleado(diferencia.abs());
-            liq.setSaldoAfavorEmpresa(BigDecimal.ZERO);
-        } else {
-            // Exacto
-            liq.setSaldoAfavorEmpresa(BigDecimal.ZERO);
-            liq.setSaldoAfavorEmpleado(BigDecimal.ZERO);
-        }
-
         liq.setFechaCierre(LocalDateTime.now());
-        liq.setEstadoCierre(EstadoLiquidacion.FINALIZADO);
+        liq.setEstadoCierre(EstadoLiquidacion.EQUILIBRADA);
         return liquidacionRepository.save(liq);
     }
 

@@ -224,7 +224,8 @@ CREATE TABLE liquidacion_final (
     saldo_a_favor_empresa NUMBER(10, 2) DEFAULT 0.00,
     saldo_a_favor_empleado NUMBER(10, 2) DEFAULT 0.00,
     fecha_cierre DATE,
-    estado_cierre VARCHAR2(20) DEFAULT 'PENDIENTE',
+    estado_cierre VARCHAR2(20) DEFAULT 'EQUILIBRADA',
+    mensaje_liquidacion VARCHAR2(500),
     -- Auditoría
     user_crea VARCHAR2(30) DEFAULT USER,
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -233,15 +234,15 @@ CREATE TABLE liquidacion_final (
     -- Constraints
     CONSTRAINT ck_liq_estado CHECK (
         estado_cierre IN (
-            'PENDIENTE',
-            'FINALIZADO',
-            'REEMBOLSADO'
+            'EQUILIBRADA',
+            'DEVOLUCION_EMPLEADO',
+            'PAGO_EMPLEADO'
         )
     ),
     CONSTRAINT fk_liq_comision FOREIGN KEY (id_comision) REFERENCES solicitud_comision (id_comision)
 );
-/
 
+/
 --   SEGURIDAD Y ACCESO
 
 -- ROLES
