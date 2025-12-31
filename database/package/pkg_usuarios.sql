@@ -39,6 +39,16 @@ CREATE OR REPLACE PACKAGE PKG_USUARIOS AS
         p_id_empleado IN NUMBER
     ) RETURN NUMBER;
 
+    PROCEDURE PRC_ACTUALIZAR_PASSWORD (
+        p_id_usuario IN NUMBER,
+        p_password IN VARCHAR2
+    );
+
+    PROCEDURE PRC_ACTUALIZAR_ROL (
+        p_id_usuario IN NUMBER,
+        p_rol_id IN NUMBER
+    );
+
 END PKG_USUARIOS;
 /
 
@@ -230,6 +240,42 @@ CREATE OR REPLACE PACKAGE BODY PKG_USUARIOS AS
         WHEN OTHERS THEN
             RAISE;
     END FNC_OBTENER_USUARIO_POR_EMPLEADO;
+
+    -- Actualizar contraseña
+    PROCEDURE PRC_ACTUALIZAR_PASSWORD (
+        p_id_usuario IN NUMBER,
+        p_password IN VARCHAR2
+    ) AS
+    BEGIN
+        UPDATE usuarios
+        SET password = p_password,
+            fecha_mod = SYSTIMESTAMP
+        WHERE id_usuario = p_id_usuario;
+        
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE;
+    END PRC_ACTUALIZAR_PASSWORD;
+
+    -- Actualizar rol
+    PROCEDURE PRC_ACTUALIZAR_ROL (
+        p_id_usuario IN NUMBER,
+        p_rol_id IN NUMBER
+    ) AS
+    BEGIN
+        UPDATE usuarios
+        SET id_rol = p_rol_id,
+            fecha_mod = SYSTIMESTAMP
+        WHERE id_usuario = p_id_usuario;
+        
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE;
+    END PRC_ACTUALIZAR_ROL;
 
 END PKG_USUARIOS;
 /

@@ -125,6 +125,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_EMPLEADOS AS
             ) RETURNING id_empleado INTO p_id_empleado_out;
 
         -- actualizar empleado
+            -- actualizar empleado
         ELSE
             UPDATE empleados
             SET nombres = p_nombres,
@@ -162,8 +163,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_EMPLEADOS AS
         IF v_count = 0 THEN
             RAISE_APPLICATION_ERROR(-20003, 'Empleado no encontrado');
         END IF;
-
-        -- eliminar empleado (el usuario debe eliminarse antes desde la capa de servicio)
+ 
         DELETE FROM empleados
         WHERE id_empleado = p_id_empleado;
 
@@ -213,13 +213,13 @@ CREATE OR REPLACE PACKAGE BODY PKG_EMPLEADOS AS
         v_count NUMBER;
     BEGIN
         IF p_id_empleado_actual IS NULL THEN
-            -- Para nuevo empleado: verificar si DNI existe
+            -- Para nuevo empleado verificar si DNI existe
             SELECT COUNT(*)
             INTO v_count
             FROM empleados
             WHERE dni = p_dni;
         ELSE
-            -- Para actualización: verificar si DNI existe en otro empleado
+            -- Para actualización  verificar si DNI existe en otro empleado
             SELECT COUNT(*)
             INTO v_count
             FROM empleados
