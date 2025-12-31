@@ -289,7 +289,7 @@ CREATE TABLE usuarios_roles (
 );
 /
 
---  okens de recuperación de contraseña
+--  tokens de recuperación de contraseña
 CREATE TABLE PASSWORD_RESET_TOKENS (
     id_token NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     token VARCHAR2(255) NOT NULL UNIQUE,
@@ -298,4 +298,16 @@ CREATE TABLE PASSWORD_RESET_TOKENS (
     usado NUMBER(1) DEFAULT 0 CHECK (usado IN (0, 1)),
     fecha_crea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_token_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
+);
+
+/
+-- auditoria de solicitudes
+CREATE TABLE AUDITORIA_SOLICITUDES (
+    id_auditoria NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_comision NUMBER NOT NULL,
+    id_empleado NUMBER NOT NULL,
+    estado_anterior VARCHAR2(20),
+    estado_nuevo VARCHAR2(20),
+    fecha_cambio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    usuario_cambio VARCHAR2(30) DEFAULT USER
 );
