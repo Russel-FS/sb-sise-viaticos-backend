@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalle de Solicitud - ISS Viáticos</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- tema -->
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: [
+                "Inter",
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "sans-serif",
+              ],
+            },
+            colors: {
+              aura: {
+                blue: "#0066cc",
+                surface: "#ffffff",
+                bg: "#f5f5f7",
+                text: "#1d1d1f",
+                gray: "#86868b",
+                border: "rgba(0, 0, 0, 0.08)",
+              },
+              dark: {
+                bg: "#000000",
+                surface: "#1c1c1e",
+                border: "rgba(255, 255, 255, 0.1)",
+              },
+            },
+            borderRadius: {
+              aura: "28px",
+            },
+            boxShadow: {
+              premium: "0 20px 40px -12px rgba(0, 0, 0, 0.05)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+        -webkit-font-smoothing: antialiased;
+      }
+      .dark body {
+        background-color: #000000;
+        color: #f5f5f7;
+      }
+
+      .aura-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 28px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .dark .aura-card {
+        background: rgba(28, 28, 30, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      @keyframes fade-in-up {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-enter {
+        animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+      }
+      .delay-100 {
+        animation-delay: 100ms;
+      }
+      .delay-200 {
+        animation-delay: 200ms;
+      }
+    </style>
+    <th:block th:replace="~{fragments/nav :: styles}"></th:block>
+  </head>
+  <body
+    class="min-h-screen pb-20 selection:bg-accent-sage selection:text-accent-forest"
+  >
+    <!-- nav -->
+    <th:block
+      th:replace="~{fragments/nav :: navbar(activeTab='solicitudes')}"
+    ></th:block>
+
+    <main class="max-w-[1000px] mx-auto px-6 pt-32">
+      <!-- Acciones & Estado -->
+      <div
+        class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-12 animate-enter delay-100"
+      >
+        <div class="space-y-4 max-w-2xl">
+          <!-- Badge de estado -->
+          <div class="flex items-center gap-3">
+            <span
+              th:if="${sol.estado.name() == 'BORRADOR'}"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 border border-transparent"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+              Borrador
+            </span>
+            <span
+              th:if="${sol.estado.name() == 'PENDIENTE'}"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-[#FFF9E6] dark:bg-yellow-500/10 text-[#B45309] dark:text-yellow-400 border border-[#FEF3C7] dark:border-yellow-500/20"
+            >
+              <span class="relative flex h-2 w-2">
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"
+                ></span>
+                <span
+                  class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"
+                ></span>
+              </span>
+              Pendiente
+            </span>
+            <span
+              th:if="${sol.estado.name() == 'APROBADO'}"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-[#E3ECD2] dark:bg-[#2D3B2D] text-[#2D3B2D] dark:text-[#E3ECD2] border border-[#2D3B2D]/10"
+            >
+              <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Aprobado
+            </span>
+            <span
+              th:if="${sol.estado.name() == 'RECHAZADO'}"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800/30"
+            >
+              <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Rechazado
+            </span>
+            <!-- Estado: cancelado -->
+            <span
+              th:if="${sol.estado.name() == 'CANCELADO'}"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800/30"
+            >
+              <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Cancelado
+            </span>
+            <span
+              th:if="${sol.estado.name() == 'LIQUIDADO'}"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-black dark:bg-white text-white dark:text-black border border-transparent shadow-sm"
+            >
+              <i data-lucide="check-check" class="w-3.5 h-3.5"></i> Liquidado
+            </span>
+            <span
+              th:if="${sol.estado.name() == 'Rendido'}"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-[#F0F9FF] dark:bg-blue-900/20 text-[#0071e3] dark:text-blue-400 border border-[#0071e3]/10"
+            >
+              <i data-lucide="file-check" class="w-3.5 h-3.5"></i> Rendido
+            </span>
+            <span
+              th:if="${sol.estado.name() == 'OBSERVADO'}"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400 border border-orange-100 dark:border-orange-800/30"
+            >
+              <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Observado
+            </span>
+
+            <span class="text-gray-300 dark:text-gray-600">|</span>
+            <span
+              class="text-xs font-mono text-gray-400 uppercase tracking-widest"
+              th:text="${#temporals.format(sol.fechaSolicitud, 'd MMM yyyy')}"
+              >DATE</span
+            >
+          </div>
+
+          <h1
+            class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight"
+            th:text="${sol.motivoViaje}"
+          >
+            Motivo del Viaje
+          </h1>
+        </div>
+
+        <!-- Acciones Hero -->
+        <div class="flex flex-col gap-3 min-w-[200px]">
+          <form
+            th:if="${sol.estado.name() == 'BORRADOR'}"
+            th:action="@{'/solicitudes/enviar/' + ${sol.id}}"
+            method="post"
+          >
+            <button
+              type="submit"
+              class="w-full py-3.5 bg-black dark:bg-white text-white dark:text-black text-sm font-bold rounded-full hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg"
+            >
+              Enviar Solicitud <i data-lucide="send" class="w-4 h-4"></i>
+            </button>
+          </form>
+          <a
+            th:if="${sol.estado.name() == 'APROBADO' || sol.estado.name() == 'OBSERVADO'}"
+            th:href="@{'/rendiciones/solicitud/' + ${sol.id}}"
+            class="w-full py-3.5 bg-accent-forest text-white text-sm font-bold rounded-full hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg"
+          >
+            Rendir Gastos <i data-lucide="receipt" class="w-4 h-4"></i>
+          </a>
+          <!-- Ver Rendición  -->
+          <a
+            th:if="${sol.estado.name() == 'RENDIDO' || sol.estado.name() == 'LIQUIDADO'}"
+            th:href="@{'/rendiciones/solicitud/' + ${sol.id}}"
+            class="w-full py-3.5 bg-white dark:bg-white/10 text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 text-sm font-bold rounded-full hover:bg-gray-50 dark:hover:bg-white/20 transition-colors flex items-center justify-center gap-2 shadow-sm"
+          >
+            Ver Rendición <i data-lucide="file-text" class="w-4 h-4"></i>
+          </a>
+          <form
+            th:if="${sol.estado.name() == 'BORRADOR' || sol.estado.name() == 'PENDIENTE'}"
+            th:action="@{'/solicitudes/cancelar/' + ${sol.id}}"
+            method="post"
+            onsubmit="return confirm('¿Confirma la cancelación?');"
+          >
+            <button
+              type="submit"
+              class="w-full py-3 text-xs font-bold text-red-500 hover:text-red-700 transition-colors uppercase tracking-widest"
+            >
+              Cancelar
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Grid principal -->
+      <div
+        class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-enter delay-200"
+      >
+        <!-- Columna izquierda: Detalles -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- Información del viaje -->
+          <div class="aura-card p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <p
+                class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2"
+              >
+                Solicitante
+              </p>
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-600 dark:text-gray-300"
+                >
+                  <i data-lucide="user" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <p
+                    class="font-bold text-gray-900 dark:text-white"
+                    th:text="${sol.empleado.nombres + ' ' + sol.empleado.apellidos}"
+                  >
+                    Nombre
+                  </p>
+                  <p
+                    class="text-xs text-gray-500"
+                    th:text="${sol.empleado.nivel.nombre ?: 'Sin Nivel'}"
+                  >
+                    Nivel
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p
+                class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2"
+              >
+                Duración
+              </p>
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-600 dark:text-gray-300"
+                >
+                  <i data-lucide="calendar" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <p
+                    class="font-bold text-gray-900 dark:text-white"
+                    th:text="${sol.fechaInicio + ' — ' + (sol.fechaFin ?: '...')}"
+                  >
+                    Fechas
+                  </p>
+                  <p class="text-xs text-gray-500">
+                    <span
+                      th:text="${sol.itinerarios.size() > 0 ? (sol.itinerarios[sol.itinerarios.size()-1].noches + 1) + ' días' : 'Por definir'}"
+                      >0 días</span
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Itinerario -->
+          <div class="aura-card p-8">
+            <div class="flex items-center gap-3 mb-6">
+              <div
+                class="w-8 h-8 rounded-full bg-accent-sage/20 flex items-center justify-center text-accent-forest"
+              >
+                <i data-lucide="map" class="w-4 h-4"></i>
+              </div>
+              <h2 class="font-bold text-xl text-gray-900 dark:text-white">
+                Ruta de Viaje
+              </h2>
+            </div>
+
+            <div
+              class="space-y-6 relative ml-3 pl-8 border-l border-gray-100 dark:border-white/5"
+            >
+              <div th:each="iti, stat : ${sol.itinerarios}" class="relative">
+                <!-- Punto -->
+                <div
+                  class="absolute -left-[37px] top-1.5 w-3 h-3 bg-white dark:bg-black border-2 border-gray-300 dark:border-gray-600 rounded-full"
+                ></div>
+
+                <div class="flex items-start justify-between group">
+                  <div>
+                    <p
+                      class="text-xs font-bold text-accent-forest/60 dark:text-accent-sage/60 uppercase tracking-wider mb-0.5"
+                      th:text="${iti.zonaDestino.nombre}"
+                    >
+                      Zona
+                    </p>
+                    <p
+                      class="text-lg font-bold text-gray-900 dark:text-white"
+                      th:text="${iti.ciudadEspecifica}"
+                    >
+                      Ciudad
+                    </p>
+                  </div>
+                  <div
+                    class="px-3 py-1 bg-gray-50 dark:bg-white/5 rounded-full border border-gray-100 dark:border-white/5 text-xs font-medium text-gray-600 dark:text-gray-400"
+                  >
+                    <span th:text="${iti.noches}">0</span> Noches
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alerta de rechazo -->
+          <div
+            th:if="${sol.estado.name() == 'RECHAZADO' || sol.estado.name() == 'OBSERVADO'}"
+            class="aura-card p-6 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 flex gap-4"
+          >
+            <i
+              data-lucide="alert-circle"
+              class="w-6 h-6 text-red-600 shrink-0"
+            ></i>
+            <div>
+              <h3 class="font-bold text-red-900 dark:text-red-200">
+                Solicitud Observada
+              </h3>
+              <p
+                class="text-sm text-red-700 dark:text-red-300 mt-1"
+                th:text="${sol.comentarioRechazo}"
+              >
+                Detalle
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna derecha: Presupuesto -->
+        <div class="lg:col-span-1 space-y-6">
+          <div
+            class="aura-card p-8 bg-[#0066cc] dark:bg-[#1C1E22] text-white relative overflow-hidden group"
+          >
+            <p
+              class="text-[10px] font-bold text-gray-50 uppercase tracking-widest mb-4 relative z-10"
+            >
+              Presupuesto
+            </p>
+            <h3
+              class="text-5xl font-bold mb-8 relative z-10"
+              th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 2, 'POINT')}"
+            >
+              S/ 0.00
+            </h3>
+
+            <div class="border-t border-white/10 pt-6 relative z-10">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-gray-400 uppercase tracking-wider font-bold"
+                  >Estado Pago</span
+                >
+                <span
+                  th:if="${sol.estado.name() == 'PENDIENTE'}"
+                  class="text-yellow-400 font-bold flex items-center gap-1.5"
+                >
+                  <span
+                    class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"
+                  ></span>
+                  Procesando
+                </span>
+                <span
+                  th:if="${sol.estado.name() == 'BORRADOR'}"
+                  class="text-gray-500 font-bold"
+                  >No Iniciado</span
+                >
+                <span
+                  th:if="${sol.estado.name() == 'APROBADO' || sol.estado.name() == 'LIQUIDADO' || sol.estado.name() == 'RENDIDO'}"
+                  class="text-accent-sage font-bold flex items-center gap-1.5"
+                >
+                  <i data-lucide="check" class="w-3 h-3"></i> Depositado
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resultado de cierre   -->
+          <div
+            th:if="${sol.estado.name() == 'LIQUIDADO' && liq != null}"
+            class="aura-card p-6 animate-in slide-in-from-bottom-4"
+          >
+            <h4 class="font-bold text-lg mb-4 text-gray-900 dark:text-white">
+              Resultado Cierre
+            </h4>
+
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500">Asignado</span>
+                <span
+                  class="font-medium dark:text-white"
+                  th:text="${'S/ ' + #numbers.formatDecimal(liq.montoAsignado, 1, 2)}"
+                  >0.00</span
+                >
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500">Gasto Validado</span>
+                <span
+                  class="font-medium dark:text-white"
+                  th:text="${'S/ ' + #numbers.formatDecimal(liq.montoRendidoValidado, 1, 2)}"
+                  >0.00</span
+                >
+              </div>
+            </div>
+
+            <div
+              th:if="${liq.saldoAfavorEmpresa > 0}"
+              class="p-4 bg-red-50 dark:bg-red-900/10 rounded-xl text-center"
+            >
+              <p
+                class="text-[10px] font-bold text-red-600 uppercase tracking-wider mb-1"
+              >
+                Devolución
+              </p>
+              <p
+                class="text-2xl font-bold text-red-700 dark:text-red-400"
+                th:text="${'S/ ' + #numbers.formatDecimal(liq.saldoAfavorEmpresa, 1, 2)}"
+              >
+                0.00
+              </p>
+            </div>
+
+            <div
+              th:if="${liq.saldoAfavorEmpleado > 0}"
+              class="p-4 bg-green-50 dark:bg-green-900/10 rounded-xl text-center"
+            >
+              <p
+                class="text-[10px] font-bold text-green-600 uppercase tracking-wider mb-1"
+              >
+                Reembolso
+              </p>
+              <p
+                class="text-2xl font-bold text-green-700 dark:text-green-400"
+                th:text="${'S/ ' + #numbers.formatDecimal(liq.saldoAfavorEmpleado, 1, 2)}"
+              >
+                0.00
+              </p>
+            </div>
+
+            <a
+              th:href="@{'/solicitudes/' + ${sol.id} + '/reporte'}"
+              target="_blank"
+              class="mt-4 block w-full py-2.5 bg-gray-100 dark:bg-white/5 text-center text-xs font-bold rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors uppercase tracking-widest text-gray-600 dark:text-gray-300"
+            >
+              Descargar PDF
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="mt-12 pt-8 border-t border-gray-100 dark:border-white/5 text-center"
+      >
+        <p
+          class="font-mono text-[10px] text-gray-300 uppercase tracking-[0.2em]"
+          th:text="${'REGISTRO POR ' + sol.userCrea + ' · ' + #temporals.format(sol.fechaCrea, 'd MMM yyyy HH:mm')}"
+        >
+          METADATA
+        </p>
+      </div>
+    </main>
+
+    <script th:inline="javascript">
+      lucide.createIcons();
+    </script>
+    <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
+  </body>
+</html>

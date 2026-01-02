@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Política de Privacidad - ISS Viáticos</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: [
+                "Inter",
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "sans-serif",
+              ],
+            },
+            colors: {
+              apple: {
+                blue: "#0066cc",
+                gray: {
+                  light: "#f5f5f7",
+                  border: "#d2d2d7",
+                  text: "#86868b",
+                  dark: "#1d1d1f",
+                },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #ffffff;
+        color: #1d1d1f;
+        -webkit-font-smoothing: antialiased;
+      }
+      .dark body {
+        background-color: #000000;
+        color: #f5f5f7;
+      }
+      .content-section {
+        max-width: 680px;
+        margin: 0 auto;
+      }
+      .policy-text {
+        font-size: 17px;
+        line-height: 1.6;
+        color: #1d1d1f;
+      }
+      .dark .policy-text {
+        color: #f5f5f7;
+      }
+      .policy-h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-top: 48px;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <nav
+      class="sticky top-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-apple-gray-border dark:border-zinc-800"
+    >
+      <div
+        class="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between"
+      >
+        <a
+          href="/login"
+          class="text-apple-blue hover:underline flex items-center gap-1 text-[14px] font-medium"
+        >
+          <i data-lucide="chevron-left" class="w-4 h-4"></i>
+          Volver
+        </a>
+        <span class="text-[14px] font-semibold">ISS Viáticos</span>
+        <div class="w-10"></div>
+      </div>
+    </nav>
+
+    <main class="flex-grow py-20 px-6">
+      <article class="content-section">
+        <header class="mb-16">
+          <h1
+            class="text-[40px] md:text-[48px] font-semibold leading-tight tracking-tight mb-4"
+          >
+            Política de Privacidad.
+          </h1>
+          <p class="text-[19px] text-apple-gray-text">
+            Última actualización: 31 de diciembre de 2025
+          </p>
+        </header>
+
+        <section class="policy-text">
+          <p class="mb-8">
+            En Ingeniería y Servicios del Sur S.A.C. (ISS), valoramos tu
+            privacidad. Esta política describe cómo manejamos la información
+            personal de nuestros empleados dentro del sistema de gestión de
+            viáticos.
+          </p>
+
+          <h2 class="policy-h2">1. Información que recolectamos</h2>
+          <p class="mb-6">
+            Para el funcionamiento del sistema, procesamos datos como tu nombre,
+            número de documento, cargo, y detalles bancarios necesarios para el
+            reembolso de viáticos.
+          </p>
+
+          <h2 class="policy-h2">2. Uso de la información</h2>
+          <p class="mb-6">La información se utiliza exclusivamente para:</p>
+          <ul class="list-disc pl-6 mb-8 space-y-3">
+            <li>Calcular montos de viáticos según tarifario.</li>
+            <li>Validar comprobantes de pago ante SUNAT.</li>
+            <li>Gestionar depósitos y liquidaciones financieras.</li>
+            <li>Mantener auditorías internas de gastos corporativos.</li>
+          </ul>
+
+          <h2 class="policy-h2">3. Protección de datos</h2>
+          <p class="mb-6">
+            Utilizamos medidas de seguridad de grado industrial, incluyendo
+            cifrado de datos y acceso basado en roles (RBAC) para asegurar que
+            solo el personal autorizado vea información sensible.
+          </p>
+        </section>
+      </article>
+    </main>
+
+    <footer
+      class="py-12 border-t border-apple-gray-border dark:border-zinc-800 bg-apple-gray-light dark:bg-zinc-900"
+    >
+      <div class="max-w-4xl mx-auto px-6 text-center">
+        <p class="text-[12px] text-apple-gray-text">
+          © 2025 Ingeniería y Servicios del Sur S.A.C. Todos los derechos
+          reservados.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

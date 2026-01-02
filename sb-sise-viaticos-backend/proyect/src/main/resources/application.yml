@@ -1,0 +1,92 @@
+spring:
+  application:
+    name: proyect
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+      resolve-lazily: true
+
+  # Configuración de Correo Resend SMTP
+  mail:
+    host: smtp.resend.com
+    port: 465
+    username: resend
+    password: ${RESEND_API_KEY:re_RFKeNnYw_JjcryLuTfYfDd8x3oFgWHcU5}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false
+            required: false
+          ssl:
+            enable: true
+        debug: true
+    default-encoding: UTF-8
+
+  # Base de Datos Oracle
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: C##viaticos_user
+    password: admin123
+    driver-class-name: oracle.jdbc.OracleDriver
+
+# Configuración personalizada de la aplicación
+app:
+  url: http://localhost:8080
+  mail:
+    from: onboarding@resend.dev
+
+  # Configuración JPA / Hibernate
+  jpa:
+    database-platform: org.hibernate.dialect.OracleDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format-sql: true
+
+  # configuración de salida
+  output:
+    ansi:
+      enabled: always
+
+server:
+  tomcat:
+    max-swallow-size: 100MB
+
+#  Logs
+logging:
+  level:
+    org:
+      springframework:
+        web: INFO
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){blue} %clr(%5p){highlight} %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){bright_cyan} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %clr(%m){green}%n%wEx"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+  # Configuración de archivos de log
+  file:
+    name: logs/viaticos-api.log
+    path: logs
+
+  logback:
+    rollingpolicy:
+      file-name-pattern: logs/archived/viaticos-api-%d{yyyy-MM-dd}.%i.log
+      max-file-size: 10MB
+      max-history: 30
+      total-size-cap: 100MB
+      clean-history-on-start: true

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nueva Solicitud - ISS Viáticos</title>
+
+    <!-- recursos externos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- manejo de temas -->
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              aura: {
+                blue: "#0071e3",
+                surface: "rgba(255, 255, 255, 0.8)",
+                bg: "#f5f5f7",
+                text: "#1d1d1f",
+                gray: "#86868b",
+                border: "rgba(0, 0, 0, 0.05)",
+              },
+              dark: {
+                bg: "#000000",
+                surface: "rgba(28, 28, 30, 0.8)",
+                border: "rgba(255, 255, 255, 0.1)",
+              },
+            },
+            borderRadius: {
+              aura: "28px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+        font-family: "Inter", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .dark body {
+        background-color: #000000;
+        color: #f5f5f7;
+      }
+
+      /* Aura Cards */
+      .aura-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 28px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backface-visibility: hidden;
+        transform: translateZ(0);
+      }
+      .dark .aura-card {
+        background: rgba(28, 28, 30, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Premium Inputs */
+      .input-premium {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 16px;
+        padding: 12px 16px;
+        transition: all 0.2s ease;
+        outline: none;
+      }
+      .dark .input-premium {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+      .input-premium:focus {
+        background: white;
+        border-color: #0071e3;
+        box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+      }
+      .dark .input-premium:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #0071e3;
+      }
+
+      /* animaciones */
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade {
+        animation: fade-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        opacity: 0;
+      }
+
+      .select-chevron {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-position: right 1rem center;
+        background-size: 1.2rem;
+        background-repeat: no-repeat;
+        appearance: none;
+      }
+    </style>
+    <th:block th:replace="~{fragments/nav :: styles}"></th:block>
+  </head>
+  <body class="min-h-screen pb-20">
+    <!-- nav -->
+    <th:block
+      th:replace="~{fragments/nav :: navbar(activeTab='solicitudes')}"
+    ></th:block>
+
+    <main class="max-w-5xl mx-auto px-6 pt-24 md:pt-32">
+      <!-- Header -->
+      <header class="mb-12 animate-fade">
+        <p class="text-[17px] font-semibold text-aura-blue mb-2">
+          Comisión de Servicio
+        </p>
+        <h1
+          class="text-[40px] md:text-[48px] font-bold tracking-tight leading-tight"
+        >
+          Nueva Solicitud
+        </h1>
+        <p class="text-[19px] md:text-[21px] text-aura-gray mt-2 max-w-2xl">
+          Configura tu próximo viaje. Calcularemos los viáticos automáticamente
+          basados en tu destino y nivel.
+        </p>
+      </header>
+
+      <form
+        action="/solicitudes/nueva"
+        method="post"
+        class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fade"
+        style="animation-delay: 0.1s"
+      >
+        <!-- Formulario principal -->
+        <div class="lg:col-span-8 space-y-8">
+          <!-- Seccion 1: Datos Generales -->
+          <div class="aura-card p-8 relative overflow-hidden">
+            <div
+              class="absolute -right-10 -top-10 w-40 h-40 bg-aura-blue/5 rounded-full blur-3xl"
+            ></div>
+
+            <h2 class="text-[21px] font-bold mb-8 flex items-center gap-3">
+              <span
+                class="w-8 h-8 rounded-full bg-aura-blue text-white flex items-center justify-center text-[15px]"
+                >1</span
+              >
+              Información del Viaje
+            </h2>
+
+            <div class="space-y-6">
+              <div>
+                <label
+                  class="block text-[13px] font-bold text-aura-gray uppercase tracking-widest mb-2 ml-1"
+                  >Motivo</label
+                >
+                <input
+                  type="text"
+                  name="motivoViaje"
+                  required
+                  placeholder="Ej: Supervisión técnica en Sede Callao"
+                  class="w-full input-premium text-[17px] font-medium"
+                />
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label
+                    class="block text-[13px] font-bold text-aura-gray uppercase tracking-widest mb-2 ml-1"
+                    >Fecha de Salida</label
+                  >
+                  <div class="relative">
+                    <input
+                      type="date"
+                      id="fechaInicio"
+                      name="fechaInicio"
+                      required
+                      onchange="updateEstimation()"
+                      class="w-full input-premium text-[17px] font-medium"
+                    />
+                    <i
+                      data-lucide="calendar"
+                      class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-aura-gray/50 pointer-events-none"
+                    ></i>
+                  </div>
+                </div>
+                <div class="flex items-center pt-6 md:pt-0">
+                  <div class="pl-4 border-l-2 border-aura-blue/20">
+                    <p
+                      class="text-[11px] font-bold text-aura-gray uppercase tracking-widest mb-1"
+                    >
+                      Retorno (Basado en itinerario)
+                    </p>
+                    <p id="fechaRetornoDisplay" class="text-[19px] font-bold">
+                      --/--/----
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seccion 2: Itinerario -->
+          <div class="aura-card p-8">
+            <div class="flex items-center justify-between mb-8">
+              <h2 class="text-[21px] font-bold flex items-center gap-3">
+                <span
+                  class="w-8 h-8 rounded-full bg-aura-blue text-white flex items-center justify-center text-[15px]"
+                  >2</span
+                >
+                Ruta del Viaje
+              </h2>
+              <button
+                type="button"
+                onclick="agregarTramo()"
+                class="inline-flex items-center gap-2 bg-aura-text text-aura-bg dark:bg-white dark:text-black px-4 py-2 rounded-full font-bold text-[13px] uppercase tracking-wider hover:opacity-90 transition-all"
+              >
+                <i data-lucide="plus" class="w-4 h-4"></i> Añadir Destino
+              </button>
+            </div>
+
+            <div id="itinerario-container" class="space-y-6 relative">
+              <!-- Linea vertical -->
+              <div
+                class="absolute left-4 top-8 bottom-8 w-0.5 bg-aura-blue/10 dark:bg-white/5"
+              ></div>
+
+              <!-- Tramo Inicial -->
+              <div class="tramo-row relative pl-10">
+                <!-- Punto en la linea -->
+                <div
+                  class="absolute left-3 top-4 w-2.5 h-2.5 bg-aura-blue rounded-full border-4 border-aura-bg dark:border-aura-surface shadow-[0_0_0_4px_rgba(0,113,227,0.1)]"
+                ></div>
+
+                <div
+                  class="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 bg-aura-bg/50 dark:bg-white/5 rounded-2xl border border-aura-border group transition-all hover:bg-white dark:hover:bg-white/10"
+                >
+                  <div class="md:col-span-1">
+                    <label
+                      class="block text-[11px] font-bold text-aura-gray uppercase tracking-widest mb-2"
+                      >Región / Zona</label
+                    >
+                    <select
+                      name="idZonas"
+                      required
+                      onchange="updateEstimation()"
+                      class="w-full input-premium text-[15px] font-semibold select-chevron"
+                    >
+                      <option value="" disabled selected>Seleccione...</option>
+                      <option
+                        th:each="zona : ${zonas}"
+                        th:value="${zona.id}"
+                        th:text="${zona.nombre}"
+                      >
+                        Zona
+                      </option>
+                    </select>
+                  </div>
+                  <div class="md:col-span-1">
+                    <label
+                      class="block text-[11px] font-bold text-aura-gray uppercase tracking-widest mb-2"
+                      >Lugar Específico</label
+                    >
+                    <input
+                      type="text"
+                      name="ciudades"
+                      required
+                      placeholder="Ej: Chiclayo"
+                      class="w-full input-premium text-[15px] font-semibold"
+                    />
+                  </div>
+                  <div class="md:col-span-1">
+                    <label
+                      class="block text-[11px] font-bold text-aura-gray uppercase tracking-widest mb-2"
+                      >Noches</label
+                    >
+                    <input
+                      type="number"
+                      name="noches"
+                      required
+                      min="1"
+                      value="1"
+                      onchange="updateEstimation()"
+                      class="w-full input-premium text-[15px] font-bold"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p
+              class="mt-8 text-center text-[13px] text-aura-gray flex items-center justify-center gap-2 font-medium"
+            >
+              <i data-lucide="info" class="w-4 h-4 text-aura-blue/60"></i>
+              Los viáticos se calculan automáticamente por cada noche de
+              pernoctación según escala.
+            </p>
+          </div>
+        </div>
+
+        <!-- Sidebar: Resumen Dinámico -->
+        <div class="lg:col-span-4 lg:sticky lg:top-32">
+          <div id="estimacionCard" class="hidden flex-col gap-6">
+            <div
+              class="aura-card bg-aura-text text-aura-bg dark:bg-white dark:text-black p-8 relative overflow-hidden group"
+            >
+              <!-- Decoración -->
+              <div
+                class="absolute -right-4 -bottom-4 w-24 h-24 bg-aura-blue/20 rounded-full blur-2xl group-hover:scale-110 transition-transform"
+              ></div>
+
+              <p
+                class="text-[11px] font-bold text-aura-gray dark:text-gray-500 uppercase tracking-[0.2em] mb-4"
+              >
+                Total Proyectado
+              </p>
+              <h3
+                id="montoTotalDisplay"
+                class="text-[44px] font-bold tracking-tight leading-none mb-6"
+              >
+                S/ 0.00
+              </h3>
+
+              <div
+                class="space-y-3 pt-6 border-t border-aura-bg/20 dark:border-black/5 text-[15px]"
+              >
+                <div class="flex justify-between font-medium">
+                  <span class="opacity-60">Duración:</span>
+                  <span id="diasDisplay">0 días</span>
+                </div>
+                <div class="flex justify-between font-medium">
+                  <span class="opacity-60 text-aura-gray">Llegada:</span>
+                  <span id="finalRetornoDisplay">--</span>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full mt-10 bg-aura-blue text-white py-4 rounded-[18px] font-bold text-[17px] hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-aura-blue/20"
+              >
+                Confirmar Solicitud
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+              </button>
+            </div>
+
+            <p class="px-4 text-[13px] text-aura-gray text-center font-medium">
+              Al confirmar, tu solicitud pasará al estado **Pendiente** y se
+              notificará a tu supervisor.
+            </p>
+          </div>
+
+          <!-- Boton por defecto si no hay calculo -->
+          <div id="defaultSubmit" class="flex flex-col gap-4">
+            <div
+              class="aura-card p-8 border-dashed border-2 flex flex-col items-center justify-center text-center"
+            >
+              <i
+                data-lucide="calculator"
+                class="w-8 h-8 text-aura-gray mb-3"
+              ></i>
+              <p class="text-[15px] font-medium text-aura-gray">
+                Completa los destinos para ver el cálculo estimado.
+              </p>
+            </div>
+            <button
+              type="submit"
+              class="w-full px-8 py-4 bg-aura-text text-aura-bg dark:bg-white dark:text-black rounded-[18px] font-bold text-[17px] hover:opacity-90 transition-all"
+            >
+              Continuar a Revisión
+            </button>
+          </div>
+        </div>
+      </form>
+    </main>
+
+    <!-- template para nuevos tramos -->
+    <template id="tramo-template">
+      <div class="tramo-row relative pl-10 group animate-fade">
+        <div
+          class="absolute left-3 top-4 w-2.5 h-2.5 bg-aura-blue/40 rounded-full border-4 border-aura-bg dark:border-aura-surface"
+        ></div>
+
+        <!-- Boton eliminar -->
+        <button
+          type="button"
+          onclick="this.closest('.tramo-row').remove(); updateEstimation();"
+          class="absolute -right-2 top-2 w-8 h-8 bg-black dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 shadow-lg z-10"
+        >
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 bg-aura-bg/50 dark:bg-white/5 rounded-2xl border border-aura-border transition-all hover:bg-white dark:hover:bg-white/10 hover:border-aura-blue/20"
+        >
+          <div class="md:col-span-1">
+            <label
+              class="block text-[11px] font-bold text-aura-gray uppercase tracking-widest mb-2"
+              >Región / Zona</label
+            >
+            <select
+              name="idZonas"
+              required
+              onchange="updateEstimation()"
+              class="w-full input-premium text-[15px] font-semibold select-chevron"
+            >
+              <option value="" disabled selected>Seleccione...</option>
+              <option
+                th:each="zona : ${zonas}"
+                th:value="${zona.id}"
+                th:text="${zona.nombre}"
+              >
+                Zona
+              </option>
+            </select>
+          </div>
+          <div class="md:col-span-1">
+            <label
+              class="block text-[11px] font-bold text-aura-gray uppercase tracking-widest mb-2"
+              >Lugar Específico</label
+            >
+            <input
+              type="text"
+              name="ciudades"
+              required
+              placeholder="Ej: Chiclayo"
+              class="w-full input-premium text-[15px] font-semibold"
+            />
+          </div>
+          <div class="md:col-span-1">
+            <label
+              class="block text-[11px] font-bold text-aura-gray uppercase tracking-widest mb-2"
+              >Noches</label
+            >
+            <input
+              type="number"
+              name="noches"
+              required
+              min="1"
+              value="1"
+              onchange="updateEstimation()"
+              class="w-full input-premium text-[15px] font-bold"
+            />
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <script th:inline="javascript">
+      lucide.createIcons();
+
+      const container = document.getElementById("itinerario-container");
+      const template = document.getElementById("tramo-template");
+      const estimacionCard = document.getElementById("estimacionCard");
+      const defaultSubmit = document.getElementById("defaultSubmit");
+      const montoTotalDisplay = document.getElementById("montoTotalDisplay");
+      const diasDisplay = document.getElementById("diasDisplay");
+      const fechaRetornoDisplay = document.getElementById(
+        "fechaRetornoDisplay"
+      );
+      const finalRetornoDisplay = document.getElementById(
+        "finalRetornoDisplay"
+      );
+      const inputFechaInicio = document.getElementById("fechaInicio");
+
+      function agregarTramo() {
+        const clone = template.content.cloneNode(true);
+        container.appendChild(clone);
+        lucide.createIcons();
+        updateEstimation();
+      }
+
+      async function updateEstimation() {
+        const idZonas = Array.from(document.getElementsByName("idZonas")).map(
+          (el) => el.value
+        );
+        const noches = Array.from(document.getElementsByName("noches")).map(
+          (el) => parseInt(el.value) || 0
+        );
+        const fechaInicioVal = inputFechaInicio.value;
+
+        // Calc Date
+        if (fechaInicioVal) {
+          const totalNoches = noches.reduce((a, b) => a + b, 0);
+          const fecha = new Date(fechaInicioVal + "T00:00:00");
+          fecha.setDate(fecha.getDate() + totalNoches);
+
+          const formattedDate = fecha.toLocaleDateString("es-PE", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          });
+          fechaRetornoDisplay.innerText = formattedDate;
+          finalRetornoDisplay.innerText = formattedDate;
+        }
+
+        // Fetch Estimado
+        if (idZonas.length > 0 && idZonas.every((z) => z !== "")) {
+          try {
+            const queryParams = idZonas
+              .map((z, i) => `idZonas=${z}&noches=${noches[i]}`)
+              .join("&");
+            const response = await fetch(
+              `/api/solicitudes/estimar?${queryParams}`
+            );
+            const data = await response.json();
+
+            if (data.montoTotal !== undefined) {
+              montoTotalDisplay.innerText = `S/ ${data.montoTotal.toLocaleString(
+                "es-PE",
+                { minimumFractionDigits: 2 }
+              )}`;
+              diasDisplay.innerText = `${data.dias} días`;
+
+              estimacionCard.classList.remove("hidden");
+              estimacionCard.classList.add("flex");
+              defaultSubmit.classList.add("hidden");
+            } else {
+              estimacionCard.classList.add("hidden");
+              defaultSubmit.classList.remove("hidden");
+            }
+          } catch (error) {
+            console.error("Error calculando estimado:", error);
+          }
+        }
+      }
+    </script>
+    <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
+  </body>
+</html>

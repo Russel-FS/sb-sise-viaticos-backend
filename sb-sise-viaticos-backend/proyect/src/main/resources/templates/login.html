@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar Sesión - Apple style</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <th:block th:replace="~{fragments/theme :: themeStyles}"></th:block>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: [
+                "Inter",
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "sans-serif",
+              ],
+            },
+            colors: {
+              apple: {
+                blue: "#0066cc",
+                gray: {
+                  light: "#f5f5f7",
+                  border: "#d2d2d7",
+                  text: "#86868b",
+                  dark: "#1d1d1f",
+                },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #ffffff;
+        color: #1d1d1f;
+        -webkit-font-smoothing: antialiased;
+      }
+      .dark body {
+        background-color: #000000;
+        color: #f5f5f7;
+      }
+      .apple-input {
+        border: 1px solid #d2d2d7;
+        border-radius: 12px;
+        height: 52px;
+        font-size: 17px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .apple-input:focus {
+        border-color: #0066cc;
+        box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+        outline: none;
+      }
+      .dark .apple-input {
+        background-color: #1d1d1f;
+        border-color: #424245;
+      }
+      .apple-button {
+        background-color: #0066cc;
+        color: #ffffff;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 17px;
+        height: 52px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+      }
+      .apple-button:hover {
+        background-color: #0077ed;
+      }
+      .apple-button:active {
+        transform: scale(0.98);
+      }
+      .theme-toggle {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        z-index: 50;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+      <button
+        onclick="toggleTheme()"
+        class="w-10 h-10 rounded-full flex items-center justify-center bg-apple-gray-light dark:bg-zinc-800 hover:opacity-80 transition-opacity border border-apple-gray-border dark:border-zinc-700"
+      >
+        <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-white"></i>
+        <i
+          data-lucide="moon"
+          class="w-5 h-5 block dark:hidden text-apple-gray-dark"
+        ></i>
+      </button>
+    </div>
+
+    <main class="flex-grow flex items-center justify-center p-6">
+      <div class="w-full max-w-[460px] text-center">
+        <!-- Apple ID style Header -->
+        <h1
+          class="text-[40px] md:text-[48px] font-semibold leading-tight tracking-tight mb-4"
+        >
+          Iniciar sesión.
+        </h1>
+        <p
+          class="text-[19px] md:text-[21px] text-apple-gray-text dark:text-gray-400 mb-12 max-w-[340px] mx-auto leading-snug"
+        >
+          Usa tu cuenta de ISS Viáticos para acceder al sistema de gestión.
+        </p>
+
+        <form th:action="@{/login}" method="post" class="space-y-4">
+          <div class="text-left space-y-4">
+            <input
+              type="text"
+              name="username"
+              required
+              placeholder="Usuario"
+              class="w-full apple-input px-4 dark:text-white"
+            />
+            <input
+              type="password"
+              name="password"
+              required
+              placeholder="Contraseña"
+              class="w-full apple-input px-4 dark:text-white"
+            />
+          </div>
+
+          <!-- Error mensaje -->
+          <div
+            th:if="${param.error}"
+            class="p-4 rounded-xl bg-red-50 dark:bg-red-950/20 text-[14px] text-red-600 dark:text-red-400 text-left border border-red-100 dark:border-red-900/30"
+          >
+            Los datos de acceso son incorrectos. Por favor, inténtalo de nuevo.
+          </div>
+
+          <div class="pt-6">
+            <button type="submit" class="apple-button shadow-sm">
+              <span>Continuar</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 text-white/50"></i>
+            </button>
+          </div>
+        </form>
+
+        <div class="mt-12 text-[17px]">
+          <a
+            href="/forgot-password"
+            class="text-apple-blue hover:underline font-normal"
+          >
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="py-12 border-t border-apple-gray-border dark:border-zinc-800 bg-apple-gray-light dark:bg-zinc-900"
+    >
+      <div class="max-w-6xl mx-auto px-6">
+        <div
+          class="flex flex-col md:flex-row justify-between items-center gap-6"
+        >
+          <p class="text-[12px] text-apple-gray-text">
+            Copyright © 2025 ISS Viáticos. Todos los derechos reservados.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script th:inline="javascript">
+      lucide.createIcons();
+      function toggleTheme() {
+        if (document.documentElement.classList.contains("dark")) {
+          document.documentElement.classList.remove("dark");
+          localStorage.setItem("theme", "light");
+        } else {
+          document.documentElement.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+        }
+      }
+    </script>
+    <th:block th:replace="~{fragments/theme :: themeScript}"></th:block>
+  </body>
+</html>
