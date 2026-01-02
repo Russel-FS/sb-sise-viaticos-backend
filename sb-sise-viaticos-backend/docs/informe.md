@@ -809,48 +809,44 @@ END;
 #### Capa de Servicios (Java)
 
 ```java
-@Service
-public class SolicitudServiceImpl implements SolicitudService {
+@Repository
+public class SolicitudComisionRepositoryImpl implements SolicitudComisionRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Transactional
-    public Long guardarNuevaSolicitud(GuardarSolicitudDTO dto) {
-        // Mapear itinerario Java → Array Oracle
-        Array itinerarioArray = jdbcTemplate.execute(
-            (Connection con) -> {
-                Struct[] structs = new Struct[dto.getItinerario().size()];
-                for (int i = 0; i < dto.getItinerario().size(); i++) {
-                    Object[] attrs = new Object[] {
-                        dto.getItinerario().get(i).getIdZona(),
-                        dto.getItinerario().get(i).getCiudad(),
-                        dto.getItinerario().get(i).getNoches()
-                    };
-                    structs[i] = con.createStruct("T_ITINERARIO_REC", attrs);
-                }
-                return con.createArrayOf("T_ITINERARIO_TAB", structs);
-            }
-        );
+    @Override
+    public Long registrarSolicitudFull(Long empleadoId, String motivo, LocalDate fechaInicio,
+            List<Long> idZonas, List<String> ciudades, List<Integer> noches, String userCrea) {
+        return jdbcTemplate.execute((Connection conn) -> {
+            OracleConnection oracleConn = conn.unwrap(OracleConnection.class);
 
-        // Llamar procedimiento almacenado
-        Long idComision = jdbcTemplate.execute(
-            (CallableStatement cs) -> {
-                cs.setLong(1, dto.getIdEmpleado());
-                cs.setString(2, dto.getMotivo());
-                cs.setDate(3, new java.sql.Date(dto.getFechaInicio().getTime()));
-                cs.setArray(4, itinerarioArray);
-                cs.setString(5, SecurityContextHolder.getContext()
-                    .getAuthentication().getName());
+            try (CallableStatement cs = oracleConn
+                    .prepareCall("{call PKG_SOLICITUDES.PRC_REGISTRAR_SOLICITUD(?, ?, ?, ?, ?, ?)}")) {
+                cs.setLong(1, empleadoId);
+                cs.setString(2, motivo);
+                cs.setDate(3, Date.valueOf(fechaInicio));
+
+                Object[] structArray = new Object[idZonas.size()];
+                for (int i = 0; i < idZonas.size(); i++) {
+                    structArray[i] = oracleConn.createStruct("T_ITINERARIO_REC", new Object[] {
+                            idZonas.get(i),
+                            ciudades.get(i),
+                            noches.get(i)
+                    });
+                }
+
+                Array oracleArray = oracleConn.createOracleArray("T_ITINERARIO_TAB", structArray);
+                cs.setArray(4, oracleArray);
+                cs.setString(5, userCrea);
                 cs.registerOutParameter(6, Types.NUMERIC);
 
                 cs.execute();
                 return cs.getLong(6);
             }
-        );
-
-        return idComision;
+        });
     }
+
 }
 ```
 
