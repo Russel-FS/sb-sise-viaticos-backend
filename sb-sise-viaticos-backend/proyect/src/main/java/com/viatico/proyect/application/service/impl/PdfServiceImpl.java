@@ -1,7 +1,6 @@
 package com.viatico.proyect.application.service.impl;
 
 import com.lowagie.text.*;
-import com.lowagie.text.Font;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -15,7 +14,6 @@ import com.viatico.proyect.domain.enums.EstadoComprobante;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.lowagie.text.Rectangle;
 import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -141,7 +139,10 @@ public class PdfServiceImpl implements PdfService {
             addStripCell(strip, "ASIGNADO", safeBigDecimal(sol.getMontoTotal()), COL_TEXT_PRIMARY, fLabel, fBigNumber);
 
             // Gastado
-            BigDecimal gastado = (ren != null) ? safeBigDecimal(ren.getTotalAceptado()) : BigDecimal.ZERO;
+            BigDecimal gastado = (ren != null) ? safeBigDecimal(ren.getDetalles().stream()
+                    .filter(d -> d.getEstadoValidacion() == EstadoComprobante.ACEPTADO)
+                    .map(DetalleComprobante::getMontoTotal)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)) : BigDecimal.ZERO;
             addStripCell(strip, "GASTADO", gastado, COL_TEXT_PRIMARY, fLabel, fBigNumber);
 
             // Balance
