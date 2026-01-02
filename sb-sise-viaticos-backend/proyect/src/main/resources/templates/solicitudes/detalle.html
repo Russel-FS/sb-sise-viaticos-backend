@@ -179,7 +179,7 @@
               <i data-lucide="check-check" class="w-3.5 h-3.5"></i> Liquidado
             </span>
             <span
-              th:if="${sol.estado.name() == 'Rendido'}"
+              th:if="${sol.estado.name() == 'RENDIDO'}"
               class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium bg-[#F0F9FF] dark:bg-blue-900/20 text-[#0071e3] dark:text-blue-400 border border-[#0071e3]/10"
             >
               <i data-lucide="file-check" class="w-3.5 h-3.5"></i> Rendido
@@ -224,7 +224,7 @@
           <a
             th:if="${sol.estado.name() == 'APROBADO' || sol.estado.name() == 'OBSERVADO'}"
             th:href="@{'/rendiciones/solicitud/' + ${sol.id}}"
-            class="w-full py-3.5 bg-accent-forest text-white text-sm font-bold rounded-full hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg"
+            class="w-full py-3.5 bg-black dark:bg-white text-white dark:text-black text-sm font-bold rounded-full hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg"
           >
             Rendir Gastos <i data-lucide="receipt" class="w-4 h-4"></i>
           </a>
