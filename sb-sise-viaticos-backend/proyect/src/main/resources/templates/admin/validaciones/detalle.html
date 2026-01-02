@@ -227,7 +227,7 @@
             </span>
           </div>
           <h1
-            class="text-4xl md:text-5xl font-serif text-gray-900 dark:text-white leading-tight"
+            class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight"
             th:text="${sol.motivoViaje}"
           >
             Motivo del Viaje
@@ -267,7 +267,7 @@
               >Presupuesto</span
             >
             <span
-              class="text-xl font-serif font-medium text-gray-900 dark:text-white"
+              class="text-xl font-bold font-medium text-gray-900 dark:text-white"
               th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 2, 'POINT')}"
               >0.00</span
             >
@@ -303,7 +303,7 @@
       <!-- Comprobantes Grid -->
       <div class="space-y-8 mb-24">
         <div class="flex items-center justify-between">
-          <h2 class="text-2xl font-serif text-gray-900 dark:text-white">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
             Comprobantes Presentados
           </h2>
           <span
@@ -385,7 +385,7 @@
                     >
                   </div>
                   <p
-                    class="text-2xl font-serif text-gray-900 dark:text-white tabular-nums tracking-tight"
+                    class="text-2xl font-bold text-gray-900 dark:text-white tabular-nums tracking-tight"
                     th:text="${'S/ ' + #numbers.formatDecimal(det.montoTotal, 1, 'COMMA', 2, 'POINT')}"
                   >
                     0.00
@@ -632,7 +632,7 @@
         class="bg-white dark:bg-[#1C1E22] w-full max-w-lg rounded-[32px] p-8 shadow-2xl animate-in zoom-in-95 duration-200"
       >
         <div class="flex items-center justify-between mb-6">
-          <h3 class="text-2xl font-serif text-gray-900 dark:text-white">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
             Observar Rendición
           </h3>
           <button

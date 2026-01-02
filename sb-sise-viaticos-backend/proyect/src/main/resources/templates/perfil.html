@@ -184,7 +184,7 @@
           <!-- Avatar -->
           <div class="relative shrink-0">
             <div
-              class="w-24 h-24 rounded-full bg-gradient-to-tr from-[#111114] to-[#636366] dark:from-[#3A3A3C] dark:to-[#1C1C1E] flex items-center justify-center text-white text-3xl font-serif shadow-xl ring-4 ring-white dark:ring-[#1C1C1E]"
+              class="w-24 h-24 rounded-full bg-gradient-to-tr from-[#111114] to-[#636366] dark:from-[#3A3A3C] dark:to-[#1C1C1E] flex items-center justify-center text-white text-3xl font-bold shadow-xl ring-4 ring-white dark:ring-[#1C1C1E]"
             >
               <span
                 th:text="${#strings.substring(empleado.nombres,0,1) + #strings.substring(empleado.apellidos,0,1)}"
@@ -200,7 +200,7 @@
           <!-- Info -->
           <div class="text-center md:text-left flex-1 min-w-0">
             <h2
-              class="text-2xl font-serif text-gray-900 dark:text-white leading-tight mb-1"
+              class="text-2xl font-bold text-gray-900 dark:text-white leading-tight mb-1"
               th:text="${empleado.nombres + ' ' + empleado.apellidos}"
             >
               Nombre del Usuario

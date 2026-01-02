@@ -108,27 +108,20 @@ public class PdfServiceImpl implements PdfService {
             subtitle.setSpacingAfter(30);
             document.add(subtitle);
 
-            // empleado info
-            PdfPTable empTable = new PdfPTable(2);
-            empTable.setWidthPercentage(100);
-            empTable.setSpacingAfter(30);
+            PdfPTable infoTable = new PdfPTable(2);
+            infoTable.setWidthPercentage(100);
+            infoTable.setSpacingAfter(35);
+            infoTable.setWidths(new float[] { 1f, 1f });
 
-            // Empleado
-            PdfPCell cEmp = new PdfPCell();
-            cEmp.setBorder(Rectangle.NO_BORDER);
-            cEmp.addElement(new Paragraph("EMPLEADO", fLabel));
-            cEmp.addElement(
-                    new Paragraph(sol.getEmpleado().getNombres() + " " + sol.getEmpleado().getApellidos(), fBodyBold));
-            empTable.addCell(cEmp);
+            // Row 1
+            addInfoCell(infoTable, "EMPLEADO", sol.getEmpleado().getNombres() + " " + sol.getEmpleado().getApellidos());
+            addInfoCell(infoTable, "DNI", safeString(sol.getEmpleado().getDni()));
 
-            // Cargo/Nivel
-            PdfPCell cCargo = new PdfPCell();
-            cCargo.setBorder(Rectangle.NO_BORDER);
-            cCargo.addElement(new Paragraph("NIVEL / CARGO", fLabel));
-            cCargo.addElement(new Paragraph(safeString(sol.getEmpleado().getNivel().getNombre()), fBody));
-            empTable.addCell(cCargo);
+            // Row 2
+            addInfoCell(infoTable, "CARGO / NIVEL", safeString(sol.getEmpleado().getNivel().getNombre()));
+            addInfoCell(infoTable, "CUENTA BANCARIA", safeString(sol.getEmpleado().getCuentaBancaria()));
 
-            document.add(empTable);
+            document.add(infoTable);
 
             // financial strip
             PdfPTable strip = new PdfPTable(3);
@@ -295,6 +288,26 @@ public class PdfServiceImpl implements PdfService {
 
     private BigDecimal safeBigDecimal(BigDecimal val) {
         return val != null ? val : BigDecimal.ZERO;
+    }
+
+    private void addInfoCell(PdfPTable table, String label, String value) {
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder(Rectangle.BOTTOM);
+        cell.setBorderColor(COL_BORDER_LIGHT);
+        cell.setPaddingTop(6);
+        cell.setPaddingBottom(8);
+        cell.setPaddingLeft(0);
+
+        Font fLabel = FontFactory.getFont(FontFactory.HELVETICA, 7, COL_TEXT_SECONDARY);
+        Paragraph pLabel = new Paragraph(label.toUpperCase(), fLabel);
+        cell.addElement(pLabel);
+
+        Font fValue = FontFactory.getFont(FontFactory.HELVETICA, 10, COL_TEXT_PRIMARY);
+        Paragraph pValue = new Paragraph(value.isEmpty() ? "-" : value, fValue);
+        pValue.setSpacingBefore(2);
+        cell.addElement(pValue);
+
+        table.addCell(cell);
     }
 
     private String safeString(String val) {

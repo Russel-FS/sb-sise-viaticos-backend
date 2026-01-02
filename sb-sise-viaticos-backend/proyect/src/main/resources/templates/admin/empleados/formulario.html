@@ -162,13 +162,13 @@
           >
         </span>
         <h1
-          class="text-4xl md:text-5xl font-serif text-gray-900 dark:text-white mb-4"
+          class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4"
           th:text="${empleado.id != null ? 'Editar Empleado' : 'Nuevo Empleado'}"
         >
           Nuevo Empleado
         </h1>
         <p
-          class="text-lg text-gray-500 dark:text-gray-400 font-light max-w-lg mx-auto"
+          class="text-lg text-gray-500 dark:text-gray-400 max-w-lg mx-auto"
           th:text="${empleado.id != null ? 'Modifica los datos del colaborador, actualiza su rol o gestiona sus credenciales de acceso.' : 'Registra un nuevo colaborador, asigna su rol y configura sus credenciales de acceso iniciales.'}"
         >
           Registra un nuevo colaborador, asigna su rol y configura sus

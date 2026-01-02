@@ -181,12 +181,12 @@
             >
           </div>
           <h1
-            class="text-4xl md:text-5xl font-serif text-gray-900 dark:text-white leading-tight mb-2"
+            class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight mb-2"
           >
             Panel de Gastos
           </h1>
           <p
-            class="text-lg text-gray-500 dark:text-gray-400 font-light"
+            class="text-lg text-gray-500 dark:text-gray-400"
             th:text="${sol.motivoViaje}"
           >
             Motivo del viaje
@@ -262,7 +262,7 @@
               Presupuesto Asignado
             </p>
             <h3
-              class="text-4xl font-serif text-gray-900 dark:text-white"
+              class="text-4xl font-bold text-gray-900 dark:text-white"
               th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 2)}"
             >
               S/ 0.00
@@ -296,7 +296,7 @@
               Total Reportado
             </p>
             <h3
-              class="text-4xl font-serif text-accent-forest dark:text-white"
+              class="text-4xl font-bold text-accent-forest dark:text-white"
               th:text="${'S/ ' + #numbers.formatDecimal(ren.totalGastadoBruto, 1, 2)}"
             >
               S/ 0.00
@@ -328,7 +328,7 @@
               Saldo Restante
             </p>
             <h3
-              class="text-4xl font-serif tabular-nums"
+              class="text-4xl font-bold tabular-nums"
               th:classappend="${sol.montoTotal.subtract(ren.totalGastadoBruto).signum() < 0 ? 'text-red-600 dark:text-red-400' : 'text-white'}"
               th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal.subtract(ren.totalGastadoBruto), 1, 2)}"
             >
@@ -372,7 +372,7 @@
               </div>
               <div>
                 <h3
-                  class="font-serif text-xl text-gray-900 dark:text-white leading-none"
+                  class="font-bold text-xl text-gray-900 dark:text-white leading-none"
                 >
                   Registrar Gasto
                 </h3>
@@ -618,7 +618,7 @@
               class="p-8 border-b border-gray-100 dark:border-white/5 flex justify-between items-end"
             >
               <div>
-                <h3 class="font-serif text-2xl text-gray-900 dark:text-white">
+                <h3 class="font-bold text-2xl text-gray-900 dark:text-white">
                   Comprobantes
                 </h3>
                 <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">
@@ -899,7 +899,7 @@
         >
           <i data-lucide="info" class="w-6 h-6"></i>
         </div>
-        <h3 class="text-2xl font-serif text-gray-900 dark:text-white mb-2">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Comprobante Observado
         </h3>
         <p class="text-xs text-gray-400 uppercase tracking-widest mb-6">
