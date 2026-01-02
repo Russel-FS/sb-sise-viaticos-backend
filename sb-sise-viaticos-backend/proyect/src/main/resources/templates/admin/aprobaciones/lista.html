@@ -363,7 +363,7 @@
                   </td>
                   <td class="px-8 py-6 text-right">
                     <p
-                      class="text-lg font-bold italic font-bold text-gray-900 dark:text-white"
+                      class="text-lg font-bold font-bold text-gray-900 dark:text-white"
                       th:text="${'S/ ' + #numbers.formatDecimal(sol.montoTotal, 1, 'COMMA', 2, 'POINT')}"
                     >
                       S/ 0.00
@@ -482,7 +482,7 @@
                       class="p-3 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 rounded-xl"
                     >
                       <p
-                        class="text-xs font-medium text-red-800 dark:text-red-200 italic leading-relaxed"
+                        class="text-xs font-medium text-red-800 dark:text-red-200 leading-relaxed"
                       >
                         "<span
                           th:text="${sol.comentarioRechazo ?: 'Sin motivo'}"
