@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -29,126 +30,193 @@ public class PdfServiceImpl implements PdfService {
     private final RendicionService rendicionService;
     private final LiquidacionService liquidacionService;
 
+    private static final Color COL_TEXT_PRIMARY = new Color(29, 29, 31); // #1d1d1f
+    private static final Color COL_TEXT_SECONDARY = new Color(134, 134, 139); // #86868b
+    private static final Color COL_BG_STRIP = new Color(245, 245, 247); // #f5f5f7
+    private static final Color COL_BORDER_LIGHT = new Color(230, 230, 230);
+    private static final Color COL_SUCCESS = new Color(52, 199, 89);
+    private static final Color COL_DANGER = new Color(255, 59, 48);
+
     @Override
     public ByteArrayInputStream generarReporteLiquidacion(Long solicitudId) {
         SolicitudComision sol = solicitudService.obtenerPorId(solicitudId);
         RendicionCuentas ren = rendicionService.obtenerPorSolicitud(solicitudId);
         LiquidacionFinal liq = liquidacionService.obtenerPorSolicitud(solicitudId);
 
-        Document document = new Document(PageSize.A4);
+        // A4 estándar con márgenes generosos
+        Document document = new Document(PageSize.A4, 50, 50, 60, 60);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         try {
             PdfWriter.getInstance(document, out);
             document.open();
 
-            // Fuentes
-            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 22, Color.BLACK);
-            Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, Color.DARK_GRAY);
-            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
-            Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.BLACK);
-            Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.BLACK);
+            Font fDisplayBold = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 22, COL_TEXT_PRIMARY);
+            Font fHeading = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, COL_TEXT_PRIMARY);
+            Font fLabel = FontFactory.getFont(FontFactory.HELVETICA, 8, COL_TEXT_SECONDARY);
 
-            // Título
-            Paragraph title = new Paragraph("LIQUIDACIÓN DE VIÁTICOS", titleFont);
-            title.setAlignment(Element.ALIGN_CENTER);
-            title.setSpacingAfter(20);
+            Font fBody = FontFactory.getFont(FontFactory.HELVETICA, 10, COL_TEXT_PRIMARY);
+            Font fBodyBold = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, COL_TEXT_PRIMARY);
+
+            Font fTableHeader = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 7, COL_TEXT_SECONDARY);
+
+            Font fBigNumber = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, COL_TEXT_PRIMARY);
+
+            PdfPTable topBar = new PdfPTable(2);
+            topBar.setWidthPercentage(100);
+
+            PdfPCell cBrand = new PdfPCell(
+                    new Phrase("ISS VIÁTICOS", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8, COL_TEXT_SECONDARY)));
+            cBrand.setBorder(Rectangle.NO_BORDER);
+            cBrand.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            topBar.addCell(cBrand);
+
+            // ID Comprobante
+            PdfPCell cRef = new PdfPCell(new Phrase("Ref: " + String.format("%06d", sol.getId()), fLabel));
+            cRef.setBorder(Rectangle.NO_BORDER);
+            cRef.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            topBar.addCell(cRef);
+
+            document.add(topBar);
+
+            // Separador sutil
+            PdfPTable line = new PdfPTable(1);
+            line.setWidthPercentage(100);
+            PdfPCell cLine = new PdfPCell();
+            cLine.setBorder(Rectangle.BOTTOM);
+            cLine.setBorderColor(COL_BORDER_LIGHT);
+            cLine.setFixedHeight(10f);
+            line.addCell(cLine);
+            document.add(line);
+
+            document.add(new Paragraph("\n"));
+
+            // header
+            Paragraph title = new Paragraph("Liquidación Final", fDisplayBold);
+            title.setSpacingAfter(4);
             document.add(title);
 
-            // Información General
-            PdfPTable infoTable = new PdfPTable(2);
-            infoTable.setWidthPercentage(100);
-            infoTable.setSpacingBefore(10);
-            infoTable.setSpacingAfter(20);
-
-            addInfoCell(infoTable, "Solicitante:",
-                    sol.getEmpleado().getNombres() + " " + sol.getEmpleado().getApellidos(), boldFont, normalFont);
-            addInfoCell(infoTable, "ID Solicitud:", "#" + sol.getId(), boldFont, normalFont);
-            addInfoCell(infoTable, "Motivo:", sol.getMotivoViaje(), boldFont, normalFont);
-            String destino = (sol.getItinerarios() != null && !sol.getItinerarios().isEmpty())
-                    ? sol.getItinerarios().get(0).getZonaDestino().getNombre()
-                    : "N/A";
-            addInfoCell(infoTable, "Destino:", destino, boldFont, normalFont);
-            addInfoCell(infoTable, "Periodo:", sol.getFechaInicio() + " al " + sol.getFechaFin(), boldFont, normalFont);
-            addInfoCell(infoTable, "Estado:", sol.getEstado().toString(), boldFont, normalFont);
-
-            document.add(infoTable);
-
-            // Resumen Financiero
-            Paragraph resTitle = new Paragraph("RESUMEN FINANCIERO", subtitleFont);
-            resTitle.setSpacingAfter(10);
-            document.add(resTitle);
-
-            PdfPTable resTable = new PdfPTable(3);
-            resTable.setWidthPercentage(100);
-            resTable.setSpacingAfter(20);
-
-            addNumericCell(resTable, "Monto Asignado", sol.getMontoTotal(), headerFont, boldFont,
-                    new Color(0, 113, 227));
-            addNumericCell(resTable, "Total Gastado", ren != null ? ren.getTotalAceptado() : BigDecimal.ZERO,
-                    headerFont, boldFont, new Color(134, 134, 139));
-
-            BigDecimal saldo = BigDecimal.ZERO;
-            if (liq != null) {
-                saldo = liq.getSaldoAfavorEmpleado().subtract(liq.getSaldoAfavorEmpresa());
-            }
-            Color saldoColor = saldo.signum() >= 0 ? new Color(52, 199, 89) : new Color(255, 59, 48);
-            addNumericCell(resTable, "Saldo Final", saldo, headerFont, boldFont, saldoColor);
-
-            document.add(resTable);
-
-            // Detalle de Gastos
-            if (ren != null && ren.getDetalles() != null) {
-                Paragraph gastTitle = new Paragraph("DETALLE DE COMPROBANTES ACEPTADOS", subtitleFont);
-                gastTitle.setSpacingAfter(10);
-                document.add(gastTitle);
-
-                PdfPTable detallesTable = new PdfPTable(new float[] { 3, 4, 3, 2, 2 });
-                detallesTable.setWidthPercentage(100);
-
-                String[] headers = { "Tipo de Gasto", "Proveedor", "N° Doc", "Fecha", "Monto" };
-                for (String h : headers) {
-                    PdfPCell cell = new PdfPCell(new Phrase(h, headerFont));
-                    cell.setBackgroundColor(Color.BLACK);
-                    cell.setPadding(8);
-                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    detallesTable.addCell(cell);
+            String rangoFechas = "Fecha no definida";
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("d MMM yyyy");
+            if (sol.getFechaInicio() != null) {
+                rangoFechas = sol.getFechaInicio().format(fmt);
+                if (sol.getFechaFin() != null) {
+                    rangoFechas += " — " + sol.getFechaFin().format(fmt);
                 }
+            }
 
+            Paragraph subtitle = new Paragraph(sol.getMotivoViaje() + " (" + rangoFechas + ")",
+                    FontFactory.getFont(FontFactory.HELVETICA, 11, COL_TEXT_SECONDARY));
+            subtitle.setSpacingAfter(30);
+            document.add(subtitle);
+
+            // empleado info
+            PdfPTable empTable = new PdfPTable(2);
+            empTable.setWidthPercentage(100);
+            empTable.setSpacingAfter(30);
+
+            // Empleado
+            PdfPCell cEmp = new PdfPCell();
+            cEmp.setBorder(Rectangle.NO_BORDER);
+            cEmp.addElement(new Paragraph("EMPLEADO", fLabel));
+            cEmp.addElement(
+                    new Paragraph(sol.getEmpleado().getNombres() + " " + sol.getEmpleado().getApellidos(), fBodyBold));
+            empTable.addCell(cEmp);
+
+            // Cargo/Nivel
+            PdfPCell cCargo = new PdfPCell();
+            cCargo.setBorder(Rectangle.NO_BORDER);
+            cCargo.addElement(new Paragraph("NIVEL / CARGO", fLabel));
+            cCargo.addElement(new Paragraph(safeString(sol.getEmpleado().getNivel().getNombre()), fBody));
+            empTable.addCell(cCargo);
+
+            document.add(empTable);
+
+            // financial strip
+            PdfPTable strip = new PdfPTable(3);
+            strip.setWidthPercentage(100);
+            strip.setSpacingAfter(40);
+
+            // Asignado
+            addStripCell(strip, "ASIGNADO", safeBigDecimal(sol.getMontoTotal()), COL_TEXT_PRIMARY, fLabel, fBigNumber);
+
+            // Gastado
+            BigDecimal gastado = (ren != null) ? safeBigDecimal(ren.getTotalAceptado()) : BigDecimal.ZERO;
+            addStripCell(strip, "GASTADO", gastado, COL_TEXT_PRIMARY, fLabel, fBigNumber);
+
+            // Balance
+            BigDecimal balance = BigDecimal.ZERO;
+            if (liq != null) {
+                balance = safeBigDecimal(liq.getSaldoAfavorEmpleado())
+                        .subtract(safeBigDecimal(liq.getSaldoAfavorEmpresa()));
+            }
+            Color balColor = (balance.compareTo(BigDecimal.ZERO) >= 0) ? COL_SUCCESS : COL_DANGER;
+            addStripCell(strip, "BALANCE", balance, balColor, fLabel, fBigNumber);
+
+            document.add(strip);
+
+            // lista de gastos
+            if (ren != null && ren.getDetalles() != null && !ren.getDetalles().isEmpty()) {
+                Paragraph listHeader = new Paragraph("Desglose de Gastos", fHeading);
+                listHeader.setSpacingAfter(15);
+                document.add(listHeader);
+
+                PdfPTable table = new PdfPTable(new float[] { 3, 4, 3, 2, 2 });
+                table.setWidthPercentage(100);
+
+                // Headers
+                addHeaderCell(table, "TIPO", fTableHeader);
+                addHeaderCell(table, "PROVEEDOR", fTableHeader);
+                addHeaderCell(table, "DOCUMENTO", fTableHeader);
+                addHeaderCell(table, "FECHA", fTableHeader);
+                addRightHeaderCell(table, "MONTO", fTableHeader);
+
+                // filas
                 for (DetalleComprobante det : ren.getDetalles()) {
-                    if (det.getEstadoValidacion() == EstadoComprobante.ACEPTADO) {
-                        detallesTable.addCell(new PdfPCell(new Phrase(det.getTipoGasto().getNombre(), normalFont)));
-                        detallesTable.addCell(new PdfPCell(new Phrase(det.getRazonSocialEmisor(), normalFont)));
-                        detallesTable.addCell(new PdfPCell(
-                                new Phrase(det.getSerieComprobante() + "-" + det.getNumeroComprobante(), normalFont)));
-                        detallesTable.addCell(
-                                new PdfPCell(new Phrase(det.getFechaEmision().toLocalDate().toString(), normalFont)));
+                    if (det != null && det.getEstadoValidacion() == EstadoComprobante.ACEPTADO) {
+                        String tipo = (det.getTipoGasto() != null) ? det.getTipoGasto().getNombre() : "-";
+                        String prov = safeString(det.getRazonSocialEmisor());
+                        if (prov.length() > 20)
+                            prov = prov.substring(0, 20) + "...";
 
-                        PdfPCell priceCell = new PdfPCell(new Phrase("S/ " + det.getMontoTotal(), boldFont));
-                        priceCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        detallesTable.addCell(priceCell);
+                        String doc = safeString(det.getSerieComprobante()) + "-"
+                                + safeString(det.getNumeroComprobante());
+                        String fec = (det.getFechaEmision() != null) ? det.getFechaEmision().toLocalDate().toString()
+                                : "-";
+
+                        addBodyCell(table, tipo, fBody);
+                        addBodyCell(table, prov, fBody);
+                        addBodyCell(table, doc, fBody);
+                        addBodyCell(table, fec, fBody);
+                        addRightBodyCell(table, "S/ " + safeBigDecimal(det.getMontoTotal()).toString(), fBodyBold);
                     }
                 }
-                document.add(detallesTable);
+
+                document.add(table);
             }
 
-            // Firmas
-            document.add(new Paragraph("\n\n\n"));
-            PdfPTable signTable = new PdfPTable(2);
-            signTable.setWidthPercentage(100);
+            // footer / firmas
+            document.add(new Paragraph("\n\n\n\n"));
 
-            PdfPCell sign1 = new PdfPCell(new Phrase("__________________________\nFirma del Colaborador", normalFont));
-            sign1.setBorder(Rectangle.NO_BORDER);
-            sign1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            PdfPTable signatures = new PdfPTable(2);
+            signatures.setWidthPercentage(100);
 
-            PdfPCell sign2 = new PdfPCell(
-                    new Phrase("__________________________\nFirma de Administración", normalFont));
-            sign2.setBorder(Rectangle.NO_BORDER);
-            sign2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            PdfPCell s1 = new PdfPCell();
+            s1.setBorder(Rectangle.NO_BORDER);
+            s1.addElement(new Paragraph("______________________",
+                    FontFactory.getFont(FontFactory.HELVETICA, 10, COL_TEXT_SECONDARY)));
+            s1.addElement(new Paragraph("Firma del Empleado", fLabel));
 
-            signTable.addCell(sign1);
-            signTable.addCell(sign2);
-            document.add(signTable);
+            PdfPCell s2 = new PdfPCell();
+            s2.setBorder(Rectangle.NO_BORDER);
+            s2.addElement(new Paragraph("______________________",
+                    FontFactory.getFont(FontFactory.HELVETICA, 10, COL_TEXT_SECONDARY)));
+            s2.addElement(new Paragraph("V°B° Administración", fLabel));
+
+            signatures.addCell(s1);
+            signatures.addCell(s2);
+
+            document.add(signatures);
 
             document.close();
         } catch (Exception e) {
@@ -158,34 +226,77 @@ public class PdfServiceImpl implements PdfService {
         return new ByteArrayInputStream(out.toByteArray());
     }
 
-    private void addInfoCell(PdfPTable table, String label, String value, Font labelFont, Font valueFont) {
-        PdfPCell cellLabel = new PdfPCell(new Phrase(label, labelFont));
-        cellLabel.setBorder(Rectangle.NO_BORDER);
-        cellLabel.setPadding(5);
-        table.addCell(cellLabel);
+    // helpers
 
-        PdfPCell cellValue = new PdfPCell(new Phrase(value, valueFont));
-        cellValue.setBorder(Rectangle.NO_BORDER);
-        cellValue.setPadding(5);
-        table.addCell(cellValue);
-    }
-
-    private void addNumericCell(PdfPTable table, String label, BigDecimal value, Font headerFont, Font valueFont,
-            Color bgColor) {
+    private void addStripCell(PdfPTable table, String label, BigDecimal value, Color valColor, Font fLabel,
+            Font fValueBase) {
         PdfPCell cell = new PdfPCell();
-        cell.setBackgroundColor(bgColor);
-        cell.setPadding(10);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setBackgroundColor(COL_BG_STRIP);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPadding(15);
+        cell.setPaddingTop(20);
+        cell.setPaddingBottom(20);
 
-        Paragraph p1 = new Paragraph(label, headerFont);
-        p1.setAlignment(Element.ALIGN_CENTER);
-        cell.addElement(p1);
+        // Label
+        Paragraph pLbl = new Paragraph(label, fLabel);
+        pLbl.setAlignment(Element.ALIGN_CENTER);
+        cell.addElement(pLbl);
 
-        Paragraph p2 = new Paragraph("S/ " + value, valueFont);
-        p2.setAlignment(Element.ALIGN_CENTER);
-        p2.setFont(FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, Color.WHITE));
-        cell.addElement(p2);
+        // Value
+        Font fVal = new Font(fValueBase);
+        fVal.setColor(valColor);
+        Paragraph pVal = new Paragraph("S/ " + value.toString(), fVal);
+        pVal.setAlignment(Element.ALIGN_CENTER);
+        pVal.setSpacingBefore(4);
+        cell.addElement(pVal);
 
         table.addCell(cell);
+    }
+
+    private void addHeaderCell(PdfPTable table, String text, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setBorder(Rectangle.BOTTOM);
+        cell.setBorderColor(COL_BORDER_LIGHT);
+        cell.setPaddingBottom(8);
+        cell.setPaddingTop(0);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
+    }
+
+    private void addRightHeaderCell(PdfPTable table, String text, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setBorder(Rectangle.BOTTOM);
+        cell.setBorderColor(COL_BORDER_LIGHT);
+        cell.setPaddingBottom(8);
+        cell.setPaddingTop(0);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+    }
+
+    private void addBodyCell(PdfPTable table, String text, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setBorder(Rectangle.BOTTOM);
+        cell.setBorderColor(COL_BG_STRIP);
+        cell.setPaddingTop(10);
+        cell.setPaddingBottom(10);
+        table.addCell(cell);
+    }
+
+    private void addRightBodyCell(PdfPTable table, String text, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setBorder(Rectangle.BOTTOM);
+        cell.setBorderColor(COL_BG_STRIP);
+        cell.setPaddingTop(10);
+        cell.setPaddingBottom(10);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(cell);
+    }
+
+    private BigDecimal safeBigDecimal(BigDecimal val) {
+        return val != null ? val : BigDecimal.ZERO;
+    }
+
+    private String safeString(String val) {
+        return val != null ? val : "";
     }
 }
