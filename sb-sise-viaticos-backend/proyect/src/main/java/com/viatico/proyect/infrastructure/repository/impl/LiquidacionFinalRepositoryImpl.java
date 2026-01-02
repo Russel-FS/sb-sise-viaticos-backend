@@ -25,7 +25,7 @@ public class LiquidacionFinalRepositoryImpl implements LiquidacionFinalRepositor
     @Override
     public LiquidacionFinal save(LiquidacionFinal l) {
         return jdbcTemplate.execute((Connection con) -> {
-            String sql = "{call PKG_LIQUIDACIONES.PRC_GUARDAR_LIQUIDACION(?, ?, ?, ?, ?, ?)}";
+            String sql = "{call PKG_LIQUIDACIONES.PRC_GUARDAR_LIQUIDACION(?, ?, ?, ?, ?)}";
             try (CallableStatement stmt = con.prepareCall(sql)) {
                 if (l.getId() == null) {
                     stmt.setNull(1, Types.NUMERIC);
@@ -35,9 +35,8 @@ public class LiquidacionFinalRepositoryImpl implements LiquidacionFinalRepositor
                 stmt.registerOutParameter(1, Types.NUMERIC);
                 stmt.setLong(2, l.getSolicitud().getId());
                 stmt.setBigDecimal(3, l.getMontoAsignado());
-                stmt.setBigDecimal(4, l.getMontoRendidoValidado());
-                stmt.setDate(5, l.getFechaCierre() != null ? Date.valueOf(l.getFechaCierre().toLocalDate()) : null);
-                stmt.setString(6, l.getUserCrea());
+                stmt.setDate(4, l.getFechaCierre() != null ? Date.valueOf(l.getFechaCierre().toLocalDate()) : null);
+                stmt.setString(5, l.getUserCrea());
 
                 stmt.execute();
 

@@ -3,8 +3,9 @@ CREATE OR REPLACE TYPE T_LIQUIDACION AS OBJECT (
     monto_rendido_validado NUMBER(12,2), 
     CONSTRUCTOR FUNCTION T_LIQUIDACION(
         p_monto_asignado NUMBER,
-        p_monto_rendido_validado NUMBER
+        p_id_solicitud NUMBER
     ) RETURN SELF AS RESULT, 
+    STATIC FUNCTION calcular_monto_validado(p_id_solicitud NUMBER) RETURN NUMBER,
     MEMBER FUNCTION calcular_saldo_empresa RETURN NUMBER,
     MEMBER FUNCTION calcular_saldo_empleado RETURN NUMBER, 
     MEMBER FUNCTION obtener_tipo_liquidacion RETURN VARCHAR2,
@@ -29,12 +30,29 @@ CREATE OR REPLACE TYPE BODY T_LIQUIDACION AS
      -- Constructor para inicializar los montos
     CONSTRUCTOR FUNCTION T_LIQUIDACION(
         p_monto_asignado NUMBER,
-        p_monto_rendido_validado NUMBER
+        p_id_solicitud NUMBER
     ) RETURN SELF AS RESULT IS
     BEGIN
-        SELF.monto_asignado := NVL(p_monto_asignado, 0);
-        SELF.monto_rendido_validado := NVL(p_monto_rendido_validado, 0);
+        SELF.monto_asignado := NVL(p_monto_asignado, 0); 
+        SELF.monto_rendido_validado := T_LIQUIDACION.calcular_monto_validado(p_id_solicitud);
         RETURN;
+    END;
+
+    STATIC FUNCTION calcular_monto_validado(p_id_solicitud NUMBER) RETURN NUMBER IS
+        v_monto NUMBER(12,2);
+    BEGIN
+        SELECT NVL(SUM(d.monto_total), 0)
+        INTO v_monto
+        FROM rendicion_cuentas r
+        JOIN detalle_comprobantes d ON r.id_rendicion = d.id_rendicion
+        WHERE r.id_comision = p_id_solicitud
+          AND d.estado = 'ACEPTADO';
+        RETURN v_monto;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            RETURN 0;
+        WHEN OTHERS THEN
+            RETURN 0;
     END;
 
     -- Calcula el saldo a favor de la empresa - empleado debe devolver
@@ -194,7 +212,6 @@ CREATE OR REPLACE PACKAGE PKG_LIQUIDACIONES AS
         p_id_liquidacion IN OUT NUMBER,
         p_id_solicitud IN NUMBER,
         p_monto_asignado IN NUMBER,
-        p_monto_rendido_validado IN NUMBER,
         p_fecha_cierre IN DATE,
         p_user_crea IN VARCHAR2
     );
@@ -244,7 +261,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_LIQUIDACIONES AS
         p_id_liquidacion IN OUT NUMBER,
         p_id_solicitud IN NUMBER,
         p_monto_asignado IN NUMBER,
-        p_monto_rendido_validado IN NUMBER,
         p_fecha_cierre IN DATE,
         p_user_crea IN VARCHAR2
     ) AS 
@@ -255,7 +271,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_LIQUIDACIONES AS
         v_mensaje VARCHAR2(500);
         v_validacion VARCHAR2(500);
     BEGIN 
-        v_liquidacion := T_LIQUIDACION(p_monto_asignado, p_monto_rendido_validado);
+     
+        v_liquidacion := T_LIQUIDACION(p_monto_asignado, p_id_solicitud);
         
         -- Validar la liquidación
         v_validacion := v_liquidacion.validar_liquidacion();
@@ -278,7 +295,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_LIQUIDACIONES AS
                 saldo_a_favor_empresa, saldo_a_favor_empleado,
                 fecha_cierre, estado_cierre, mensaje_liquidacion, user_crea, fecha_crea
             ) VALUES (
-                p_id_solicitud, p_monto_asignado, p_monto_rendido_validado,
+                p_id_solicitud, p_monto_asignado, v_liquidacion.monto_rendido_validado,
                 v_saldo_empresa, v_saldo_empleado,
                 p_fecha_cierre, v_tipo_liq, v_mensaje, p_user_crea, SYSTIMESTAMP
             ) RETURNING id_liquidacion INTO p_id_liquidacion;
@@ -286,7 +303,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_LIQUIDACIONES AS
             UPDATE liquidacion_final SET
                 id_comision = p_id_solicitud,
                 monto_asignado = p_monto_asignado,
-                monto_rendido_validado = p_monto_rendido_validado,
+                monto_rendido_validado = v_liquidacion.monto_rendido_validado,
                 saldo_a_favor_empresa = v_saldo_empresa,
                 saldo_a_favor_empleado = v_saldo_empleado,
                 fecha_cierre = p_fecha_cierre,
