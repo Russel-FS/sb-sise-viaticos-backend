@@ -1,7 +1,6 @@
 -- Active: 1766458157960@@127.0.0.1@1521@XE@C
 -- PROYECTO: SISTEMA DE GESTIÓN DE VIÁTICOS
 -- EMPRESA: Ingeniería y Servicios del Sur S.A.C.
--- DESCRIPCIÓN: Modelo optimizado para escalabilidad de conceptos de gasto.
 -- MOTOR: Oracle Database 12c+
 -- ESQUEMA: VIATICOS_USER
 
