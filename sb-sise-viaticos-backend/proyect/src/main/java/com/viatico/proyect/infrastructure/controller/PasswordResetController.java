@@ -37,6 +37,7 @@ public class PasswordResetController {
                         "Si el correo electrónico existe en nuestro sistema, recibirás instrucciones para restablecer tu contraseña.");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             ra.addFlashAttribute("error",
                     "Hubo un problema al enviar el correo técnico. Por favor, inténtalo más tarde.");
         }
